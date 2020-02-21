@@ -32,7 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
     transparent={true}
     visible={isShowed}
     onRequestClose={onClose}>
-    <ScrollView>
+    <ScrollView contentContainerStyle={{justifyContent: 'center', alignItems: 'center', height: Dimensions.get('window').height-25 }}>
       <ContainerModal>
         {image && (
           <IconBoxModal style={{borderRadius: 25}}>
@@ -56,10 +56,8 @@ const Container = styled(NativeModal)`
   align-items: center;
   justify-content: center;
 `;
-const ScrollView = styled.View`
+const ScrollView = styled.ScrollView`
   background-color: ${colors.blackTransparent};
-  justify-content: center;
-  align-items: center;
   height: 100%;
 `;
 const ContainerModal = styled.View`

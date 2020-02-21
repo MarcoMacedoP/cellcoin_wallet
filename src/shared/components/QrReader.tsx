@@ -2,22 +2,23 @@
 
 import React, { Component } from 'react';
 
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
+import {} from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
-export class ScanScreen extends Component {
+type QRprops = {
+  closeModal: any,
+};
+export class ScanScreen extends Component<QRprops> {
   onSuccess = (e) => {
-    Linking
-      .openURL(e.data)
-      .catch(err => console.error('An error occured', err));
+    if (e.data.indexOf(':')) {
+      var address = e.data.split(':')
+      console.log( 'Direccion parseada', address[1]);
+      this.props.closeModal(address[1]);
+    } else {
+      this.props.closeModal(e.data);
+    }
+    
   }
-
   render() {
     return (
       <QRCodeScanner

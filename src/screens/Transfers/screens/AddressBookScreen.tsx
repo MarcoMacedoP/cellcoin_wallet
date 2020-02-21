@@ -30,6 +30,7 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
   const [state, setState] = useState({
     alias: '',
     address: '',
+    ready: false,
   });
 
   const [listAddress, setListAddress] = useState([]);
@@ -107,6 +108,7 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
           </>
         :
           <ListContent>
+            <Subtitle>Swipe elements to remove</Subtitle>
             <SwipeListView
                 data={listAddress}
                 renderItem={ (data, rowMap) => (
@@ -130,7 +132,7 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
                         </IconBox>
                         <LabelBox>
                           <Text>{data.item.alias}</Text>
-                          <Text style={{color: colors.gray}}> {data.item.address}</Text>
+                          <Text style={{color: colors.gray, fontSize: 10}}> {data.item.address}</Text>
                         </LabelBox>
                       </>
                     </TouchableHighlight>
@@ -174,7 +176,7 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
             </InputContainer>
             <InputContainer>
               <Label>Address</Label>
-              <Input
+                <InputField
                   align="left"
                   value={state.address}
                   keyboardAppearance={'dark'}
@@ -184,10 +186,10 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
                   setModalAdd(!modalAdd);
                   setModalQR(!modalQR);
                 }}>
-                  <Icon name="qrcode" size={15} color={colors.accent} />
+                  <Icon name="qrcode" size={25} color={colors.accent} />
                 </IconContainer>
             </InputContainer>
-            <Button isActivated={true} width={"90%"} onClick={() => addNewAddress()}>
+            <Button isActivated={state.alias && state.address ? true : false} width={"90%"} onClick={() => addNewAddress()}>
               Add Address
             </Button>
         </Modal>
@@ -199,7 +201,11 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
             setModalQR(!modalQR);
             setModalAdd(!modalAdd);
           }}>
-            <ScanScreen />
+          <ScanScreen closeModal={(data) => { 
+            setState({...state, address: data});
+            setModalQR(false); 
+            setModalAdd(true)}
+          } />
         </Modal>
 
       </Container>
@@ -228,6 +234,9 @@ const InputContainer = styled.View`
   background-color: ${colors.whiteDark};
   border-radius: 4px;
 `;
+const InputField = styled(Input)`
+  width: 90%;
+`; 
 const IconBox = styled.View`
   width: 10%;
   justify-content: center;
@@ -241,6 +250,11 @@ const LabelBox = styled.View`
 `;
 const Label = styled(BaseLabel)`
   position: relative;
+  top: 4px;
+`;
+const Subtitle = styled(BaseLabel)`
+  position: relative;
+  color: ${colors.black}
   top: 4px;
 `;
 const IconContainer = styled.TouchableOpacity`

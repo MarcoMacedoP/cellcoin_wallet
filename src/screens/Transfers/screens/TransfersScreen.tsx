@@ -10,6 +10,7 @@ import {TransfersHistoryComponent} from '../components/History';
 import {colors} from 'shared/styles';
 import { BalanceHeaderComponent } from 'screens/Balance/components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useGlobalState } from 'globalState';
 
 
 type TransfersScreenProps = {
@@ -20,6 +21,7 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
   const {route, navigation} = props;
   const {currency}: {currency: CurrencyType} = route.params;
   const {value, type} = currency;
+  const [mainAddress,] = useGlobalState('mainAddress');
 
   const navigateToSendTransfer = () => navigation.navigate('send', {currency});
   const navigateToRecieveTransfer = () =>
@@ -41,7 +43,7 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
             <Subtitle>{'= $' + value}</Subtitle>
           </Header>
           <ClipboardContainer>
-            <ClipboardComponent text="e0d123e5f316bef78bfdf5a008837577" />
+            <ClipboardComponent text={mainAddress} />
           </ClipboardContainer>
           <ButtonsContainer>
             <Button
