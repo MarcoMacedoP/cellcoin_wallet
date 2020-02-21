@@ -18,8 +18,6 @@ import {CreateScreen} from 'screens/Create';
 
 import {colors} from 'shared/styles/variables';
 import {useGlobalState} from 'globalState';
-import {ScrollView} from 'react-native-gesture-handler';
-import styled from 'styled-components/native';
 const {Navigator, Screen} = createStackNavigator();
 
 const balanceOptions: StackNavigationOptions = {
