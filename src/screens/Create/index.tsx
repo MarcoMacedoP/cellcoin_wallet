@@ -53,7 +53,7 @@ export const CreateScreen = ({navigation}) => {
   }
 
   return (
-    <Container>
+    <Container keyboardShouldPersistTaps='handled'>
       {step === 1 ? (
         <PasswordForm
           labelText="Please set security password"

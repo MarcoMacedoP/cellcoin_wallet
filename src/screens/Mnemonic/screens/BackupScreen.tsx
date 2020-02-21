@@ -10,6 +10,7 @@ import {Button} from 'shared/components/Button';
 
 import {useSeeds} from '../hooks/useSeeds';
 import {colors} from 'shared/styles';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const BackupScreen = ({navigation}) => {
   const [labels, suffleLables, shuffledLabels] = useSeeds();
@@ -60,41 +61,43 @@ export const BackupScreen = ({navigation}) => {
   };
 
   return (
-    <PageContainer light center={'space-around'}>
-      <View style={{paddingHorizontal: 15}}>
-        <H4>Back UP mnemonic phrases </H4>
-        {step == 1 ? (
-          <SmallText style={{marginTop: 15, fontSize: 15}}>
-            Make a copy of the following 12 nemonic phrases in correct order. We
-            Will verify in the next step
-          </SmallText>
-        ) : (
-          <SmallText style={{marginTop: 15, fontSize: 15}}>
-            Please enter the 12 words in the correct order
-          </SmallText>
-        )}
-      </View>
-      {step === 2 ? (
-        <TextArea multiline={true} editable={false} value={normalizedHint} />
-      ) : null}
+    <Scroll>  
+      <PageContainer light center={'space-around'}>
+        <View style={{paddingHorizontal: 15}}>
+          <H4>Back UP mnemonic phrases </H4>
+          {step == 1 ? (
+            <SmallText style={{marginTop: 15, fontSize: 15}}>
+              Make a copy of the following 12 nemonic phrases in correct order. We
+              Will verify in the next step
+            </SmallText>
+          ) : (
+            <SmallText style={{marginTop: 15, fontSize: 15}}>
+              Please enter the 12 words in the correct order
+            </SmallText>
+          )}
+        </View>
+        {step === 2 ? (
+          <TextArea multiline={true} editable={false} value={normalizedHint} />
+        ) : null}
 
-      {shuffledLabels.length > 0 ? (
-        <MnemonicListComponent
-          labels={shuffledLabels}
-          canSelectLabels={step === 2}
-          onLabelSelection={onLabelSelection}
-          onLabelUnselection={onLabelUnselection}
-        />
-      ) : null}
+        {shuffledLabels.length > 0 ? (
+          <MnemonicListComponent
+            labels={shuffledLabels}
+            canSelectLabels={step === 2}
+            onLabelSelection={onLabelSelection}
+            onLabelUnselection={onLabelUnselection}
+          />
+        ) : null}
 
-      <Button
-        width="100%"
-        margin="0 4px 0 0"
-        onClick={onSubmit}
-        isActivated={step === 2 ? hint.length === labels.length : true}>
-        {step == 1 ? 'Next' : 'Confirm'}
-      </Button>
-    </PageContainer>
+        <Button
+          width="100%"
+          margin="0 4px 0 0"
+          onClick={onSubmit}
+          isActivated={step === 2 ? hint.length === labels.length : true}>
+          {step == 1 ? 'Next' : 'Confirm'}
+        </Button>
+      </PageContainer>
+    </Scroll>
   );
 };
 
@@ -108,4 +111,14 @@ const TextArea = styled.TextInput`
   padding: 16px;
   background-color: ${colors.whiteDark};
   border-radius: 15px;
+`;
+
+const Page = styled(PageContainer)`
+  background-color: ${colors.white};
+`;
+
+
+const Scroll = styled.ScrollView`
+  height: 100%;
+  background-color: ${colors.white};
 `;

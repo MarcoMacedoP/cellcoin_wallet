@@ -45,7 +45,7 @@ export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({ ro
   );
 };
 const Container = styled.View`
-  margin-top: 50px;
+  margin-top: 80px;
   height:100%;
   justify-content: space-around;
   align-items: center;

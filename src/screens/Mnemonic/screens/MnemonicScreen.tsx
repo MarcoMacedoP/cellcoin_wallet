@@ -4,6 +4,7 @@ import Toast from 'react-native-simple-toast';
 
 //components
 import {Button, Modal} from 'shared/components';
+import { ScrollView } from 'react-native';
 
 //components
 
@@ -50,59 +51,61 @@ export const MnemonicScreen = ({navigation}) => {
         isShowed={state.modalVisible}
         image={webcam}
         onClose={() => {
-          Toast.show('Modal has been closed.', Toast.SHORT);
+          setState({
+            modalVisible: false,
+          });
         }}>
-        <ContainerText>
-          <Title
-            style={{
-              fontSize: 15,
-              textAlign: 'justify',
-              marginBottom: 10,
-            }}>
-            Having the mnemonic phrases can have full control over assets. Users
-            should be aware of the following matters
-          </Title>
-          <Label
-            style={{
-              fontSize: 15,
-              textAlign: 'justify',
-              marginBottom: 10,
-            }}>
-            Never take screenshots. Pay close attention to cameras around.
-          </Label>
-          <Label
-            style={{
-              fontSize: 15,
-              textAlign: 'justify',
-              marginBottom: 10,
-            }}>
-            Write down the words on paper and keep it in isolated from the
-            internet, Prohibit the disclosure or publicity of mnemonics in any
-            form or method.
-          </Label>
-          <Label
-            style={{
-              fontSize: 15,
-              textAlign: 'justify',
-              marginBottom: 10,
-            }}>
-            Please make sure to keepc a paper copy of your mnemonic phrases.
-            Agave Coin is not liable for the los of digital assets resulting
-            from the loss, damage or other loss of control over the paper copy
-            of mnemonic phrases.
-          </Label>
-        </ContainerText>
-        <ContainerButtons>
-          <Button
-            onClick={() => {
-              navigation.push('Backup');
-              setState({
-                modalVisible: false,
-              });
-            }}>
-            Continue
-          </Button>
-        </ContainerButtons>
+          <ContainerText>
+            <Title
+              style={{
+                fontSize: 15,
+                textAlign: 'justify',
+                marginBottom: 10,
+              }}>
+              Having the mnemonic phrases can have full control over assets. Users
+              should be aware of the following matters
+            </Title>
+            <Label
+              style={{
+                fontSize: 15,
+                textAlign: 'justify',
+                marginBottom: 10,
+              }}>
+              Never take screenshots. Pay close attention to cameras around.
+            </Label>
+            <Label
+              style={{
+                fontSize: 15,
+                textAlign: 'justify',
+                marginBottom: 10,
+              }}>
+              Write down the words on paper and keep it in isolated from the
+              internet, Prohibit the disclosure or publicity of mnemonics in any
+              form or method.
+            </Label>
+            <Label
+              style={{
+                fontSize: 15,
+                textAlign: 'justify',
+                marginBottom: 10,
+              }}>
+              Please make sure to keepc a paper copy of your mnemonic phrases.
+              Agave Coin is not liable for the los of digital assets resulting
+              from the loss, damage or other loss of control over the paper copy
+              of mnemonic phrases.
+            </Label>
+          </ContainerText>
+          <ContainerButtons>
+            <Button
+              onClick={() => {
+                navigation.push('Backup');
+                setState({
+                  modalVisible: false,
+                });
+              }}>
+              Continue
+            </Button>
+          </ContainerButtons>
       </Modal>
     </Container>
   );

@@ -67,6 +67,10 @@ export function TransfersRoutes() {
            title: `${route.params.currency.type} Send`,
             // headerShown: false,
            headerBackTitleVisible: false,
+           headerTitleStyle: {
+             fontSize: 16,
+             fontWeight: 'normal',
+           },
            headerStyle: {
              backgroundColor: colors.whiteDark,
              shadowColor: 'transparent',

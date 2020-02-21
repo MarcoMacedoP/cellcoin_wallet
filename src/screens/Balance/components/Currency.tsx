@@ -55,6 +55,8 @@ const InfoContainer = styled.View`
 `;
 const TitleContainer = styled.View`
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
 const Image = styled.Image`
   width: 30px;

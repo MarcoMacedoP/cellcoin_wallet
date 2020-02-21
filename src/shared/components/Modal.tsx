@@ -32,14 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
     transparent={true}
     visible={isShowed}
     onRequestClose={onClose}>
-    <ScrollView
-      alwaysBounceVertical
-      style={{backgroundColor: 'rgba(0,0,0,0.8)'}}
-      contentContainerStyle={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: Dimensions.get('window').height,
-      }}>
+    <ScrollView>
       <ContainerModal>
         {image && (
           <IconBoxModal style={{borderRadius: 25}}>
@@ -54,7 +47,7 @@ export const Modal: React.FC<ModalProps> = ({
             <Label>Add new address</Label>
           </HeaderModal>
         )}
-        <ModalBox>{children}</ModalBox>
+        <ModalBox contentContainerStyle={{alignItems: 'center'}}>{children}</ModalBox>
       </ContainerModal>
     </ScrollView>
   </Container>
@@ -63,8 +56,11 @@ const Container = styled(NativeModal)`
   align-items: center;
   justify-content: center;
 `;
-const ScrollView = styled.ScrollView`
+const ScrollView = styled.View`
   background-color: ${colors.blackTransparent};
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;
 const ContainerModal = styled.View`
   justify-content: space-between;
@@ -103,8 +99,7 @@ const IconModal = styled.Image`
   height: 80%;
   resize-mode: contain;
 `;
-const ModalBox = styled.View`
+const ModalBox = styled.ScrollView`
   height: 90%;
   width: 100%;
-  align-items: center;
 `;

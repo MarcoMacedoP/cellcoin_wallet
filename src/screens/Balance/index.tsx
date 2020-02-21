@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
-import {StatusBar} from 'react-native';
+import {StatusBar, RefreshControl} from 'react-native';
 import {BalanceHeaderComponent} from './components/Header';
 import {BalanceCurrencyComponent} from './components/Currency';
 import {CurrencyType} from 'shared/types';
@@ -8,6 +8,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import {useGlobalState} from 'globalState';
 import Wallet from 'erc20-wallet';
 import {useGetBalance} from './hooks/useGetBalance';
+import { colors } from 'shared/styles/variables';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
@@ -28,6 +29,20 @@ export const BalanceScreen = ({navigation, currencys = CURRENCYS}) => {
   const [mainAdress] = useGlobalState('mainAddress');
   const {ethBalance, generalBalance, tokenBalance} = useGetBalance(mainAdress);
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  function wait(timeout) {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+
+    wait(2000).then(() => setRefreshing(false));
+  }, [refreshing]);
+
   const handleCurrencyClick = currency =>
     navigation.navigate('Transfers', {screen: 'home', params: {currency}});
 
@@ -39,15 +54,13 @@ export const BalanceScreen = ({navigation, currencys = CURRENCYS}) => {
   };
   return (
     <>
-      <GestureRecognizer
-        onSwipeDown={goNotifications}
-        onSwipeRight={goNotifications}
-        config={config}
-        style={{
-          flex: 1,
-        }}>
+      
         <BalanceHeaderComponent assets={generalBalance} />
-        <CurrencysContainer>
+        <CurrencysContainer 
+          contentContainerStyle={{ justifyContent: 'center',}} 
+          refreshControl={
+            <RefreshControl colors={[colors.accent, colors.primary]} progressBackgroundColor={'white'} refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           {currencys.map((currency, index) => (
             <BalanceCurrencyComponent
               currency={currency}
@@ -56,15 +69,14 @@ export const BalanceScreen = ({navigation, currencys = CURRENCYS}) => {
             />
           ))}
         </CurrencysContainer>
-      </GestureRecognizer>
+      
     </>
   );
 };
 
-const CurrencysContainer = styled.View`
+const CurrencysContainer = styled.ScrollView`
   padding: 22px;
   width: 100%;
-  justify-content: center;
   position: relative;
   top: -70px;
 `;
