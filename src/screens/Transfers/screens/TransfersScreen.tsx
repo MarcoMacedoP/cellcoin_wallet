@@ -82,6 +82,7 @@ const TransactionContainer = styled(PageContainer)`
 `;
 
 const Header = styled.View`
+  margin-top: 20px;
   width: 100%;
   height: 60%;
   justify-content: center;

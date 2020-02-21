@@ -11,18 +11,22 @@ import {useGlobalState} from 'globalState';
 
 type LayoutProps = {
  light?: boolean,
- title?: string,
+ title?: string, 
+ children?: string,
  titleColor?: string,
  leftIcon?: string,
  rightIcon?: string,
 };
-export const LayoutHeader: React.FC<LayoutProps> = ({
-  light = false,
-  title,
-  titleColor,
-  leftIcon,
-  rightIcon,
-}) => {
+export const LayoutHeader: React.FC<LayoutProps> = (props) => {
+  const {
+    light = false,
+    title,
+    children,
+    titleColor,
+    leftIcon,
+    rightIcon,
+  } = props
+  console.log(props)
 // export const LayoutHeader = (props: any) => {
   const navigation = useNavigation();
   const [modalAdd, setModalAdd] = useGlobalState('modalAdd');
@@ -45,7 +49,7 @@ export const LayoutHeader: React.FC<LayoutProps> = ({
     else if(rightIcon == 'add')
       return  <FIcon name="plus" size={20} color={colors.black} />
     else
-    return  null;
+      return <Icon name="qrcode" size={20} color={colors.black} />;
   }
 
   const onShare = async () => {
@@ -86,7 +90,7 @@ export const LayoutHeader: React.FC<LayoutProps> = ({
       </NotificationsIcon>
     </Container>
   ) : (
-    <Container light={light}>
+      <Container light={light} transparency={rightIcon}>
       <NotificationsIcon
         onPress={handlePressBack}
         underlayColor={colors.white}>
@@ -97,7 +101,7 @@ export const LayoutHeader: React.FC<LayoutProps> = ({
         </>
       </NotificationsIcon>
       <LabelHeader titleColor={titleColor}>
-        {title}
+        {title ? title : children}
       </LabelHeader>
       <Shared
         onPress={() => {
@@ -105,8 +109,10 @@ export const LayoutHeader: React.FC<LayoutProps> = ({
             navigation.navigate('Transfers', {screen: 'address'});
           } else if(rightIcon == 'add') {
             setModalAdd(!modalAdd) 
-          } else {
+          } else if (rightIcon == 'shared') {
             onShare();
+          } else {
+            console.log('you found easter egg');
           }
         }}
         underlayColor={colors.white}>
@@ -121,7 +127,8 @@ export const LayoutHeader: React.FC<LayoutProps> = ({
 };
 
 type StyleProps = {
-  light?: boolean,
+  light?: boolean, 
+  transparency? : string,
 };
 
 const Container = styled.View<StyleProps>`
@@ -130,7 +137,8 @@ const Container = styled.View<StyleProps>`
   justify-content: ${props => props.light ? 'space-between' : 'space-around' };
   flex-direction: row;
   padding: 0 16px;
-  background-color: transparent;
+  margin-top: -20px;
+  background-color: ${props => props.transparency == 'qr' ? colors.whiteDark : 'transparent'};
 `;
 const LogoImage = styled.Image`
   margin: 0 auto;
