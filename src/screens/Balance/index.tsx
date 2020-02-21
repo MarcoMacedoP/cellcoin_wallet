@@ -26,6 +26,9 @@ const CURRENCYS: Array<CurrencyType> = [
 
 export const BalanceScreen = ({navigation, currencys = CURRENCYS}) => {
   const [mainAdress] = useGlobalState('mainAddress');
+  console.log({mainAdress
+  });
+  
   const {ethBalance, generalBalance, tokenBalance} = useGetBalance(mainAdress);
 
   const handleCurrencyClick = currency =>
