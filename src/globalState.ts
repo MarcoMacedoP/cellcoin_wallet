@@ -11,7 +11,7 @@ type globalState = {
   modalAdd: boolean;
   modalQR: boolean;
   addresses: Array<adressType>;
-  mainAddress: adressType;
+  mainAddress: string;
   contactsQuantity: 0;
 };
 

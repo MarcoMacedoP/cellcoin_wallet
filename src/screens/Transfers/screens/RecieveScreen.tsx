@@ -4,13 +4,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components/native';
 import { colors } from 'shared/styles';
 import { ClipboardComponent } from 'shared/components/Clipboard';
+import { useGlobalState } from 'globalState';
 
 type RecieveTransferScreenProps = {
   route: any,
 };
 
 export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({ route }) => {
-  const { params : {currency}} = route
+  const { params : {currency}} = route;
+  const [mainAddress,] = useGlobalState('mainAddress')
   console.log(currency)
   return (
     <>
@@ -28,10 +30,10 @@ export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({ ro
                 }
                 style={{width: 35, height: 35,}}
               />
-              <Image source={{uri: 'https://chart.googleapis.com/chart?chs=300x300&chld=L|1&cht=qr&chl=ethereum:0xa25beef0b1d60ca40990a7b3164da84eaa9c2395'}} />
+              <Image source={{ uri: `https://chart.googleapis.com/chart?chs=300x300&chld=L|1&cht=qr&chl=ethereum:${mainAddress}`}} />
             </ImageBox>
             <AddressBox>
-              <ClipboardComponent text="0xa25beef0b1d60ca40990a7b3164da84eaa9c2395" />
+              <ClipboardComponent text={mainAddress} />
             </AddressBox>
           </Box>
 
@@ -45,7 +47,7 @@ export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({ ro
   );
 };
 const Container = styled.View`
-  margin-top: 50px;
+  margin-top: 80px;
   height:100%;
   justify-content: space-around;
   align-items: center;

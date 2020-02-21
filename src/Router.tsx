@@ -81,6 +81,10 @@ const Router = () => {
             options={{
               title: 'Notification Center',
               gestureDirection: 'horizontal-inverted',
+              headerTitleStyle: {
+                fontSize: 16,
+                fontWeight: 'normal',
+              },
             }}
           />
 

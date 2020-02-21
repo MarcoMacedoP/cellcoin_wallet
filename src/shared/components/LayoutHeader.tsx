@@ -77,9 +77,13 @@ export const LayoutHeader: React.FC<LayoutProps> = ({
         <MIcon name="ios-notifications-outline" size={25} color={colors.white} />
       </NotificationsIcon>
       <LogoImage
-        resizeMode="cover"
+        resizeMode="contain"
+        style={{ width: 110, }}
         source={require('../../assets/icons/logo_mini.png')}
       />
+      <NotificationsIcon>
+        <MIcon name="ios-notifications-outline" size={25} color={'transparent'} />
+      </NotificationsIcon>
     </Container>
   ) : (
     <Container light={light}>

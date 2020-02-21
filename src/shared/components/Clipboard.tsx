@@ -21,7 +21,7 @@ export const ClipboardComponent = ({text}) => {
   );
 };
 
-const Container = styled.TouchableHighlight`
+const Container = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;

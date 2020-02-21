@@ -10,7 +10,7 @@ export const colors = {
   whiteDark: '#ebe8e8',
   black: '#575555',
   blackLigth: '#c9c5c5',
-  blackTransparent: 'rgba(0,0,0,0.1)',
+  blackTransparent: 'rgba(0,0,0,0.8)',
   gray: '#cfd8dc',
   lightGray: '#eceff1',
 };
