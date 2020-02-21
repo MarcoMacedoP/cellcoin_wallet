@@ -8,10 +8,9 @@ import {ClipboardComponent} from 'shared/components/Clipboard';
 import {PageContainer, Title, Subtitle} from 'shared/styled-components';
 import {TransfersHistoryComponent} from '../components/History';
 import {colors} from 'shared/styles';
-import { BalanceHeaderComponent } from 'screens/Balance/components/Header';
+import {BalanceHeaderComponent} from 'screens/Balance/components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useGlobalState } from 'globalState';
-
+import {useGlobalState} from 'globalState';
 
 type TransfersScreenProps = {
   route: any;
@@ -21,7 +20,7 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
   const {route, navigation} = props;
   const {currency}: {currency: CurrencyType} = route.params;
   const {value, type} = currency;
-  const [mainAddress,] = useGlobalState('mainAddress');
+  const [mainAddress] = useGlobalState('mainAddress');
 
   const navigateToSendTransfer = () => navigation.navigate('send', {currency});
   const navigateToRecieveTransfer = () =>
@@ -39,8 +38,8 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
                   : require('assets/icons/ethereum_icon.png')
               }
             />
-            <Title>{value}</Title>
-            <Subtitle>{'= $' + value}</Subtitle>
+            <Title>{value.original}</Title>
+            <Subtitle>{'= $' + value.usd}</Subtitle>
           </Header>
           <ClipboardContainer>
             <ClipboardComponent text={mainAddress} />
@@ -51,14 +50,14 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
               width="50%"
               margin="0 4px 0 0"
               onClick={navigateToSendTransfer}>
-              <Icon name="send" size={15} color="white"/> Send
+              <Icon name="send" size={15} color="white" /> Send
             </Button>
             <Button
               secondary
               width="50%"
               margin="0 0 0 4px"
               onClick={navigateToRecieveTransfer}>
-              <Icon name="qrcode" size={15} color="white"/> Receive
+              <Icon name="qrcode" size={15} color="white" /> Receive
             </Button>
           </ButtonsContainer>
         </TransactionContainer>
@@ -73,7 +72,7 @@ const Container = styled.SafeAreaView`
   height: 100%;
   width: 100%;
   justify-content: flex-start;
-  background-color: ${colors.white}
+  background-color: ${colors.white};
 `;
 const TransactionContainer = styled(PageContainer)`
   height: 70%;
@@ -107,7 +106,7 @@ const ClipboardContainer = styled.View`
   margin: 16px 0 16px;
   width: 95%;
   border-radius: 15px;
-  background-color: ${colors.whiteDark}
+  background-color: ${colors.whiteDark};
 `;
 const ButtonsContainer = styled.View`
   flex-direction: row;

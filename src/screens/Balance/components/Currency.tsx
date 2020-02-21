@@ -31,8 +31,8 @@ export const BalanceCurrencyComponent: React.FC<BalanceCurrencyComponentProps> =
           </View>
         </TitleContainer>
         <View>
-          <CurrencyStatus>{value}</CurrencyStatus>
-          <CurrencyInLocal>$={value}</CurrencyInLocal>
+          <CurrencyStatus>{value.original}</CurrencyStatus>
+          <CurrencyInLocal>$={value.usd}</CurrencyInLocal>
         </View>
       </InfoContainer>
     </Container>
@@ -64,8 +64,10 @@ const Image = styled.Image`
 `;
 const CurrencyStatus = styled(Text)`
   font-weight: bold;
+  text-align: right;
 `;
 const CurrencyInLocal = styled.Text`
   font-size: 12px;
+  text-align: right;
   color: ${colors.blackLigth};
 `;

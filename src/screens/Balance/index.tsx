@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {StatusBar, RefreshControl} from 'react-native';
 import {BalanceHeaderComponent} from './components/Header';
@@ -8,29 +8,39 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import {useGlobalState} from 'globalState';
 import Wallet from 'erc20-wallet';
 import {useGetBalance} from './hooks/useGetBalance';
-import { colors } from 'shared/styles/variables';
+import {colors} from 'shared/styles/variables';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
     name: 'Agave coin',
     type: 'AGVC',
-    value: '0.00',
+    value: {original: '0.0', usd: '0.0'},
     image: 'assets/icons/agave_coin_icon.png',
   },
   {
     type: 'ETH',
-    value: '0.00',
+    value: {original: '0.00', usd: '0.0'},
     name: 'Ethereum',
     image: 'assets/icons/ethereum_icon.png',
   },
 ];
 
-export const BalanceScreen = ({navigation, currencys = CURRENCYS}) => {
+export const BalanceScreen = ({navigation}) => {
+  const [currencys, setCurrencys] = useState<Array<CurrencyType>>([
+    ...CURRENCYS,
+  ]);
   const [mainAdress] = useGlobalState('mainAddress');
-  console.log({mainAdress
-  });
-  
+  console.log({mainAdress});
+
   const {ethBalance, generalBalance, tokenBalance} = useGetBalance(mainAdress);
+  useEffect(() => {
+    if (ethBalance && tokenBalance) {
+      const [token, ethereum] = currencys;
+      token.value = tokenBalance;
+      ethereum.value = ethBalance;
+      setCurrencys([token, ethereum]);
+    }
+  }, [ethBalance, tokenBalance]);
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -49,30 +59,27 @@ export const BalanceScreen = ({navigation, currencys = CURRENCYS}) => {
   const handleCurrencyClick = currency =>
     navigation.navigate('Transfers', {screen: 'home', params: {currency}});
 
-  const goNotifications = () => navigation.navigate('Notifications');
-
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
-  };
   return (
     <>
-      
-        <BalanceHeaderComponent assets={generalBalance} />
-        <CurrencysContainer 
-          contentContainerStyle={{ justifyContent: 'center',}} 
-          refreshControl={
-            <RefreshControl colors={[colors.accent, colors.primary]} progressBackgroundColor={'white'} refreshing={refreshing} onRefresh={onRefresh} />
-          }>
-          {currencys.map((currency, index) => (
-            <BalanceCurrencyComponent
-              currency={currency}
-              key={index}
-              onClick={() => handleCurrencyClick(currency)}
-            />
-          ))}
-        </CurrencysContainer>
-      
+      <BalanceHeaderComponent assets={generalBalance} />
+      <CurrencysContainer
+        contentContainerStyle={{justifyContent: 'center'}}
+        refreshControl={
+          <RefreshControl
+            colors={[colors.accent, colors.primary]}
+            progressBackgroundColor={'white'}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }>
+        {currencys.map((currency, index) => (
+          <BalanceCurrencyComponent
+            currency={currency}
+            key={index}
+            onClick={() => handleCurrencyClick(currency)}
+          />
+        ))}
+      </CurrencysContainer>
     </>
   );
 };
@@ -82,9 +89,4 @@ const CurrencysContainer = styled.ScrollView`
   width: 100%;
   position: relative;
   top: -70px;
-`;
-const Title = styled.Text`
-  font-size: 36px;
-  font-weight: bold;
-  margin-bottom: 16px;
 `;

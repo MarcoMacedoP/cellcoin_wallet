@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
 
 type BalanceHeaderComponentProps = {
-  assets: number;
+  assets: string;
 };
 export const BalanceHeaderComponent: React.FC<BalanceHeaderComponentProps> = ({
   assets,

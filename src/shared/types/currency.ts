@@ -1,5 +1,5 @@
 export type CurrencyType = {
-  value: string;
+  value: {original: string; usd: string};
   type: 'ETH' | 'AGVC';
   name: string;
   image: string;

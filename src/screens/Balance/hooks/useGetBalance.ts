@@ -5,24 +5,47 @@ import Wallet from 'erc20-wallet';
 import Web3 from 'web3';
 import HookedWeb3Provider from 'hooked-web3-provider';
 
-export function useGetBalance(address: adressType) {
-  const initialState = {tokenBalance: 0, ethBalance: 0, generalBalance: 0};
+export function useGetBalance(address) {
+  const initialState = {
+    tokenBalance: {original: '0', usd: 0},
+    ethBalance: {original: '0', usd: 0},
+    generalBalance: '0',
+  };
   const [state, setState] = useState(initialState);
-
+  const [mainAddress, ] = useGlobalState('mainAddress')
+  const addressTest = '0xd353A3FD2A91dBC1fAeA041b0d1901a7A0978434';
   useEffect(() => {
     const getBalance = async () => {
       try {
         const {ethBalance, tokenBalance} = await fetchBalance(
-          '0xd353A3FD2A91dBC1fAeA041b0d1901a7A0978434',
+          mainAddress,
         );
-        setState({...state, ethBalance, tokenBalance});
+        const {token, eth} = await getPrices(
+          state.ethBalance,
+          state.tokenBalance,
+        );
+        const ethUsd = parseFloat(((eth * ethBalance) * 1 ).toFixed(4));
+        const tokenUsd = parseFloat(((token * tokenBalance) * 1).toFixed(4));
+        const totalUsd = ethUsd + tokenUsd;
+        console.log(ethUsd);
+        console.log(totalUsd);
+        setState({
+          tokenBalance: {
+            original: tokenBalance.toFixed(8),
+            usd: tokenUsd,
+          },
+          generalBalance: totalUsd.toFixed(2),
+          ethBalance: {
+            original: ethBalance.toFixed(8),
+            usd: ethUsd,
+          },
+        });
       } catch (error) {
         console.log(error);
       }
     };
     getBalance();
     console.log({state});
-    getPrices(state.ethBalance, state.tokenBalance);
   }, []);
 
   return state;
@@ -31,7 +54,7 @@ export function useGetBalance(address: adressType) {
 type fetchBalance = (address: adressType,) =>  Promise<{tokenBalance: 0; ethBalance: 0}>; // prettier-ignore
 
 async function fetchBalance(address) {
-  const tokenBalance = await Wallet.getTokenAddress(address);
+  const tokenBalance: number = await Wallet.getTokenAddress(address);
   const ethBalance: any = await getBalanceEth(address);
   return {tokenBalance, ethBalance};
 }
@@ -48,18 +71,17 @@ async function getBalanceEth(address) {
     ),
   );
 }
-async function getPrices(eth, token) {
-  const body = new FormData();
-  body.append('eth', eth);
-  body.append('token', token);
-
-  const response = await fetch('https://erc20.lomeli.xyz/agavecoin/prices', {
-    body,
+async function getPrices(eth, token): Promise<{eth; token}> {
+  const requestOptions = {
     method: 'post',
-  });
-  console.log(response.status);
+    body: `eth=1&token=1`,
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+  };
 
-  const data = await response.json();
-  console.log({data});
+  const response = await fetch(
+    'https://erc20.lomeli.xyz/agavecoin/prices',
+    requestOptions,
+  );
+  const {data} = await response.json();
   return data;
 }
