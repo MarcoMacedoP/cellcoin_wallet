@@ -12,6 +12,9 @@ import Slider from '@react-native-community/slider';
 import {Button} from 'shared/components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import { useGlobalState } from 'globalState';
+import { ScanScreen } from 'shared/components/QrReader';
+import { Modal } from 'shared/components';
 
 type SendTransferScreenProps = {
   params: {balance: number};
@@ -20,8 +23,18 @@ type SendTransferScreenProps = {
 export const SendTransferScreen: React.FC<SendTransferScreenProps> = props => {
   const balance = 20.0;
   const recomendation = 0.8;
-
+  const [modalQR, setModalQR] = useGlobalState('modalQR');
   const [transferValue, setTransferValue] = useState();
+  const [mainAddress,] = useGlobalState('mainAddress');
+  const [state, setState] = useState({
+    amount: 0,
+    to: '',
+  });
+
+  const onTextAddressChange = text => {
+    setState({...state, to: text});
+  };
+
   const [minerFee, setMinerFee] = useState(0);
   const navigation = useNavigation();
   const onMaxTransfersClick = () =>
@@ -32,6 +45,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = props => {
   const onRecomendationClick = () => setMinerFee(recomendation);
 
   return (
+    <>
     <ScrollView contentContainerStyle={{ backgroundColor: colors.white }} style={{ backgroundColor: colors.white}}>
       <StatusBar backgroundColor={colors.whiteDark} barStyle="light-content" />
       <Header>
@@ -63,7 +77,15 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = props => {
       <PageContainer style={{paddingTop: 8, alignItems: 'flex-start'}} light>
         <InputContainer>
           <Label>To</Label>
-          <Input align="left" value="15566sss5s5ss" />
+
+
+          <FromInput 
+            align="left"
+            value={state.to}
+            keyboardAppearance={'dark'}
+            onChangeText={value => onTextAddressChange(value)} />
+
+
           <IconContainer onPress={() => navigation.navigate('Transfers', {screen: 'address'}) }>
             <Icon
               name="address-book"
@@ -75,7 +97,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = props => {
 
         <InputContainer>
           <Label>From</Label>
-          <Input align="left">15566sss5s5ss</Input>
+          <FromInput align="left">{mainAddress}</FromInput>
         </InputContainer>
 
         <InputContainer>
@@ -101,7 +123,21 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = props => {
           Confirm
         </Button>
       </PageContainer>
+      <Modal
+          isShowed={modalQR}
+          icon={'x'}
+          onClose={() => {
+            setModalQR(!modalQR);
+          }}>
+          <ScanScreen closeModal={(data) => { 
+              setState({...state, to: data});
+              setModalQR(false); 
+            }
+          }/>
+      </Modal>
     </ScrollView>
+    
+    </>
   );
 };
 
@@ -131,6 +167,11 @@ const TransferInputContainer = styled.View`
 `;
 const MaxTransfer = styled(SmallText)`
   color: ${colors.primary};
+`;
+const FromInput = styled(Input)`
+  font-size: 13px;
+  font-weight: normal;
+  width: 100%;
 `;
 const TransferInput = styled(Input)`
   font-size: 14px;

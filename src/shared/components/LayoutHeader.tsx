@@ -30,6 +30,7 @@ export const LayoutHeader: React.FC<LayoutProps> = (props) => {
 // export const LayoutHeader = (props: any) => {
   const navigation = useNavigation();
   const [modalAdd, setModalAdd] = useGlobalState('modalAdd');
+  const [modalQR, setModalQR] = useGlobalState('modalQR');
   const [addresses,] = useGlobalState('addresses');
   const handlePressNotifications = () => navigation.navigate('Notifications');
   const handlePressBack = () => navigation.goBack();
@@ -112,7 +113,7 @@ export const LayoutHeader: React.FC<LayoutProps> = (props) => {
           } else if (rightIcon == 'shared') {
             onShare();
           } else {
-            console.log('you found easter egg');
+            setModalQR(!modalQR)
           }
         }}
         underlayColor={colors.white}>
