@@ -51,6 +51,8 @@ target 'wallet_template' do
   pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone.podspec"
 
 
+  pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
+
   target 'wallet_templateTests' do
     inherit! :search_paths
     # Pods for testing
