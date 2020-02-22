@@ -7,7 +7,7 @@ import {
 } from 'shared/styled-components';
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
-import {TouchableOpacity, Image, ScrollView} from 'react-native';
+import {TouchableOpacity, Image, ScrollView, StatusBar} from 'react-native';
 import Slider from '@react-native-community/slider';
 import {Button} from 'shared/components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -32,7 +32,8 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = props => {
   const onRecomendationClick = () => setMinerFee(recomendation);
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ backgroundColor: colors.white }} style={{ backgroundColor: colors.white}}>
+      <StatusBar backgroundColor={colors.whiteDark} barStyle="light-content" />
       <Header>
         <Title>Transfer Amount</Title>
         <TransfersContainer>
@@ -106,14 +107,13 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = props => {
 
 const Header = styled(PageContainer)`
   background-color: ${colors.whiteDark};
-  padding-bottom: 12px;
   height: auto;
   align-items: flex-start;
   justify-content: center;
   width: 100%;
+  margin-top: 60px;
 `;
 const Title = styled(Text)`
-  margin-bottom: 16px;
 `;
 const Label = styled(BaseLabel)`
   position: relative;
