@@ -32,7 +32,12 @@ export const BalanceScreen = ({navigation}) => {
   const [mainAdress] = useGlobalState('mainAddress');
   console.log({mainAdress});
 
-  const {ethBalance, generalBalance, tokenBalance} = useGetBalance(mainAdress);
+  const {
+    ethBalance,
+    generalBalance,
+    tokenBalance,
+    fetchBalance,
+  } = useGetBalance(mainAdress);
   useEffect(() => {
     if (ethBalance && tokenBalance) {
       const [token, ethereum] = currencys;
@@ -44,16 +49,9 @@ export const BalanceScreen = ({navigation}) => {
 
   const [refreshing, setRefreshing] = React.useState(false);
 
-  function wait(timeout) {
-    return new Promise(resolve => {
-      setTimeout(resolve, timeout);
-    });
-  }
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-
-    wait(2000).then(() => setRefreshing(false));
+    fetchBalance().then(() => setRefreshing(false));
   }, [refreshing]);
 
   const handleCurrencyClick = currency =>
