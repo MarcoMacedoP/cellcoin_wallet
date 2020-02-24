@@ -6,3 +6,4 @@ export * from './TabBar';
 export * from './Modal';
 export * from './Loading';
 export * from './FadeInView';
+export * from './NotificationCard';
