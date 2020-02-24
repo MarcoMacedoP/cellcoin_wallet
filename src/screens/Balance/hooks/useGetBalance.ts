@@ -9,8 +9,9 @@ export function useGetBalance(address) {
   const initialState = {
     tokenBalance: {original: '0', usd: 0},
     ethBalance: {original: '0', usd: 0},
-    generalBalance: '0',
+    generalBalance: null,
     fetchBalance: () => {},
+    isLoading: false,
   };
   const [state, setState] = useState(initialState);
   const [mainAddress] = useGlobalState('mainAddress');
@@ -18,8 +19,8 @@ export function useGetBalance(address) {
 
   const getBalance = async () => {
     try {
+      setState({...state, isLoading: true});
       console.log('updated balance!');
-
       const {ethBalance, tokenBalance} = await fetchBalance(mainAddress);
       const {token, eth} = await getPrices(
         state.ethBalance,
@@ -30,6 +31,7 @@ export function useGetBalance(address) {
       const totalUsd = ethUsd + tokenUsd;
       setState({
         ...state,
+        isLoading: false,
         tokenBalance: {
           original: tokenBalance.toFixed(2),
           usd: tokenUsd,
@@ -42,6 +44,7 @@ export function useGetBalance(address) {
       });
     } catch (error) {
       console.log(error);
+      setState({...state, isLoading: false});
     }
   };
   useEffect(() => {
