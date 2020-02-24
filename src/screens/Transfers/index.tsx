@@ -10,29 +10,51 @@ import Router, {commonScreenOptions} from 'Router';
 import {colors} from 'shared/styles';
 import {useGlobalState} from 'globalState';
 import {LayoutHeader} from 'shared/components/LayoutHeader';
-import { AddressBookScreen } from './screens/AddressBookScreen';
+import {AddressBookScreen} from './screens/AddressBookScreen';
 
 const Transfers = createStackNavigator();
 
 const balanceOptions: StackNavigationOptions = {
   headerTransparent: true,
-  headerTitle: props => <LayoutHeader {...props} light titleColor={'black'} title={'Send'} leftIcon="back-black" rightIcon="address" />,
+  headerTitle: props => (
+    <LayoutHeader
+      {...props}
+      light
+      titleColor={'black'}
+      title={'Send'}
+      leftIcon="back-black"
+      rightIcon="address"
+    />
+  ),
   headerBackTitleVisible: false,
   headerLeft: null,
 };
 
 const sendOptions: StackNavigationOptions = {
   headerTransparent: true,
-  headerTitle: props => <LayoutHeader {...props} light titleColor={'black'}  leftIcon="back-black" rightIcon="qr" />,
+  headerTitle: props => (
+    <LayoutHeader
+      {...props}
+      light
+      titleColor={'black'}
+      leftIcon="back-black"
+      rightIcon="qr"
+    />
+  ),
   headerBackTitleVisible: false,
   headerLeft: null,
 };
 
-
 const recieveOptions: StackNavigationOptions = {
   headerTransparent: true,
   headerTitle: () => (
-    <LayoutHeader light={true} title={'Receive'} titleColor={'white'} leftIcon="back-white" rightIcon="shared" />
+    <LayoutHeader
+      light={true}
+      title={'Receive'}
+      titleColor={'white'}
+      leftIcon="back-white"
+      rightIcon="shared"
+    />
   ),
   headerBackTitleVisible: false,
   headerLeft: null,
@@ -41,7 +63,13 @@ const recieveOptions: StackNavigationOptions = {
 const addressOptions: StackNavigationOptions = {
   headerTransparent: true,
   headerTitle: () => (
-    <LayoutHeader light title={'Address Book'} titleColor={'black'} leftIcon="back-black" rightIcon="add" />
+    <LayoutHeader
+      light
+      title={'Address Book'}
+      titleColor={'black'}
+      leftIcon="back-black"
+      rightIcon="add"
+    />
   ),
   headerBackTitleVisible: false,
   headerLeft: null,
@@ -60,7 +88,10 @@ export function TransfersRoutes() {
       <Transfers.Screen
         name="send"
         component={SendTransferScreen}
-        options={({ route }: { route: any }) => ({...sendOptions, title: route.params.currency.type + ' Send'})}
+        options={({route}: {route: any}) => ({
+          ...sendOptions,
+          title: route.params.currency.type + ' Send',
+        })}
         //  options={({route}: {route: any}) => ({
         //    ...commonScreenOptions,
         //    title: `${route.params.currency.type} Send`,

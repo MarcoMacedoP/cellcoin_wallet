@@ -3,21 +3,21 @@ import styled from 'styled-components/native';
 import {Image, Dimensions, View, Text, Share} from 'react-native';
 import {colors} from '../styles';
 import {useNavigation} from '@react-navigation/native';
-import { Label } from 'shared/styled-components';
+import {Label} from 'shared/styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FIcon from 'react-native-vector-icons/Feather';
 import MIcon from 'react-native-vector-icons/Ionicons';
 import {useGlobalState} from 'globalState';
 
 type LayoutProps = {
- light?: boolean,
- title?: string, 
- children?: string,
- titleColor?: string,
- leftIcon?: string,
- rightIcon?: string,
+  light?: boolean;
+  title?: string;
+  children?: string;
+  titleColor?: string;
+  leftIcon?: string;
+  rightIcon?: string;
 };
-export const LayoutHeader: React.FC<LayoutProps> = (props) => {
+export const LayoutHeader: React.FC<LayoutProps> = props => {
   const {
     light = false,
     title,
@@ -25,33 +25,29 @@ export const LayoutHeader: React.FC<LayoutProps> = (props) => {
     titleColor,
     leftIcon,
     rightIcon,
-  } = props
-  console.log(props)
-// export const LayoutHeader = (props: any) => {
+  } = props;
   const navigation = useNavigation();
   const [modalAdd, setModalAdd] = useGlobalState('modalAdd');
   const [modalQR, setModalQR] = useGlobalState('modalQR');
-  const [addresses,] = useGlobalState('addresses');
+  const [addresses] = useGlobalState('addresses');
   const handlePressNotifications = () => navigation.navigate('Notifications');
   const handlePressBack = () => navigation.goBack();
   const renderLeftIcon = () => {
     if (leftIcon == 'back-white')
-      return <FIcon name="arrow-left" size={20} color={colors.white} />
-    else if(leftIcon == 'back-black')
-      return  <FIcon name="arrow-left" size={20} color={colors.black} />
-    else
-    return  null;
-  }
+      return <FIcon name="arrow-left" size={20} color={colors.white} />;
+    else if (leftIcon == 'back-black')
+      return <FIcon name="arrow-left" size={20} color={colors.black} />;
+    else return null;
+  };
   const renderRightIcon = () => {
     if (rightIcon == 'address')
-      return <Icon name="address-book" size={20} color={colors.black} />
-    else if(rightIcon == 'shared')
-      return  <FIcon name="share" size={20} color={colors.white} />
-    else if(rightIcon == 'add')
-      return  <FIcon name="plus" size={20} color={colors.black} />
-    else
-      return <Icon name="qrcode" size={20} color={colors.black} />;
-  }
+      return <Icon name="address-book" size={20} color={colors.black} />;
+    else if (rightIcon == 'shared')
+      return <FIcon name="share" size={20} color={colors.white} />;
+    else if (rightIcon == 'add')
+      return <FIcon name="plus" size={20} color={colors.black} />;
+    else return <Icon name="qrcode" size={20} color={colors.black} />;
+  };
 
   const onShare = async () => {
     try {
@@ -73,33 +69,34 @@ export const LayoutHeader: React.FC<LayoutProps> = (props) => {
     }
   };
 
-
   return light == false ? (
     <Container light={light}>
       <NotificationsIcon
         onPress={handlePressNotifications}
         underlayColor={colors.primaryLigth}>
-        <MIcon name="ios-notifications-outline" size={25} color={colors.white} />
+        <MIcon
+          name="ios-notifications-outline"
+          size={25}
+          color={colors.white}
+        />
       </NotificationsIcon>
       <LogoImage
         resizeMode="contain"
-        style={{ width: 110, }}
+        style={{width: 110}}
         source={require('../../assets/icons/logo_mini.png')}
       />
       <NotificationsIcon>
-        <MIcon name="ios-notifications-outline" size={25} color={'transparent'} />
+        <MIcon
+          name="ios-notifications-outline"
+          size={25}
+          color={'transparent'}
+        />
       </NotificationsIcon>
     </Container>
   ) : (
-      <Container light={light} transparency={rightIcon}>
-      <NotificationsIcon
-        onPress={handlePressBack}
-        underlayColor={colors.white}>
-        <>
-          {
-            renderLeftIcon()
-          }
-        </>
+    <Container light={light} transparency={rightIcon}>
+      <NotificationsIcon onPress={handlePressBack} underlayColor={colors.white}>
+        <>{renderLeftIcon()}</>
       </NotificationsIcon>
       <LabelHeader titleColor={titleColor}>
         {title ? title : children}
@@ -108,38 +105,35 @@ export const LayoutHeader: React.FC<LayoutProps> = (props) => {
         onPress={() => {
           if (rightIcon == 'address') {
             navigation.navigate('Transfers', {screen: 'address'});
-          } else if(rightIcon == 'add') {
-            setModalAdd(!modalAdd) 
+          } else if (rightIcon == 'add') {
+            setModalAdd(!modalAdd);
           } else if (rightIcon == 'shared') {
             onShare();
           } else {
-            setModalQR(!modalQR)
+            setModalQR(!modalQR);
           }
         }}
         underlayColor={colors.white}>
-        <>
-          {
-            renderRightIcon()
-          }
-        </>
+        <>{renderRightIcon()}</>
       </Shared>
     </Container>
   );
 };
 
 type StyleProps = {
-  light?: boolean, 
-  transparency? : string,
+  light?: boolean;
+  transparency?: string;
 };
 
 const Container = styled.View<StyleProps>`
   width: ${Dimensions.get('window').width}px;
   align-items: center;
-  justify-content: ${props => props.light ? 'space-between' : 'space-around' };
+  justify-content: ${props => (props.light ? 'space-between' : 'space-around')};
   flex-direction: row;
   padding: 0 16px;
   margin-top: -20px;
-  background-color: ${props => props.transparency == 'qr' ? colors.whiteDark : 'transparent'};
+  background-color: ${props =>
+    props.transparency == 'qr' ? colors.whiteDark : 'transparent'};
 `;
 const LogoImage = styled.Image`
   margin: 0 auto;
@@ -154,7 +148,7 @@ const Shared = styled.TouchableOpacity`
   padding: 8px;
 `;
 type HeaderProps = {
-  titleColor?: string,
+  titleColor?: string;
 };
 
 const LabelHeader = styled(Label)<HeaderProps>`
@@ -163,5 +157,5 @@ const LabelHeader = styled(Label)<HeaderProps>`
   justify-content: center;
   font-size: 18px;
   font-weight: bold;
-  color: ${props => props.titleColor ? props.titleColor : colors.black};
+  color: ${props => (props.titleColor ? props.titleColor : colors.black)};
 `;

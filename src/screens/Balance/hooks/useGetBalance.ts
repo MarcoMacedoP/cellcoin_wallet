@@ -5,23 +5,22 @@ import Wallet from 'erc20-wallet';
 import Web3 from 'web3';
 import HookedWeb3Provider from 'hooked-web3-provider';
 
-export function useGetBalance(address) {
+export function useGetBalance() {
   const initialState = {
     tokenBalance: {original: '0', usd: 0},
     ethBalance: {original: '0', usd: 0},
     generalBalance: null,
-    fetchBalance: () => {},
     isLoading: false,
   };
   const [state, setState] = useState(initialState);
   const [mainAddress] = useGlobalState('mainAddress');
-  const __addressTest = '0xd353A3FD2A91dBC1fAeA041b0d1901a7A0978434';
+  const [, setBalance] = useGlobalState('balance');
 
   const getBalance = async () => {
     try {
       setState({...state, isLoading: true});
-      console.log('updated balance!');
       const {ethBalance, tokenBalance} = await fetchBalance(mainAddress);
+      console.log('updated balance!');
       const {token, eth} = await getPrices(
         state.ethBalance,
         state.tokenBalance,
@@ -42,6 +41,7 @@ export function useGetBalance(address) {
           usd: ethUsd,
         },
       });
+      setBalance({...state, fetchBalance: getBalance});
     } catch (error) {
       console.log(error);
       setState({...state, isLoading: false});
@@ -50,7 +50,6 @@ export function useGetBalance(address) {
   useEffect(() => {
     getBalance();
   }, []);
-
   return {...state, fetchBalance: getBalance};
 }
 
@@ -77,7 +76,7 @@ async function getBalanceEth(address) {
 async function getPrices(eth, token): Promise<{eth; token}> {
   const requestOptions = {
     method: 'post',
-    body: `eth=1&token=1`,
+    body: `eth=${eth}&token=${token}`,
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
   };
 

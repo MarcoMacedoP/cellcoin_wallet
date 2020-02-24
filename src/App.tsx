@@ -6,6 +6,7 @@ import Router from './Router';
 import {Splash} from 'shared/components/Splash';
 import {useFindWalletInStorage} from 'shared/hooks/useFindWalletInStorage';
 import {FadeInView} from 'shared/components';
+import {useGlobalState} from 'globalState';
 //declarations
 declare var global: {HermesInternal: null | {}};
 const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
@@ -16,6 +17,17 @@ Wallet.mySeed = 'mipalabraalfanumerica8989';
  */
 function useInitilizeApp() {
   const [hasInitialized, setHasInitilization] = useState(false);
+  const [hasSetInitialization, setHasSetInitialization] = useState(false);
+  const [hasKeystore] = useGlobalState('keystore');
+
+  const wallet = useFindWalletInStorage();
+
+  useEffect(() => {
+    if (hasSetInitialization && !wallet.isLoading) {
+      setHasInitilization(true);
+    }
+  }, [hasSetInitialization, wallet.isLoading]);
+
   useEffect(() => {
     async function getInitialization() {
       const response = await fetch(`${API_URL}/data-general`, {
@@ -33,18 +45,16 @@ function useInitilizeApp() {
         const walletHasProp = initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop); // prettier-ignore
         if (walletHasProp) Wallet[prop] = initialization[prop];
       }
-      setHasInitilization(true);
+      setHasSetInitialization(true);
     }
     setInitialization();
   }, []);
-  console.log(Wallet.provider);
-  return hasInitialized;
+  return {hasInitialized, hasKeystore};
 }
 const App = () => {
-  const {isLoading} = useFindWalletInStorage();
-  const hasInitialized = useInitilizeApp();
-  useEffect(() => console.log({isLoading}), [isLoading]);
-  return isLoading || !hasInitialized ? (
+  const {hasInitialized} = useInitilizeApp();
+
+  return !hasInitialized ? (
     <Splash />
   ) : (
     <FadeInView style={{flex: 1}}>

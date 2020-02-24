@@ -45,7 +45,7 @@ export const commonScreenOptions: StackNavigationOptions = {
 };
 
 const Router = () => {
-  const [keystore] = useGlobalState('keystore');
+  const [hasKeystore] = useGlobalState('keystore');
 
   return (
     <>
@@ -56,7 +56,7 @@ const Router = () => {
       />
       <NavigationContainer>
         <Navigator screenOptions={commonScreenOptions} mode="card">
-          {keystore ? (
+          {hasKeystore ? (
             <Screen
               name="Balance"
               component={BalanceScreen}

@@ -37,12 +37,11 @@ export function useFindWalletInStorage() {
 async function getDecodedWallet() {
   const decodedKeystore = await AsyncStorage.getItem('keystore');
   Wallet.keystoreJson = JSON.parse(decodedKeystore);
-  try {
-    const undecodedKeystore = await Wallet.decodeJson();
-    Wallet.keystore = undecodedKeystore;
 
-    return undecodedKeystore;
-  } catch (error) {}
+  const undecodedKeystore = await Wallet.decodeJson();
+  Wallet.keystore = undecodedKeystore;
+
+  return undecodedKeystore;
 }
 async function getAdress() {
   const adresses = JSON.parse(await AsyncStorage.getItem('addresses'));

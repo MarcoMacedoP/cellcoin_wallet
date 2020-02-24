@@ -31,7 +31,7 @@ export const BalanceScreen = ({navigation}) => {
   const [mainAdress] = useGlobalState('mainAddress');
   console.log({mainAdress});
 
-  const balance = useGetBalance(mainAdress);
+  const balance = useGetBalance();
   const {ethBalance, generalBalance, tokenBalance, fetchBalance} = balance;
   useEffect(() => {
     if (ethBalance && tokenBalance) {
