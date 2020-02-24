@@ -1,25 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {StatusBar, RefreshControl} from 'react-native';
+import {RefreshControl, Dimensions} from 'react-native';
 import {BalanceHeaderComponent} from './components/Header';
 import {BalanceCurrencyComponent} from './components/Currency';
 import {CurrencyType} from 'shared/types';
-import GestureRecognizer from 'react-native-swipe-gestures';
 import {useGlobalState} from 'globalState';
-import Wallet from 'erc20-wallet';
 import {useGetBalance} from './hooks/useGetBalance';
 import {colors} from 'shared/styles/variables';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
     name: 'Agave coin',
     type: 'AGVC',
-    value: {original: '0.0', usd: '0.0'},
+    value: {original: '---', usd: '---'},
     image: 'assets/icons/agave_coin_icon.png',
   },
   {
     type: 'ETH',
-    value: {original: '0.00', usd: '0.0'},
+    value: {original: '---', usd: '---'},
     name: 'Ethereum',
     image: 'assets/icons/ethereum_icon.png',
   },
@@ -32,7 +31,8 @@ export const BalanceScreen = ({navigation}) => {
   const [mainAdress] = useGlobalState('mainAddress');
   console.log({mainAdress});
 
-  const {ethBalance, generalBalance, tokenBalance} = useGetBalance(mainAdress);
+  const balance = useGetBalance(mainAdress);
+  const {ethBalance, generalBalance, tokenBalance, fetchBalance} = balance;
   useEffect(() => {
     if (ethBalance && tokenBalance) {
       const [token, ethereum] = currencys;
@@ -42,36 +42,33 @@ export const BalanceScreen = ({navigation}) => {
     }
   }, [ethBalance, tokenBalance]);
 
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  function wait(timeout) {
-    return new Promise(resolve => {
-      setTimeout(resolve, timeout);
-    });
-  }
-
   const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-
-    wait(2000).then(() => setRefreshing(false));
-  }, [refreshing]);
+    fetchBalance();
+  }, []);
 
   const handleCurrencyClick = currency =>
     navigation.navigate('Transfers', {screen: 'home', params: {currency}});
 
   return (
-    <>
+    <ScrollView
+      contentContainerStyle={{
+        width: Dimensions.get('screen').width,
+        height: Dimensions.get('window').height,
+      }}
+      refreshControl={
+        <RefreshControl
+          size={35}
+          tintColor={colors.white}
+          refreshing={balance.isLoading}
+          style={{
+            borderWidth: 0,
+            backgroundColor: colors.primary,
+          }}
+          onRefresh={onRefresh}
+        />
+      }>
       <BalanceHeaderComponent assets={generalBalance} />
-      <CurrencysContainer
-        contentContainerStyle={{justifyContent: 'center'}}
-        refreshControl={
-          <RefreshControl
-            colors={[colors.accent, colors.primary]}
-            progressBackgroundColor={'white'}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }>
+      <CurrencysContainer>
         {currencys.map((currency, index) => (
           <BalanceCurrencyComponent
             currency={currency}
@@ -80,13 +77,20 @@ export const BalanceScreen = ({navigation}) => {
           />
         ))}
       </CurrencysContainer>
-    </>
+    </ScrollView>
   );
 };
 
-const CurrencysContainer = styled.ScrollView`
+const CurrencysContainer = styled.View`
   padding: 22px;
   width: 100%;
   position: relative;
-  top: -70px;
+  top: -56px;
+`;
+const LoadingContainer = styled.View`
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: ${colors.primary};
 `;

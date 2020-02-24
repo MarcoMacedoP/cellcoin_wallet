@@ -13,7 +13,7 @@ export const BalanceHeaderComponent: React.FC<BalanceHeaderComponentProps> = ({
   return (
     <Container source={require('assets/images/agave_background.png')}>
       <AssetsContainer>
-        <Title>{assets}</Title>
+        <Title>{assets || '----'}</Title>
         <SmallText>$</SmallText>
       </AssetsContainer>
     </Container>
@@ -24,13 +24,13 @@ const Container = styled.ImageBackground`
   border-bottom-left-radius: 32px;
   border-bottom-right-radius: 32px;
   width: 100%;
-  height: 100%;
   justify-content: center;
   align-items: center;
-  height: 35%;
+  height: 35.6%;
   margin-bottom: 16px;
   resize-mode: cover;
   background-color: ${colors.primary};
+  margin: -16px 0;
 `;
 
 const AssetsContainer = styled.View`

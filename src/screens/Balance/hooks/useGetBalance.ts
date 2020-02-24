@@ -7,48 +7,51 @@ import HookedWeb3Provider from 'hooked-web3-provider';
 
 export function useGetBalance(address) {
   const initialState = {
-    tokenBalance: {original: '0', usd: 0},
-    ethBalance: {original: '0', usd: 0},
-    generalBalance: '0',
+    tokenBalance: {original: '0', usd: '0'},
+    ethBalance: {original: '0', usd: '0'},
+    generalBalance: null,
+    fetchBalance: () => {},
+    isLoading: false,
   };
   const [state, setState] = useState(initialState);
-  const [mainAddress, ] = useGlobalState('mainAddress')
-  const addressTest = '0xd353A3FD2A91dBC1fAeA041b0d1901a7A0978434';
+  const [mainAddress] = useGlobalState('mainAddress');
+  const __addressTest = '0xd353A3FD2A91dBC1fAeA041b0d1901a7A0978434';
+
+  const getBalance = async () => {
+    try {
+      setState({...state, isLoading: true});
+      console.log('updated balance!');
+      const {ethBalance, tokenBalance} = await fetchBalance(mainAddress);
+      const {token, eth} = await getPrices(
+        state.ethBalance,
+        state.tokenBalance,
+      );
+      const ethUsd = parseFloat((eth * ethBalance * 1).toFixed(4));
+      const tokenUsd = parseFloat((token * tokenBalance * 1).toFixed(4));
+      const totalUsd = ethUsd + tokenUsd;
+      setState({
+        ...state,
+        isLoading: false,
+        tokenBalance: {
+          original: tokenBalance.toFixed(8),
+          usd: tokenUsd.toFixed(2),
+        },
+        generalBalance: totalUsd.toFixed(2),
+        ethBalance: {
+          original: ethBalance.toFixed(8),
+          usd: ethUsd.toFixed(2),
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      setState({...state, isLoading: false});
+    }
+  };
   useEffect(() => {
-    const getBalance = async () => {
-      try {
-        const {ethBalance, tokenBalance} = await fetchBalance(
-          mainAddress,
-        );
-        const {token, eth} = await getPrices(
-          state.ethBalance,
-          state.tokenBalance,
-        );
-        const ethUsd = parseFloat(((eth * ethBalance) * 1 ).toFixed(4));
-        const tokenUsd = parseFloat(((token * tokenBalance) * 1).toFixed(4));
-        const totalUsd = ethUsd + tokenUsd;
-        console.log(ethUsd);
-        console.log(totalUsd);
-        setState({
-          tokenBalance: {
-            original: tokenBalance.toFixed(8),
-            usd: tokenUsd,
-          },
-          generalBalance: totalUsd.toFixed(2),
-          ethBalance: {
-            original: ethBalance.toFixed(8),
-            usd: ethUsd,
-          },
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getBalance();
-    console.log({state});
   }, []);
 
-  return state;
+  return {...state, fetchBalance: getBalance};
 }
 
 type fetchBalance = (address: adressType,) =>  Promise<{tokenBalance: 0; ethBalance: 0}>; // prettier-ignore

@@ -14,6 +14,8 @@ export const BalanceCurrencyComponent: React.FC<BalanceCurrencyComponentProps> =
     onClick,
     currency: {name, type, value},
   } = props;
+  console.log(value);
+
   return (
     <Container onPress={onClick} underlayColor={colors.whiteDark}>
       <InfoContainer>
@@ -32,7 +34,7 @@ export const BalanceCurrencyComponent: React.FC<BalanceCurrencyComponentProps> =
         </TitleContainer>
         <View>
           <CurrencyStatus>{value.original}</CurrencyStatus>
-          <CurrencyInLocal>$={value.usd}</CurrencyInLocal>
+          <CurrencyInLocal>$={String(value.usd)}</CurrencyInLocal>
         </View>
       </InfoContainer>
     </Container>
