@@ -7,8 +7,8 @@ import HookedWeb3Provider from 'hooked-web3-provider';
 
 export function useGetBalance() {
   const initialState = {
-    tokenBalance: {original: '0', usd: 0},
-    ethBalance: {original: '0', usd: 0},
+    tokenBalance: {original: '0', usd: '0'},
+    ethBalance: {original: '0', usd: '0'},
     generalBalance: null,
     isLoading: false,
   };
@@ -32,13 +32,13 @@ export function useGetBalance() {
         ...state,
         isLoading: false,
         tokenBalance: {
-          original: tokenBalance.toFixed(2),
-          usd: tokenUsd,
+          original: tokenBalance.toFixed(8),
+          usd: tokenUsd.toFixed(2),
         },
         generalBalance: totalUsd.toFixed(2),
         ethBalance: {
-          original: ethBalance.toFixed(2),
-          usd: ethUsd,
+          original: ethBalance.toFixed(8),
+          usd: ethUsd.toFixed(2),
         },
       });
       setBalance({...state, fetchBalance: getBalance});
