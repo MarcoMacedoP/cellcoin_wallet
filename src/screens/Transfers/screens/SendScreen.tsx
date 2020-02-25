@@ -70,77 +70,70 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     };
 
   const getGasLimit = async () => {
-    const addressTest = '0xd353A3FD2A91dBC1fAeA041b0d1901a7A0978434';
-    await calculateGasLimitToken(mainAddress, addressTest, 10)
-      .then(res => {
-        console.log('workd');
-        
-        console.log(res);
-
-        console.log('workd');
-        // setGasLimit(res);
-      })
-      .catch(err => {
-
-        console.log(' ');
-        console.log(' ');
-        console.log('err');
-        console.log('err');
-        console.log('err');
-        console.log(err)
-        console.log('err');
-        console.log('err');
-        console.log('err');
-        console.log(' ');
-        console.log(' ');
-
-      });
+    console.log(transferValue);
+    await calculateGasLimitToken(mainAddress, state.to, transferValue).then((response) => {
+        sendTokenss(response);
+    }).catch((error) => {
+        console.error(error);
+    });
   };
+
+  
 
 
   const calculateGasLimitToken = async function(from, to, value) {
-        return new Promise(async(resolve, reject) => {
-            await setWeb3Provider();
-            let contract = await Wallet.web3.eth.contract(Wallet.minABI).at(Wallet.tokenAddr);
-            value = (value * (10 ** Wallet.tokenDecimals)) * 1;
-            console.log(value);
-            console.log(Wallet.tokenDecimals)
-
-            let Result = { gasLimit: 21000, gasPrice: null };
-            
-              // await contract.transfer.estimateGas(to, value, { from: from }, function(response, error) {
-              //   // Result.gasLimit = 
-              //   console.log('response', response);
-              //   console.log('err', error);
-              // });
-
-            // resolve(contract);
-            
-             await Wallet.web3.eth.getGasPrice((error, result) => {
-                 if (!error) {
-                     Result.gasPrice = result * 1;
-                     Result.gasPrice += ((Result.gasPrice * Wallet.percentageGas) / 100) * 1;
-                     Result.gasLimit += ((Result.gasLimit * Wallet.percentageGas) / 100) * 1;
-                     Result.gasPrice = Math.round(Result.gasPrice);
-                     Result.gasLimit = Math.round(Result.gasLimit);
-                     resolve(Result);
-                 } else {
-                     reject('An error occurred while calculating the gas');
-                 }
-             });
-        });
-    };
+      return new Promise(async (resolve, reject) => {
+        setWeb3Provider();
+        let contract = Wallet.web3.eth.contract(Wallet.minABI).at(Wallet.tokenAddr);
+        // value = value * 10 ** this.tokenDecimals * 1;
+        let Result = {gasLimit: null, gasPrice: null};
+        
+        await contract.transfer.estimateGas(to, value, { from: from, }, async (err, result) => {
+          Result.gasLimit = result;
+          await Wallet.web3.eth.getGasPrice((error, result) => {
+            if (!error) {
+              Result.gasPrice = result * 1;
+              Result.gasPrice +=
+                ((Result.gasPrice * Wallet.percentageGas) / 100) * 1;
+              Result.gasLimit +=
+                ((Result.gasLimit * Wallet.percentageGas) / 100) * 1;
+              Result.gasPrice = Math.round(Result.gasPrice);
+              Result.gasLimit = Math.round(Result.gasLimit);
+              resolve(Result);
+            } else {
+              reject('An error occurred while calculating the gas');
+            }
+          });
+        });        
+      });
+  };
 
     const sendETH = async function() {
       
-      await sendETHE('lomeli', '0x53302445bca854f615053bcae2381f5b3db9fe78', '0xde6a2d76a7aa7beb6d562c72e054267aa4735ce2', 1, 1050000000, 21000)
-      .then(
-        (response) => {
+      await sendETHE('lomeli', mainAddress, state.to, 1, 1050000000, 21000)
+        .then(response => {
           console.log(response);
         })
-      .catch((error) => {
+        .catch(error => {
           console.log(error);
-      });
+        });
+    };
+
+    const sendTokenss = async function(gass) {
+      console.log('  ');
+      console.log('lomeli', mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit);
+      console.log('  ');
+      console.log('  ');
+      console.log('  ');
+      console.log('  ');
+      console.log('  ');
+      await sendTokens('lomeli', mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     };
 
 
@@ -170,25 +163,96 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
                         } catch (error) {
                           console.log('error', error);
                         }
+                        let nonce = 0;
                         Wallet.web3.eth.getTransactionCount(from, 'pending', (err, res) => {
                           txOptions.nonce = res;
+                          console.log(res);
+                          console.log('aqui esta el nonce', txOptions.nonce);
+                          let contractData = txutils.createContractTx(from, txOptions);
+                          try {
+                            let signedTx = '0x' + signing.signTx(Wallet.keystore, pwDerivedKey, contractData.tx, from);
+                              
+                              Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
+                                  if (!err) {
+                                      resolve(result);
+                                  } else {
+                                      reject(err.message);
+                                      console.log('1', err.message);
+                                  }
+                              });
+                          } catch (e) {
+                              reject(e.message);
+                              console.log('2', e.message);
+                          }
                         });
-                        let contractData = txutils.createContractTx(from, txOptions);
-                        try {
-                          let signedTx = '0x' + signing.signTx(Wallet.keystore, pwDerivedKey, contractData.tx, from);
-                            
-                            Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
-                                if (!err) {
-                                    resolve(result);
-                                } else {
-                                    reject(err.message);
-                                }
-                            });
-                        } catch (e) {
-                            reject(e.message);
-                        }
                     } else {
                         reject('There was an error sending ethereum');
+                    }
+                });
+            } catch (e) {
+                reject(e.message);
+            }
+        });
+    };
+
+
+
+
+    const sendTokens = async (password, from, to, value, gasPrice, gasLimit) => {
+        return new Promise((resolve, reject) => {
+            try {
+                Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
+                    if (!err) {
+                        setWeb3Provider();
+                        let txOptions = {
+                          to: Wallet.tokenAddr,
+                          gasLimit: 0,
+                          gasPrice: 0,
+                          value: 0,
+                          nonce: 0,
+                          data: '',
+                        };
+                        let contract = Wallet.web3.eth.contract(Wallet.minABI).at(Wallet.tokenAddr);
+                        value = (value * (10 ** Wallet.tokenDecimals)) * 1;
+                        try {
+                          txOptions.gasLimit = await Wallet.web3.toHex(gasLimit);
+                          txOptions.gasPrice = await Wallet.web3.toHex(gasPrice);
+                          txOptions.value = await Wallet.web3.toHex(0);
+                          txOptions.data = await contract.transfer.getData(to, value, { from: from });
+                        } catch (error) {
+                          console.log(error);
+                        }
+                        await Wallet.web3.eth.getTransactionCount(from, 'pending', async (err, res) => {
+                          txOptions.nonce = res;
+                          console.log(res);
+                          console.log(txOptions);
+                          let contractData = txutils.createContractTx(from, txOptions);
+                          try {
+                              let signedTx = '0x' + signing.signTx(Wallet.keystore, pwDerivedKey, contractData.tx, from);
+                              Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
+                                  if (!err) {
+                                      resolve(result);
+                                  } else {
+                                      reject(err.message);
+                                  }
+                              });
+                          } catch (e) {
+                              reject(e.message);
+                          }
+                        });
+                        
+                        // let txOptions = {
+                        //     to: this.tokenAddr,
+                        //     gasLimit: this.web3.toHex(gasLimit),
+                        //     gasPrice: this.web3.toHex(gasPrice),
+                        //     value: this.web3.toHex(0),
+                        //     nonce: this.web3.eth.getTransactionCount(from),
+                        //     data: contract.transfer.getData(to, value, { from: from }),
+                        // };
+
+                        
+                    } else {
+                        reject('There was an error sending tokens');
                     }
                 });
             } catch (e) {
@@ -304,7 +368,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
           {/* <Button isActivated={true} onClick={getGasLimit}>
             Confirm
           </Button> */}
-          <Button isActivated={true} onClick={sendETH}>
+          <Button isActivated={true} onClick={getGasLimit}>
             Confirm
           </Button>
         </PageContainer>

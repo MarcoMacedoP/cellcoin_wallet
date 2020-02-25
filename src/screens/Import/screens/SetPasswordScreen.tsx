@@ -30,6 +30,8 @@ export const SetPasswordScreen = ({navigation}) => {
   };
 
   async function onSubmit() {
+    Wallet.password = state.pass;
+    navigation.navigate('SetMnemonicScreen');
     if (step === 1) {
       isValidPassword
         ? setStep(2)
