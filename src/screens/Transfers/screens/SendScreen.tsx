@@ -197,6 +197,8 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   };
 
   const sendETH = async function (gass) {
+    console.log(state.password);
+    
     await sendETHE(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
         console.log(response);
@@ -214,6 +216,8 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   };
 
   const sendTokenss = async function(gass) {
+    console.log(state.password);
+    
     await sendTokens(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
         console.log(response);
@@ -238,7 +242,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
               Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
                   if (!err) {
                       setWeb3Provider();
-                      value = value * 1.0e18;
+                    value = (value * 1.0e18) - (gasLimit * gasPrice);  
                       let txOptions = {
                           to: to,
                           gasLimit: 0,
