@@ -42,7 +42,7 @@ export const BackupScreen = ({navigation}) => {
     labels.forEach((text, index) => {
       const hasDiferentValues = hint[index] !== text;
       if (hasDiferentValues) {
-        // hasError = true;
+         hasError = true;
       }
     });
     if (hasError) {

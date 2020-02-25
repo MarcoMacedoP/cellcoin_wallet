@@ -22,12 +22,13 @@ export function useGetBalance() {
       const {ethBalance, tokenBalance} = await fetchBalance(mainAddress);
       console.log('updated balance!');
       const {token, eth} = await getPrices(
-        state.ethBalance,
-        state.tokenBalance,
+        ethBalance,
+        tokenBalance,
       );
       const ethUsd = parseFloat((eth * ethBalance * 1).toFixed(4));
       const tokenUsd = parseFloat((token * tokenBalance * 1).toFixed(4));
       const totalUsd = ethUsd + tokenUsd;
+      
       setState({
         ...state,
         isLoading: false,
@@ -69,7 +70,16 @@ async function getBalanceEth(address) {
 
   return new Promise((resolve, reject) =>
     web3.eth.getBalance(address, (error, result) =>
-      error ? reject(error) : resolve(result.toNumber()),
+      {
+        try {
+          let toWei = Wallet.web3.fromWei(result)
+          resolve(toWei.toNumber());
+        } catch (error) {
+          reject(error);
+        }
+        
+      }
+      // error ? reject(error) : resolve(result.toNumber()),
     ),
   );
 }
