@@ -18,7 +18,8 @@ import {Modal} from 'shared/components';
 import {CurrencyType} from 'shared/types';
 import Toast from 'react-native-simple-toast';
 import Wallet from 'erc20-wallet';
-let HookedWeb3Provider = require("hooked-web3-provider");
+import {PasswordModal} from '../components/PasswordModal';
+let HookedWeb3Provider = require('hooked-web3-provider');
 let lightwallet = require('eth-lightwallet');
 let txutils = lightwallet.txutils;
 let signing = lightwallet.signing;
@@ -38,11 +39,32 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   const [gasLimit, setGasLimit] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [modalIsShowed, setModalIsShowed] = useState(false);
   const [state, setState] = useState({
     amount: 0,
     to: '',
     balance: parseFloat(currency.value.original),
+    password: '',
   });
+
+  /**
+   * Open the modal for enter the user password
+   */
+  function handleSubmit() {
+    setModalIsShowed(true);
+  }
+  /**
+   * Set the password and calls send the crypto
+   */
+  function onPasswordFilled(password: string) {
+    setState({...state, password});
+    console.log({state});
+
+    currency.type == 'ETH'
+      ? getGasLimitETH()
+      : getGasLimitToken()
+
+  }
 
   useEffect(() => {
     const parsedTransfer = parseFloat(transferValue);
@@ -53,16 +75,15 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     if (!transferIsValid && transferValue !== '') {
       setTransferValue(state.balance);
     }
-    
   }, [transferValue]);
 
   const setWeb3Provider = async function() {
-        let web3Provider = new HookedWeb3Provider({
-          host: Wallet.provider,
-          transaction_signer: Wallet.keystore,
-        });
-        Wallet.web3.setProvider(web3Provider);
-    };
+    let web3Provider = new HookedWeb3Provider({
+      host: Wallet.provider,
+      transaction_signer: Wallet.keystore,
+    });
+    Wallet.web3.setProvider(web3Provider);
+  };
 
   const getGasLimitToken = async () => {
     setIsLoading(true)
@@ -88,9 +109,6 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
       setIsLoading(false)
     });
   };
-
-  
-
 
   const calculateGasLimitToken = async function(from, to, value) {
       return new Promise(async (resolve, reject) => {
@@ -179,7 +197,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   };
 
   const sendETH = async function (gass) {
-    await sendETHE('Qwerty123$%&', mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
+    await sendETHE(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
         console.log(response);
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
@@ -196,7 +214,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   };
 
   const sendTokenss = async function(gass) {
-    await sendTokens('Qwerty123$%&', mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
+    await sendTokens(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
         console.log(response);
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
@@ -343,6 +361,11 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
 
   return (
     <>
+      <PasswordModal
+        isShowed={modalIsShowed}
+        onClose={() => setModalIsShowed(false)}
+        onDoned={onPasswordFilled}
+      />
       <ScrollView
         contentContainerStyle={{backgroundColor: colors.white}}
         style={{backgroundColor: colors.white}}>
@@ -417,11 +440,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
               <RecomendedFeed>Recomended: {recomendation} sat/b</RecomendedFeed>
             </TouchableOpacity>
           </InputContainer>
-          <Button isActivated={true} isLoading={isLoading} onClick={
-            currency.type == 'ETH' 
-            ? getGasLimitETH 
-            : getGasLimitToken
-          }>
+          <Button isActivated={true} onClick={handleSubmit} isLoading={isLoading}>
             Confirm
           </Button>
         </PageContainer>
