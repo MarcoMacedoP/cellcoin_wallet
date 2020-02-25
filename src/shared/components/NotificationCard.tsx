@@ -1,14 +1,9 @@
-import {View, Linking} from 'react-native';
+import {Linking} from 'react-native';
 import React, {useEffect} from 'react';
-import {EmptyState} from 'shared/components/EmptyState';
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles/variables';
 
 export const NotificationCard = ({data: {img, title_es, msg_es, link}}) => {
-  useEffect(() => {
-    console.log(img);
-  }, []);
-
   return (
     <Card
       onPress={() => {
