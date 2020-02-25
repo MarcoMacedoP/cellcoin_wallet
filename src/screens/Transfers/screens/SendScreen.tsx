@@ -17,7 +17,11 @@ import {ScanScreen} from 'shared/components/QrReader';
 import {Modal} from 'shared/components';
 import {CurrencyType} from 'shared/types';
 import Wallet from 'erc20-wallet';
-
+let HookedWeb3Provider = require("hooked-web3-provider");
+let lightwallet = require('eth-lightwallet');
+let txutils = lightwallet.txutils;
+let signing = lightwallet.signing;
+let web3 = require('web3');
 type SendTransferScreenProps = {
   route: {params: {currency: CurrencyType}};
 };
@@ -42,20 +46,171 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     const parsedTransfer = parseFloat(transferValue);
     const transferIsValid = parsedTransfer <= state.balance;
     console.log({transferIsValid});
+    console.log('here');
+    console.log('here');
+    console.log('here');
+    console.log('here');
+    console.log('here');
+    console.log('here');
+    console.log('here');
+    console.log('here');
 
     if (!transferIsValid) {
       setTransferValue(state.balance);
     }
+    
   }, [transferValue]);
+
+  const setWeb3Provider = async function() {
+        let web3Provider = new HookedWeb3Provider({
+          host: Wallet.provider,
+          transaction_signer: Wallet.keystore,
+        });
+        Wallet.web3.setProvider(web3Provider);
+    };
 
   const getGasLimit = async () => {
     const addressTest = '0xd353A3FD2A91dBC1fAeA041b0d1901a7A0978434';
-    Wallet.calculateGasLimitToken(mainAddress, addressTest, 20)
+    await calculateGasLimitToken(mainAddress, addressTest, 10)
       .then(res => {
-        setGasLimit(res);
+        console.log('workd');
+        
+        console.log(res);
+
+        console.log('workd');
+        // setGasLimit(res);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+
+        console.log(' ');
+        console.log(' ');
+        console.log('err');
+        console.log('err');
+        console.log('err');
+        console.log(err)
+        console.log('err');
+        console.log('err');
+        console.log('err');
+        console.log(' ');
+        console.log(' ');
+
+      });
   };
+
+
+  const calculateGasLimitToken = async function(from, to, value) {
+        return new Promise(async(resolve, reject) => {
+            await setWeb3Provider();
+            let contract = await Wallet.web3.eth.contract(Wallet.minABI).at(Wallet.tokenAddr);
+            value = (value * (10 ** Wallet.tokenDecimals)) * 1;
+            console.log(value);
+            console.log(Wallet.tokenDecimals)
+
+            let Result = { gasLimit: 21000, gasPrice: null };
+            
+              // await contract.transfer.estimateGas(to, value, { from: from }, function(response, error) {
+              //   // Result.gasLimit = 
+              //   console.log('response', response);
+              //   console.log('err', error);
+              // });
+
+            // resolve(contract);
+            
+             await Wallet.web3.eth.getGasPrice((error, result) => {
+                 if (!error) {
+                     Result.gasPrice = result * 1;
+                     Result.gasPrice += ((Result.gasPrice * Wallet.percentageGas) / 100) * 1;
+                     Result.gasLimit += ((Result.gasLimit * Wallet.percentageGas) / 100) * 1;
+                     Result.gasPrice = Math.round(Result.gasPrice);
+                     Result.gasLimit = Math.round(Result.gasLimit);
+                     resolve(Result);
+                 } else {
+                     reject('An error occurred while calculating the gas');
+                 }
+             });
+        });
+    };
+
+    const sendETH = async function() {
+      
+      await sendETHE('lomeli', '0x53302445bca854f615053bcae2381f5b3db9fe78', '0xde6a2d76a7aa7beb6d562c72e054267aa4735ce2', 1, 1050000000, 21000)
+      .then(
+        (response) => {
+          console.log(response);
+        })
+      .catch((error) => {
+          console.log(error);
+      });
+    };
+
+
+
+
+    const sendETHE = (password, from, to, value, gasPrice, gasLimit)  => {
+        // console.log(password, from, to, value, gasPrice, gasLimit);
+        
+        return new Promise((resolve, reject) => {
+            try {
+                Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
+                    if (!err) {
+                        setWeb3Provider();
+                         value = value * 1.0e18;
+                         let txOptions = {
+                             to: to,
+                             gasLimit: 0,
+                             gasPrice: 0,
+                             value: 0,
+                             nonce: 0,
+                             data: ''
+                         };
+                        try {
+                          txOptions.gasLimit = await Wallet.web3.toHex(gasLimit);
+                          txOptions.gasPrice = await Wallet.web3.toHex(gasPrice);
+                          txOptions.value = await Wallet.web3.toHex(value);
+                        } catch (error) {
+                          console.log('error', error);
+                        }
+                        Wallet.web3.eth.getTransactionCount(from, 'pending', (err, res) => {
+                          txOptions.nonce = res;
+                        });
+                        let contractData = txutils.createContractTx(from, txOptions);
+                        try {
+                          let signedTx = '0x' + signing.signTx(Wallet.keystore, pwDerivedKey, contractData.tx, from);
+                            
+                            Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
+                                if (!err) {
+                                    resolve(result);
+                                } else {
+                                    reject(err.message);
+                                }
+                            });
+                        } catch (e) {
+                            reject(e.message);
+                        }
+                    } else {
+                        reject('There was an error sending ethereum');
+                    }
+                });
+            } catch (e) {
+                reject(e.message);
+            }
+        });
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const onTextAddressChange = text => {
     setState({...state, to: text});
@@ -146,7 +301,10 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
               <RecomendedFeed>Recomended: {recomendation} sat/b</RecomendedFeed>
             </TouchableOpacity>
           </InputContainer>
-          <Button isActivated={true} onClick={getGasLimit}>
+          {/* <Button isActivated={true} onClick={getGasLimit}>
+            Confirm
+          </Button> */}
+          <Button isActivated={true} onClick={sendETH}>
             Confirm
           </Button>
         </PageContainer>
