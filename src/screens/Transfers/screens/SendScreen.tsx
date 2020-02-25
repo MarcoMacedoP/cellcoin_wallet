@@ -17,7 +17,8 @@ import {ScanScreen} from 'shared/components/QrReader';
 import {Modal} from 'shared/components';
 import {CurrencyType} from 'shared/types';
 import Wallet from 'erc20-wallet';
-let HookedWeb3Provider = require("hooked-web3-provider");
+import {PasswordModal} from '../components/PasswordModal';
+let HookedWeb3Provider = require('hooked-web3-provider');
 let lightwallet = require('eth-lightwallet');
 let txutils = lightwallet.txutils;
 let signing = lightwallet.signing;
@@ -35,60 +36,72 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   const [transferValue, setTransferValue] = useState();
   const [mainAddress] = useGlobalState('mainAddress');
   const [gasLimit, setGasLimit] = useState(0);
-
+  const [modalIsShowed, setModalIsShowed] = useState(false);
   const [state, setState] = useState({
     amount: 0,
     to: '',
     balance: parseFloat(currency.value.original),
+    password: '',
   });
+
+  /**
+   * Open the modal for enter the user password
+   */
+  function handleSubmit() {
+    setModalIsShowed(true);
+  }
+  /**
+   * Set the password and calls send the crypto
+   */
+  function onPasswordFilled(password: string) {
+    setState({...state, password});
+    console.log({state});
+    //send the money, bitch
+  }
 
   useEffect(() => {
     const parsedTransfer = parseFloat(transferValue);
     const transferIsValid = parsedTransfer <= state.balance;
     console.log({transferIsValid});
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
 
     if (!transferIsValid) {
       setTransferValue(state.balance);
     }
-    
   }, [transferValue]);
 
   const setWeb3Provider = async function() {
-        let web3Provider = new HookedWeb3Provider({
-          host: Wallet.provider,
-          transaction_signer: Wallet.keystore,
-        });
-        Wallet.web3.setProvider(web3Provider);
-    };
+    let web3Provider = new HookedWeb3Provider({
+      host: Wallet.provider,
+      transaction_signer: Wallet.keystore,
+    });
+    Wallet.web3.setProvider(web3Provider);
+  };
 
   const getGasLimit = async () => {
     console.log(transferValue);
-    await calculateGasLimitToken(mainAddress, state.to, transferValue).then((response) => {
+    await calculateGasLimitToken(mainAddress, state.to, transferValue)
+      .then(response => {
         sendTokenss(response);
-    }).catch((error) => {
+      })
+      .catch(error => {
         console.error(error);
-    });
+      });
   };
 
-  
-
-
   const calculateGasLimitToken = async function(from, to, value) {
-      return new Promise(async (resolve, reject) => {
-        setWeb3Provider();
-        let contract = Wallet.web3.eth.contract(Wallet.minABI).at(Wallet.tokenAddr);
-        // value = value * 10 ** this.tokenDecimals * 1;
-        let Result = {gasLimit: null, gasPrice: null};
-        
-        await contract.transfer.estimateGas(to, value, { from: from, }, async (err, result) => {
+    return new Promise(async (resolve, reject) => {
+      setWeb3Provider();
+      let contract = Wallet.web3.eth
+        .contract(Wallet.minABI)
+        .at(Wallet.tokenAddr);
+      // value = value * 10 ** this.tokenDecimals * 1;
+      let Result = {gasLimit: null, gasPrice: null};
+
+      await contract.transfer.estimateGas(
+        to,
+        value,
+        {from: from},
+        async (err, result) => {
           Result.gasLimit = result;
           await Wallet.web3.eth.getGasPrice((error, result) => {
             if (!error) {
@@ -104,178 +117,189 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
               reject('An error occurred while calculating the gas');
             }
           });
-        });        
+        },
+      );
+    });
+  };
+  const sendETH = async function() {
+    await sendETHE('lomeli', mainAddress, state.to, 1, 1050000000, 21000)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
       });
   };
+  const sendTokenss = async function(gass) {
+    console.log('  ');
+    console.log(
+      'lomeli',
+      mainAddress,
+      state.to,
+      transferValue,
+      gass.gasPrice,
+      gass.gasLimit,
+    );
+    console.log('  ');
+    console.log('  ');
+    console.log('  ');
+    console.log('  ');
+    console.log('  ');
+    await sendTokens(
+      'lomeli',
+      mainAddress,
+      state.to,
+      transferValue,
+      gass.gasPrice,
+      gass.gasLimit,
+    )
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  const sendETHE = (password, from, to, value, gasPrice, gasLimit) => {
+    // console.log(password, from, to, value, gasPrice, gasLimit);
 
-    const sendETH = async function() {
-      
-      await sendETHE('lomeli', mainAddress, state.to, 1, 1050000000, 21000)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    };
-
-    const sendTokenss = async function(gass) {
-      console.log('  ');
-      console.log('lomeli', mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit);
-      console.log('  ');
-      console.log('  ');
-      console.log('  ');
-      console.log('  ');
-      console.log('  ');
-      await sendTokens('lomeli', mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    };
-
-
-
-
-    const sendETHE = (password, from, to, value, gasPrice, gasLimit)  => {
-        // console.log(password, from, to, value, gasPrice, gasLimit);
-        
-        return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+      try {
+        Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
+          if (!err) {
+            setWeb3Provider();
+            value = value * 1.0e18;
+            let txOptions = {
+              to: to,
+              gasLimit: 0,
+              gasPrice: 0,
+              value: 0,
+              nonce: 0,
+              data: '',
+            };
             try {
-                Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
-                    if (!err) {
-                        setWeb3Provider();
-                         value = value * 1.0e18;
-                         let txOptions = {
-                             to: to,
-                             gasLimit: 0,
-                             gasPrice: 0,
-                             value: 0,
-                             nonce: 0,
-                             data: ''
-                         };
-                        try {
-                          txOptions.gasLimit = await Wallet.web3.toHex(gasLimit);
-                          txOptions.gasPrice = await Wallet.web3.toHex(gasPrice);
-                          txOptions.value = await Wallet.web3.toHex(value);
-                        } catch (error) {
-                          console.log('error', error);
-                        }
-                        let nonce = 0;
-                        Wallet.web3.eth.getTransactionCount(from, 'pending', (err, res) => {
-                          txOptions.nonce = res;
-                          console.log(res);
-                          console.log('aqui esta el nonce', txOptions.nonce);
-                          let contractData = txutils.createContractTx(from, txOptions);
-                          try {
-                            let signedTx = '0x' + signing.signTx(Wallet.keystore, pwDerivedKey, contractData.tx, from);
-                              
-                              Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
-                                  if (!err) {
-                                      resolve(result);
-                                  } else {
-                                      reject(err.message);
-                                      console.log('1', err.message);
-                                  }
-                              });
-                          } catch (e) {
-                              reject(e.message);
-                              console.log('2', e.message);
-                          }
-                        });
-                    } else {
-                        reject('There was an error sending ethereum');
-                    }
-                });
-            } catch (e) {
-                reject(e.message);
+              txOptions.gasLimit = await Wallet.web3.toHex(gasLimit);
+              txOptions.gasPrice = await Wallet.web3.toHex(gasPrice);
+              txOptions.value = await Wallet.web3.toHex(value);
+            } catch (error) {
+              console.log('error', error);
             }
+            let nonce = 0;
+            Wallet.web3.eth.getTransactionCount(from, 'pending', (err, res) => {
+              txOptions.nonce = res;
+              console.log(res);
+              console.log('aqui esta el nonce', txOptions.nonce);
+              let contractData = txutils.createContractTx(from, txOptions);
+              try {
+                let signedTx =
+                  '0x' +
+                  signing.signTx(
+                    Wallet.keystore,
+                    pwDerivedKey,
+                    contractData.tx,
+                    from,
+                  );
+
+                Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
+                  if (!err) {
+                    resolve(result);
+                  } else {
+                    reject(err.message);
+                    console.log('1', err.message);
+                  }
+                });
+              } catch (e) {
+                reject(e.message);
+                console.log('2', e.message);
+              }
+            });
+          } else {
+            reject('There was an error sending ethereum');
+          }
         });
-    };
-
-
-
-
-    const sendTokens = async (password, from, to, value, gasPrice, gasLimit) => {
-        return new Promise((resolve, reject) => {
+      } catch (e) {
+        reject(e.message);
+      }
+    });
+  };
+  const sendTokens = async (password, from, to, value, gasPrice, gasLimit) => {
+    return new Promise((resolve, reject) => {
+      try {
+        Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
+          if (!err) {
+            setWeb3Provider();
+            let txOptions = {
+              to: Wallet.tokenAddr,
+              gasLimit: 0,
+              gasPrice: 0,
+              value: 0,
+              nonce: 0,
+              data: '',
+            };
+            let contract = Wallet.web3.eth
+              .contract(Wallet.minABI)
+              .at(Wallet.tokenAddr);
+            value = value * 10 ** Wallet.tokenDecimals * 1;
             try {
-                Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
-                    if (!err) {
-                        setWeb3Provider();
-                        let txOptions = {
-                          to: Wallet.tokenAddr,
-                          gasLimit: 0,
-                          gasPrice: 0,
-                          value: 0,
-                          nonce: 0,
-                          data: '',
-                        };
-                        let contract = Wallet.web3.eth.contract(Wallet.minABI).at(Wallet.tokenAddr);
-                        value = (value * (10 ** Wallet.tokenDecimals)) * 1;
-                        try {
-                          txOptions.gasLimit = await Wallet.web3.toHex(gasLimit);
-                          txOptions.gasPrice = await Wallet.web3.toHex(gasPrice);
-                          txOptions.value = await Wallet.web3.toHex(0);
-                          txOptions.data = await contract.transfer.getData(to, value, { from: from });
-                        } catch (error) {
-                          console.log(error);
-                        }
-                        await Wallet.web3.eth.getTransactionCount(from, 'pending', async (err, res) => {
-                          txOptions.nonce = res;
-                          console.log(res);
-                          console.log(txOptions);
-                          let contractData = txutils.createContractTx(from, txOptions);
-                          try {
-                              let signedTx = '0x' + signing.signTx(Wallet.keystore, pwDerivedKey, contractData.tx, from);
-                              Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
-                                  if (!err) {
-                                      resolve(result);
-                                  } else {
-                                      reject(err.message);
-                                  }
-                              });
-                          } catch (e) {
-                              reject(e.message);
-                          }
-                        });
-                        
-                        // let txOptions = {
-                        //     to: this.tokenAddr,
-                        //     gasLimit: this.web3.toHex(gasLimit),
-                        //     gasPrice: this.web3.toHex(gasPrice),
-                        //     value: this.web3.toHex(0),
-                        //     nonce: this.web3.eth.getTransactionCount(from),
-                        //     data: contract.transfer.getData(to, value, { from: from }),
-                        // };
-
-                        
-                    } else {
-                        reject('There was an error sending tokens');
-                    }
-                });
-            } catch (e) {
-                reject(e.message);
+              txOptions.gasLimit = await Wallet.web3.toHex(gasLimit);
+              txOptions.gasPrice = await Wallet.web3.toHex(gasPrice);
+              txOptions.value = await Wallet.web3.toHex(0);
+              txOptions.data = await contract.transfer.getData(to, value, {
+                from: from,
+              });
+            } catch (error) {
+              console.log(error);
             }
+            await Wallet.web3.eth.getTransactionCount(
+              from,
+              'pending',
+              async (err, res) => {
+                txOptions.nonce = res;
+                console.log(res);
+                console.log(txOptions);
+                let contractData = txutils.createContractTx(from, txOptions);
+                try {
+                  let signedTx =
+                    '0x' +
+                    signing.signTx(
+                      Wallet.keystore,
+                      pwDerivedKey,
+                      contractData.tx,
+                      from,
+                    );
+                  Wallet.web3.eth.sendRawTransaction(
+                    signedTx,
+                    (err, result) => {
+                      if (!err) {
+                        resolve(result);
+                      } else {
+                        reject(err.message);
+                      }
+                    },
+                  );
+                } catch (e) {
+                  reject(e.message);
+                }
+              },
+            );
+
+            // let txOptions = {
+            //     to: this.tokenAddr,
+            //     gasLimit: this.web3.toHex(gasLimit),
+            //     gasPrice: this.web3.toHex(gasPrice),
+            //     value: this.web3.toHex(0),
+            //     nonce: this.web3.eth.getTransactionCount(from),
+            //     data: contract.transfer.getData(to, value, { from: from }),
+            // };
+          } else {
+            reject('There was an error sending tokens');
+          }
         });
-    };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      } catch (e) {
+        reject(e.message);
+      }
+    });
+  };
   const onTextAddressChange = text => {
     setState({...state, to: text});
   };
@@ -291,6 +315,11 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
 
   return (
     <>
+      <PasswordModal
+        isShowed={modalIsShowed}
+        onClose={() => setModalIsShowed(false)}
+        onDoned={onPasswordFilled}
+      />
       <ScrollView
         contentContainerStyle={{backgroundColor: colors.white}}
         style={{backgroundColor: colors.white}}>
@@ -365,10 +394,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
               <RecomendedFeed>Recomended: {recomendation} sat/b</RecomendedFeed>
             </TouchableOpacity>
           </InputContainer>
-          {/* <Button isActivated={true} onClick={getGasLimit}>
-            Confirm
-          </Button> */}
-          <Button isActivated={true} onClick={getGasLimit}>
+          <Button isActivated={true} onClick={handleSubmit}>
             Confirm
           </Button>
         </PageContainer>

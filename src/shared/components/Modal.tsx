@@ -2,9 +2,7 @@ import React from 'react';
 import {Modal as NativeModal, Dimensions} from 'react-native';
 import {colors} from 'shared/styles';
 import styled from 'styled-components/native';
-import {
-  Label as BaseLabel,
-} from 'shared/styled-components';
+import {Label as BaseLabel} from 'shared/styled-components';
 import FIcon from 'react-native-vector-icons/Feather';
 /**
  *  A component to manage modals through app.
@@ -18,6 +16,7 @@ type ModalProps = {
   onClose: () => void;
   icon?: string;
   image?: string;
+  title?: string;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -25,6 +24,7 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   icon,
   image,
+  title,
   children,
 }) => (
   <Container
@@ -32,7 +32,12 @@ export const Modal: React.FC<ModalProps> = ({
     transparent={true}
     visible={isShowed}
     onRequestClose={onClose}>
-    <ScrollView contentContainerStyle={{justifyContent: 'center', alignItems: 'center', height: Dimensions.get('window').height-25 }}>
+    <ScrollView
+      contentContainerStyle={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: Dimensions.get('window').height - 25,
+      }}>
       <ContainerModal>
         {image && (
           <IconBoxModal style={{borderRadius: 25}}>
@@ -44,10 +49,12 @@ export const Modal: React.FC<ModalProps> = ({
             <IconButton onPress={() => onClose()}>
               <FIcon name="x" size={25} color={colors.black} />
             </IconButton>
-            <Label>Add new address</Label>
+            <Label>{title || 'Add new address'}</Label>
           </HeaderModal>
         )}
-        <ModalBox contentContainerStyle={{alignItems: 'center'}}>{children}</ModalBox>
+        <ModalBox contentContainerStyle={{alignItems: 'center'}}>
+          {children}
+        </ModalBox>
       </ContainerModal>
     </ScrollView>
   </Container>
@@ -68,9 +75,7 @@ const ContainerModal = styled.View`
   height: ${Dimensions.get('window').height * 0.8}px;
   width: 90%;
 `;
-const IconButton  = styled.TouchableOpacity`
-
-`;
+const IconButton = styled.TouchableOpacity``;
 const IconBoxModal = styled.View`
   width: 100%;
   height: 10%;
@@ -84,13 +89,16 @@ const HeaderModal = styled.View`
   height: 10%;
   margin-top: 16px;
   justify-content: center;
-  align-items: center;
-  background-color: white;  
+  align-items: flex-end;
+  padding: 0 16px;
+  background-color: white;
   border-radius: 15px;
 `;
 const Label = styled(BaseLabel)`
   position: relative;
-  top: 4px;
+  top: 0;
+  align-self: flex-start;
+  width: 80%;
 `;
 const IconModal = styled.Image`
   width: 80%;
