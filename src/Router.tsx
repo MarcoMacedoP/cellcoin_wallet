@@ -18,6 +18,7 @@ import {CreateScreen} from 'screens/Create';
 
 import {colors} from 'shared/styles/variables';
 import {useGlobalState} from 'globalState';
+import {ImportWalletRoutes} from 'screens/Import';
 const {Navigator, Screen} = createStackNavigator();
 
 const balanceOptions: StackNavigationOptions = {
@@ -114,6 +115,7 @@ const Router = () => {
               },
             })}
           />
+          <Screen name="Import" component={ImportWalletRoutes} />
 
           <Screen
             name="Mnemonic"
