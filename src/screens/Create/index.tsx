@@ -53,37 +53,33 @@ export const CreateScreen = ({navigation}) => {
   }
 
   return (
-    <Container keyboardShouldPersistTaps='handled'>
+    <Container keyboardShouldPersistTaps="handled">
       {step === 1 ? (
         <PasswordForm
           labelText="Please set security password"
           value={state.pass}
           onSubmitEditing={onSubmit}
           onTextChange={text => onTextChange(text)}>
-          {state.pass.length > 0 && (
-            <>
-              <PasswordLabelBox
-                isValid={validations.textHasMinorCase}
-                text="A lower case letter"
-              />
-              <PasswordLabelBox
-                isValid={validations.textHasUpperCase}
-                text="A uppercase letter"
-              />
-              <PasswordLabelBox
-                isValid={validations.textHasANumber}
-                text=" A number"
-              />
-              <PasswordLabelBox
-                isValid={validations.textHasValidLong}
-                text="8~32 characters"
-              />
-              <PasswordLabelBox
-                isValid={validations.textHasSpecialCharacter}
-                text="An special character"
-              />
-            </>
-          )}
+          <PasswordLabelBox
+            isValid={validations.textHasMinorCase}
+            text="A lower case letter"
+          />
+          <PasswordLabelBox
+            isValid={validations.textHasUpperCase}
+            text="A uppercase letter"
+          />
+          <PasswordLabelBox
+            isValid={validations.textHasANumber}
+            text=" A number"
+          />
+          <PasswordLabelBox
+            isValid={validations.textHasValidLong}
+            text="8~32 characters"
+          />
+          <PasswordLabelBox
+            isValid={validations.textHasSpecialCharacter}
+            text="An special character"
+          />
         </PasswordForm>
       ) : (
         <PasswordForm
@@ -91,16 +87,14 @@ export const CreateScreen = ({navigation}) => {
           value={state.passConfirm}
           onSubmitEditing={onSubmit}
           onTextChange={text => onTextChange(text)}>
-          {state.passConfirm.length > 0 && (
-            <PasswordLabelBox
-              isValid={state.pass === state.passConfirm}
-              text={
-                state.pass === state.passConfirm
-                  ? 'Passwords matches'
-                  : "Passwords didn't match "
-              }
-            />
-          )}
+          <PasswordLabelBox
+            isValid={state.pass === state.passConfirm}
+            text={
+              state.pass === state.passConfirm
+                ? 'Passwords match'
+                : "Passwords didn't match "
+            }
+          />
         </PasswordForm>
       )}
 
