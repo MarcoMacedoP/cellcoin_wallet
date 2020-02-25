@@ -13,8 +13,8 @@ export const BalanceHeaderComponent: React.FC<BalanceHeaderComponentProps> = ({
   return (
     <Container source={require('assets/images/agave_background.png')}>
       <AssetsContainer>
-        <Title>{assets || '----'}</Title>
-        <SmallText>$</SmallText>
+        <Title lenght={assets ? assets.length : 0} >{assets || '----'}</Title>
+        <SmallText lenght={assets ? assets.length : 0} >$</SmallText>
       </AssetsContainer>
     </Container>
   );
@@ -39,14 +39,17 @@ const AssetsContainer = styled.View`
   justify-content: center;
   width: 100%;
 `;
-const Title = styled.Text`
-  font-size: 48px;
+type BalanceTitleProps = {
+  lenght?: number
+};
+const Title = styled.Text<BalanceTitleProps>`
+  font-size: ${props => props.lenght > 10 ? '23px': '48px'};
   font-weight: bold;
   color: ${colors.white};
-  margin: 0 8px;
+  margin: ${props => props.lenght > 10 ? '18px 8px' : '0 8px'};
 `;
-const SmallText = styled.Text`
-  font-size: 24px;
+const SmallText = styled.Text<BalanceTitleProps>`
+  font-size: ${props => props.lenght > 10 ? '18px' : '24px'};
   color: ${colors.white};
   font-weight: normal;
   position: relative;

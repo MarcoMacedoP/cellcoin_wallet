@@ -20,39 +20,67 @@ export function SetMnemonicScreen({navigation}) {
   const [error, setError] = useState(null);
 
 
+  async function createAddresasds() {
+    const address = await Wallet.generateAddress();
+    const mainAddress = address[0].address;
+    Wallet.address = address;
+    await AsyncStorage.setItem('addresses', JSON.stringify(address)).then( async (res) => {
+      await AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress)).then( (res) => {
+        setMainAddress(address[0].address);
+        setAddress(address);
+    
+        console.log({mainAddress});
+        return address;
+      }).catch((err) => {
+        console.log(err);
+      });
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  async function createKeystore() {
+    Wallet.numAddr = 10;
+    const keystore = await Wallet.createdStored();
+    Wallet.keystore = keystore;
+    console.log({ keystore: true });
+    return keystore;
+  }
   async function createAddress() {
     const address = await Wallet.generateAddress();
     const mainAddress = address[0].address;
     Wallet.address = address;
     await AsyncStorage.setItem('addresses', JSON.stringify(address));
     await AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress));
-    console.log({mainAddress});
+    console.log({ mainAddress });
     return address;
   }
+  async function encodeKeystore() {
+    const json = await Wallet.encodeJson();
+    await AsyncStorage.setItem('keystore', json);
+    console.log({ storaged: true });
+  }
 
-  const handleClick = () => {
-    // const __testingSeed =
-    //   'digital cargo wing output welcome lens burst choice funny seed rain jar';
-    // Wallet.seed = __testingSeed;
-    Wallet.numAddr = 10;
+
+  const handleClick = async () => {
+    const __testingSeed =
+      'digital cargo wing output welcome lens burst choice funny seed rain jar';
+    Wallet.seed = __testingSeed;
     setIsLoading(true);
     console.log(text);
     Wallet.seed = text;
-    Wallet.createdStored()
-      .then(async (keystore) => {
-        setError(null);
-        Wallet.keystore = keystore;
-        setKeystore(keystore);
-        const address = await createAddress();
-        setMainAddress(address[0].address);
-        setAddress(address);
-        setIsLoading(false);
-        navigation.navigate('Balance');
-      })
-      .catch(err => {
-        setIsLoading(false);
-        setError(err);
-      });
+    try {
+      const keystore = await createKeystore();
+      const address = await createAddress();
+      await encodeKeystore();
+      setKeystore(keystore);
+      setMainAddress(address[0].address);
+      setAddress(address);
+      setError(null);
+    } catch (error) {
+      setError(error);
+    }
+    navigation.navigate('Balance');
   };
 
   useEffect(() => {
