@@ -52,7 +52,7 @@ export const Modal: React.FC<ModalProps> = ({
             <Label>{title || 'Add new address'}</Label>
           </HeaderModal>
         )}
-        <ModalBox contentContainerStyle={{alignItems: 'center'}}>
+        <ModalBox keyboardShouldPersistTaps="handled" contentContainerStyle={{alignItems: 'center'}}>
           {children}
         </ModalBox>
       </ContainerModal>

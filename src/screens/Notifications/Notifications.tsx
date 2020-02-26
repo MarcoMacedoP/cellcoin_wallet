@@ -30,7 +30,6 @@ export function NotificationsScreen() {
       }
       async function setInitialization() {
         const initialization = await getInitialization();
-        console.log(initialization);
         setNotifications(initialization)
         setHasInitilization(true);
       }

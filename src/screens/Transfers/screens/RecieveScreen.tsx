@@ -13,7 +13,6 @@ type RecieveTransferScreenProps = {
 export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({ route }) => {
   const { params : {currency}} = route;
   const [mainAddress,] = useGlobalState('mainAddress')
-  console.log(currency)
   return (
     <>
       <LinearGradient colors={['#26777D', '#26777D', '#50CDD5', '#50CDD5']} style={{

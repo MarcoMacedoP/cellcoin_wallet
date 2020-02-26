@@ -12,7 +12,6 @@ export function useCreateWallet() {
 
   useEffect(() => {
     async function createWallet() {
-      console.log('Creating wallet...');
       try {
         const keystore = await createKeystore();
         const address = await createAddress();
@@ -36,7 +35,6 @@ async function createKeystore() {
   Wallet.numAddr = 10;
   const keystore = await Wallet.createdStored();
   Wallet.keystore = keystore;
-  console.log({keystore: true});
   return keystore;
 }
 async function createAddress() {
@@ -45,11 +43,9 @@ async function createAddress() {
   Wallet.address = address;
   await AsyncStorage.setItem('addresses', JSON.stringify(address));
   await AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress));
-  console.log({mainAddress});
   return address;
 }
 async function encodeKeystore() {
   const json = await Wallet.encodeJson();
   await AsyncStorage.setItem('keystore', json);
-  console.log({storaged: true});
 }

@@ -20,7 +20,6 @@ export function useGetBalance() {
     try {
       setState({...state, isLoading: true});
       const {ethBalance, tokenBalance} = await fetchBalance(mainAddress);
-      console.log('updated balance!');
       const {token, eth} = await getPrices(
         ethBalance,
         tokenBalance,
@@ -44,7 +43,6 @@ export function useGetBalance() {
       });
       setBalance({...state, fetchBalance: getBalance});
     } catch (error) {
-      console.log(error);
       setState({...state, isLoading: false});
     }
   };

@@ -25,7 +25,14 @@ export const PasswordModal: PasswordModalType = ({
       onClose={onClose}
       icon="x"
       title="Enter your password to complete the transaction">
-      <Container>
+      <Container
+        contentContainerStyle={{
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+        }}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled">
         <Input
           style={{marginVertical: 16}}
           secureTextEntry
@@ -38,11 +45,8 @@ export const PasswordModal: PasswordModalType = ({
     </Modal>
   );
 };
-const Container = styled.View`
+const Container = styled.ScrollView`
   padding: 16px;
   width: 100%;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: flex-start;
   height: 100%;
 `;

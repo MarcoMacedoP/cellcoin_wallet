@@ -12,7 +12,6 @@ export class ScanScreen extends Component<QRprops> {
   onSuccess = (e) => {
     if (e.data.indexOf(':')) {
       var address = e.data.split(':')
-      console.log( 'Direccion parseada', address[1]);
       this.props.closeModal(address[1]);
     } else {
       this.props.closeModal(e.data);
