@@ -104,8 +104,8 @@ const Icons = styled.Image`
   margin-top: 15px;
 `;
 const ClipboardContainer = styled.View`
-  margin: 16px 0 16px;
-  width: 95%;
+  margin: 16px 0;
+  width: 100%;
   border-radius: 15px;
   background-color: ${colors.whiteDark};
 `;

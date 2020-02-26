@@ -12,11 +12,11 @@ export const ClipboardComponent = ({text}) => {
   };
 
   return (
-    <Container onPress={onClickHandler} underlayColor={colors.blackTransparent}>
-      <>
+    <Container onPress={onClickHandler}>
+      
         <Text>{text}</Text>
         <Image source={require('../../assets/icons/clipboard_icon.png')} />
-      </>
+      
     </Container>
   );
 };
@@ -30,5 +30,6 @@ const Container = styled.TouchableOpacity`
 `;
 
 const Text = styled(SmallText)`
-  width: 70%;
+  width: 90%;
+  font-size: 10px;
 `;

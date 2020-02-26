@@ -68,7 +68,7 @@ export function SetMnemonicScreen({navigation}) {
     Wallet.seed = __testingSeed;
     setIsLoading(true);
     console.log(text);
-    Wallet.seed = text;
+    // Wallet.seed = text;
     try {
       const keystore = await createKeystore();
       const address = await createAddress();

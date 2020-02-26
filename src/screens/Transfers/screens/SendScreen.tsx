@@ -32,11 +32,11 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   route: {params},
 }) => {
   const {currency} = params;
-  const recomendation = 0.8;
+  const recomendation = 21000;
   const [modalQR, setModalQR] = useGlobalState('modalQR');
   const [transferValue, setTransferValue] = useState();
   const [mainAddress] = useGlobalState('mainAddress');
-  const [gasLimit, setGasLimit] = useState(0);
+  const [gasLimit, setGasLimit] = useState(21000);
   const [isLoading, setIsLoading] = useState(false);
 
   const [modalIsShowed, setModalIsShowed] = useState(false);
@@ -60,19 +60,21 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     setState({...state, password});
     console.log({state});
 
-    currency.type == 'ETH' ? getGasLimitETH() : getGasLimitToken();
+    currency.type == 'ETH'
+      ? getGasLimitETH(password)
+      : getGasLimitToken(password);
   }
 
-  useEffect(() => {
+  const seteaElText = ( text ) => {
     const parsedTransfer = parseFloat(transferValue);
-    console.log(transferValue);
     const transferIsValid = parsedTransfer <= state.balance;
-    console.log({transferIsValid});
-
     if (!transferIsValid && transferValue !== '') {
       setTransferValue(state.balance);
+    } else {
+      setTransferValue(text)
     }
-  }, [transferValue]);
+  }
+  
 
   const setWeb3Provider = async function() {
     let web3Provider = new HookedWeb3Provider({
@@ -82,11 +84,11 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     Wallet.web3.setProvider(web3Provider);
   };
 
-  const getGasLimitToken = async () => {
+  const getGasLimitToken = async (pass) => {
     setIsLoading(true);
     await calculateGasLimitToken(mainAddress, state.to, transferValue)
       .then(response => {
-        sendTokenss(response);
+        sendTokenss(response, pass);
       })
       .catch(error => {
         console.log(error);
@@ -95,12 +97,12 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
       });
   };
 
-  const getGasLimitETH = async () => {
+  const getGasLimitETH = async (pass) => {
     setIsLoading(true);
     await calculateGasLimitETH(mainAddress, state.to, transferValue)
       .then(response => {
         console.log(response);
-        sendETH(response);
+        sendETH(response, pass);
       })
       .catch(error => {
         console.log(error);
@@ -210,10 +212,10 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     });
   };
 
-  const sendETH = async function (gass) {
+  const sendETH = async function (gass, pass) {
     console.log(state.password);
     
-    await sendETHE(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
+    await sendETHE(pass, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
         console.log(response);
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
@@ -229,10 +231,10 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
       });
   };
 
-  const sendTokenss = async function(gass) {
+  const sendTokenss = async function(gass, pass) {
     console.log(state.password);
     
-    await sendTokens(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
+    await sendTokens(pass, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
         console.log(response);
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
@@ -397,7 +399,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     setState({...state, to: text});
   };
 
-  const [minerFee, setMinerFee] = useState(0);
+  const [minerFee, setMinerFee] = useState(21000);
   const navigation = useNavigation();
   const onMaxTransfersClick = () =>
     transferValue === state.balance
@@ -428,7 +430,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
                 placeholder={`Balance ${state.balance}`}
                 align="left"
                 keyboardType="numeric"
-                onChangeText={text => setTransferValue(text)}>
+                onChangeText={text => seteaElText(text)}>
                 <TransferText>{transferValue}</TransferText>
               </TransferInput>
               <TouchableOpacity
@@ -478,13 +480,13 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
           </InputContainer>
 
           <InputContainer>
-            <Label>Miner fee</Label>
+            <Label>Gas fee</Label>
             <FeeText ligth={false} style={{textTransform: 'uppercase'}}>
-              {minerFee} {currency.type}= $ {minerFee * 12000}
+              {minerFee} gwei= $ {minerFee * 1050000000}
             </FeeText>
             <FeeSlider
-              minimumValue={0}
-              maximumValue={5}
+              minimumValue={21000}
+              maximumValue={81000}
               value={minerFee}
               onValueChange={setMinerFee}
             />
@@ -493,7 +495,9 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
               <SmallText color="ligth">Fast</SmallText>
             </FeeSpeedContainer>
             <TouchableOpacity onPress={onRecomendationClick}>
-              <RecomendedFeed>Recomended: {recomendation} sat/b</RecomendedFeed>
+              <RecomendedFeed>
+                Recomended: {recomendation} gwei/b
+              </RecomendedFeed>
             </TouchableOpacity>
           </InputContainer>
           <Button

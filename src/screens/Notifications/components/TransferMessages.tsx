@@ -11,25 +11,24 @@ export const TransferMessages = ({notifications, updateNotifications}) => {
     setState({...state,  isLoading: true })
   }
 
-  const renderRow = (notification) => {
-		return (
-			<NotificationCard data={notification}/>
-		)
-  }
+  const renderRow = (notification, index) => {
+    return <NotificationCard data={notification} key={index} />;
+  };
   
   return (
     <View>
-      {!notifications ? <EmptyState message="No Transfer Notifications" /> 
-      :
-      <FlatList
-        data={notifications}
-        renderItem={({item}) => renderRow(item)}
-        keyExtractor={(item, index) => item.id}
-        onRefresh={() => renderRefreshControl()}
-        refreshing={state.isLoading}
-        initialNumToRender={8}
-      />
-      }
+      {!notifications ? (
+        <EmptyState message="No Transfer Notifications" />
+      ) : (
+        <FlatList
+          data={notifications}
+          renderItem={({item, index}) => renderRow(item, index)}
+          keyExtractor={(item, index) => item.id}
+          onRefresh={() => renderRefreshControl()}
+          refreshing={state.isLoading}
+          initialNumToRender={8}
+        />
+      )}
     </View>
   );
 }
