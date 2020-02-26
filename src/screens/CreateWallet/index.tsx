@@ -6,11 +6,13 @@ import {
 } from '@react-navigation/stack';
 import {WalkthroughScreen} from './screens/WalkthroughScreen';
 import {TermsScreen} from './screens/TermsScreen';
+import {SetPasswordScreen} from './screens/SetPasswordScreen';
+import {commonScreenOptions} from 'Router';
 const CreateWallet = createStackNavigator();
 
 export const CreateWalletRoutes = () => {
   return (
-    <CreateWallet.Navigator>
+    <CreateWallet.Navigator screenOptions={commonScreenOptions}>
       <CreateWallet.Screen
         name="Walkthrough"
         component={WalkthroughScreen}
@@ -23,16 +25,23 @@ export const CreateWalletRoutes = () => {
         component={TermsScreen}
         options={termsScreenOptions}
       />
+      <CreateWallet.Screen
+        name="SetPassword"
+        component={SetPasswordScreen}
+        options={setPasswordScreenOptions}
+      />
     </CreateWallet.Navigator>
   );
 };
 
 const termsScreenOptions: StackNavigationOptions = {
-  title: 'User service Agreement',
-  headerBackTitleVisible: false,
-  headerTitleAlign: 'center',
+  title: 'User service agreement',
   headerTitleStyle: {
     fontSize: 16,
     fontWeight: 'normal',
   },
 };
+const setPasswordScreenOptions = props => ({
+  ...termsScreenOptions,
+  title: props.route.params.name,
+});

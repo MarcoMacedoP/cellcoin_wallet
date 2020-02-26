@@ -1,10 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  TextArea,
-  PageContainer,
-  Text,
-  Subtitle,
-} from 'shared/styled-components';
+import {TextArea, PageContainer, Text} from 'shared/styled-components';
 import {Button, Loading} from 'shared/components';
 import Toast from 'react-native-simple-toast';
 import Wallet from 'erc20-wallet';
@@ -19,20 +14,21 @@ export function SetMnemonicScreen({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-
   async function createAddresasds() {
     const address = await Wallet.generateAddress();
     const mainAddress = address[0].address;
     Wallet.address = address;
-    await AsyncStorage.setItem('addresses', JSON.stringify(address)).then( async (res) => {
-      await AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress)).then( (res) => {
-        setMainAddress(address[0].address);
-        setAddress(address);
-        return address;
-      }).catch((err) => {
-      });
-    }).catch((err) => {
-    });
+    await AsyncStorage.setItem('addresses', JSON.stringify(address))
+      .then(async res => {
+        await AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress))
+          .then(res => {
+            setMainAddress(address[0].address);
+            setAddress(address);
+            return address;
+          })
+          .catch(err => {});
+      })
+      .catch(err => {});
   }
 
   async function createKeystore() {
@@ -53,7 +49,6 @@ export function SetMnemonicScreen({navigation}) {
     const json = await Wallet.encodeJson();
     await AsyncStorage.setItem('keystore', json);
   }
-
 
   const handleClick = async () => {
     const __testingSeed =
@@ -87,10 +82,11 @@ export function SetMnemonicScreen({navigation}) {
       image={require('assets/images/agave_wallet_create.png')}
       text="Wallet is being created, please wait a moment"
     />
-  )
-  :(
+  ) : (
     <PageContainer light align="center">
-      <Text style={{marginBottom: 32, alignSelf:'flex-start',}}>Please enter your mnemonic phrases</Text>
+      <Text style={{marginBottom: 32, alignSelf: 'flex-start'}}>
+        Please enter your mnemonic phrases
+      </Text>
       <TextArea
         style={{marginBottom: 32}}
         onChangeText={text => setText(text)}

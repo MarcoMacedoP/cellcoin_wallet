@@ -1,16 +1,14 @@
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
-import React, {useEffect} from 'react';
+import React from 'react';
 //screens
 import {BalanceScreen} from 'screens/Balance';
 import {TransfersRoutes} from 'screens/Transfers';
 
 import {MnemonicRoutes} from 'screens/Mnemonic';
-import {ImportWalletRoutes} from 'screens/Import';
-import {CreateScreen} from 'screens/Create';
 
 import {LayoutHeader} from 'shared/components/LayoutHeader';
 import {StatusBar} from 'react-native';
@@ -33,10 +31,6 @@ const balanceOptions: StackNavigationOptions = {
   headerTitle: props => <LayoutHeader {...props} />,
   headerBackTitleVisible: false,
   headerLeft: null,
-};
-
-const walkthroughOptions: StackNavigationOptions = {
-  headerShown: false,
 };
 
 export const commonScreenOptions: StackNavigationOptions = {
@@ -85,21 +79,6 @@ const Router = () => {
               },
             }}
           />
-
-          <Screen
-            name="Create"
-            component={CreateScreen}
-            options={({route}: {route: any}) => ({
-              title: route.params.name,
-              headerBackTitleVisible: false,
-              headerTitleAlign: 'center',
-              headerTitleStyle: {
-                fontSize: 16,
-                fontWeight: 'normal',
-              },
-            })}
-          />
-          <Screen name="Import" component={ImportWalletRoutes} />
 
           <Screen
             name="Mnemonic"

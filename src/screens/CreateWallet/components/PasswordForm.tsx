@@ -34,7 +34,7 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
   );
 };
 
-const AlertBox = styled.View`
+const AlertBox = styled.View<{hasChildren: any}>`
   justify-content: center;
   margin: 16px 0;
   border: 0.5px;

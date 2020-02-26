@@ -4,12 +4,12 @@ import styled from 'styled-components/native';
 import Toast from 'react-native-simple-toast';
 import Wallet from 'erc20-wallet';
 
-import {Button} from 'shared/components/Button';
 //components
+import {Button} from 'shared/components/Button';
+import {PasswordForm} from '../components/PasswordForm';
+import {PasswordLabelBox} from '../components/PasswordLabelBox';
 
-import {PasswordForm} from '../../Create/components/PasswordForm';
-import {PasswordLabelBox} from '../../Create/components/PasswordLabelBox';
-import {usePasswordValidations} from '../../Create/hooks/usePasswordValidations';
+import {usePasswordValidations} from '../hooks/usePasswordValidations';
 import {colors} from 'shared/styles';
 
 export const SetPasswordScreen = ({navigation}) => {
@@ -30,20 +30,20 @@ export const SetPasswordScreen = ({navigation}) => {
   };
 
   async function onSubmit() {
-    Wallet.password = state.pass;
-    navigation.navigate('SetMnemonicScreen');
     if (step === 1) {
       isValidPassword
         ? setStep(2)
         : Toast.show('Invalid password', Toast.SHORT);
     } else {
+      console.log({...state});
       if (state.pass === state.passConfirm) {
         setLoading(true);
         Wallet.password = state.pass;
         try {
+          Wallet.seed = await Wallet.createSeed();
+          console.log(Wallet.seed);
           setLoading(false);
-          Wallet.password = state.pass;
-          navigation.navigate('SetMnemonicScreen');
+          navigation.navigate('Mnemonic');
         } catch (error) {
           console.error(error);
         }
@@ -61,30 +61,26 @@ export const SetPasswordScreen = ({navigation}) => {
           value={state.pass}
           onSubmitEditing={onSubmit}
           onTextChange={text => onTextChange(text)}>
-          {state.pass.length > 0 && (
-            <>
-              <PasswordLabelBox
-                isValid={validations.textHasMinorCase}
-                text="A lower case letter"
-              />
-              <PasswordLabelBox
-                isValid={validations.textHasUpperCase}
-                text="A uppercase letter"
-              />
-              <PasswordLabelBox
-                isValid={validations.textHasANumber}
-                text=" A number"
-              />
-              <PasswordLabelBox
-                isValid={validations.textHasValidLong}
-                text="8~32 characters"
-              />
-              <PasswordLabelBox
-                isValid={validations.textHasSpecialCharacter}
-                text="An special character"
-              />
-            </>
-          )}
+          <PasswordLabelBox
+            isValid={validations.textHasMinorCase}
+            text="A lower case letter"
+          />
+          <PasswordLabelBox
+            isValid={validations.textHasUpperCase}
+            text="A uppercase letter"
+          />
+          <PasswordLabelBox
+            isValid={validations.textHasANumber}
+            text=" A number"
+          />
+          <PasswordLabelBox
+            isValid={validations.textHasValidLong}
+            text="8~32 characters"
+          />
+          <PasswordLabelBox
+            isValid={validations.textHasSpecialCharacter}
+            text="An special character"
+          />
         </PasswordForm>
       ) : (
         <PasswordForm
@@ -92,16 +88,14 @@ export const SetPasswordScreen = ({navigation}) => {
           value={state.passConfirm}
           onSubmitEditing={onSubmit}
           onTextChange={text => onTextChange(text)}>
-          {state.passConfirm.length > 0 && (
-            <PasswordLabelBox
-              isValid={state.pass === state.passConfirm}
-              text={
-                state.pass === state.passConfirm
-                  ? 'Passwords matches'
-                  : "Passwords didn't match "
-              }
-            />
-          )}
+          <PasswordLabelBox
+            isValid={state.pass === state.passConfirm}
+            text={
+              state.pass === state.passConfirm
+                ? 'Passwords match'
+                : "Passwords didn't match "
+            }
+          />
         </PasswordForm>
       )}
 

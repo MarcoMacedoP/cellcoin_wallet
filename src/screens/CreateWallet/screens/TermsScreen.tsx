@@ -1,24 +1,30 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components/native';
-import Toast from 'react-native-simple-toast';
 
 //components
-import {
-  TouchableOpacity,
-  Text,
-  View,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import {ScrollView} from 'react-native';
+import {Button} from 'shared/components/Button';
+import {RadioButton} from 'shared/components/RadioButton';
+import {SmallText, Title as BaseTitle} from 'shared/styled-components/Texts';
+
 export const TermsScreen = ({route, navigation}) => {
-  const [count, setCount] = useState(2);
+  const [hasAccepted, setHasAccepted] = useState(false);
+
+  function onRadioButtonClick() {
+    const toggledRadioButtonValue = hasAccepted ? false : true;
+    setHasAccepted(toggledRadioButtonValue);
+  }
+
+  function onSubmit() {
+    navigation.navigate('SetPassword', route.params);
+  }
 
   return (
     <Container>
       <ContainerText>
-        <Title>Dear User,</Title>
+        <Title>Dear user:</Title>
         <ScrollView>
-          <Label>
+          <SmallText color="ligth">
             The Agave Coin App is a mobile-terminal based platform provided by
             Lomelí Technology Co., for security management of digital assets
             that provides the users thereof with security management og digital
@@ -87,47 +93,23 @@ export const TermsScreen = ({route, navigation}) => {
             the user shall not be entitled to use the services provided by the
             platform on the basis of this agreement. If the user does not agree
             to the content of this agreement, or refuses to recognize the right
-            of{' '}
-          </Label>
+            of
+          </SmallText>
         </ScrollView>
       </ContainerText>
       <BodyBox>
         <ContainerButtons>
-          <TouchableOpacity
-            style={styles.dotBox}
-            onPress={() => {
-              if (count == 1) {
-                setCount(2);
-              } else {
-                setCount(1);
-              }
-            }}>
-            <View style={styles.dotBlueRound}>
-              <View style={count == 1 ? styles.dotBlue : styles.dotGray}></View>
-            </View>
-            <LabelGreen>I agree to the above terms </LabelGreen>
-          </TouchableOpacity>
-          {count == 1 ? (
-            <TouchableOpacity
-              style={[{height: 50, backgroundColor: '#2FA0A8'}, styles.button]}
-              onPress={() => {
-                if (count == 1) {
-                  navigation.replace(route.params.url, route.params);
-                } else {
-                  Toast.show(
-                    'Acepta los terminos y condiciones para continuar',
-                    Toast.SHORT,
-                  );
-                }
-              }}>
-              <Text style={{color: 'white', fontSize: 18}}>Confirm</Text>
-            </TouchableOpacity>
-          ) : (
-            <View
-              style={[{height: 50, backgroundColor: '#E2E3E5'}, styles.button]}>
-              <Text style={{color: 'white', fontSize: 18}}>Confirm</Text>
-            </View>
-          )}
+          <RadioButton
+            isActivated={hasAccepted}
+            onClick={onRadioButtonClick}
+            text="I agree to the above terms"
+          />
+          <Button
+            isActivated={hasAccepted}
+            onClick={onSubmit}
+            margin="16px 0 0">
+            Confirm
+          </Button>
         </ContainerButtons>
       </BodyBox>
     </Container>
@@ -157,57 +139,8 @@ const ContainerButtons = styled.View`
   padding: 22px;
   width: 100%;
 `;
-const Title = styled.Text`
+const Title = styled(BaseTitle)`
   font-size: 18px;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #8d8d8d;
+  margin-bottom: 8px;
+  text-transform: none;
 `;
-const Label = styled.Text`
-  font-size: 12px;
-  color: #8d8d8d;
-  text-align: justify;
-`;
-const LabelGreen = styled.Text`
-  font-size: 15px;
-  margin-left: 5px;
-  color: #2fa0a8;
-  text-align: center;
-`;
-const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 50,
-    marginTop: 15,
-  },
-  dotBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  dotBlueRound: {
-    borderWidth: 1,
-    borderColor: '#2FA0A8',
-    borderRadius: 150,
-    borderRadius: 50,
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dotBlue: {
-    backgroundColor: '#2FA0A8',
-    borderRadius: 50,
-    margin: 5,
-    width: 10,
-    height: 10,
-  },
-  dotGray: {
-    backgroundColor: '#E2E3E5',
-    borderRadius: 50,
-    margin: 5,
-    width: 10,
-    height: 10,
-  },
-});
