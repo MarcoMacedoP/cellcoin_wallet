@@ -8,9 +8,7 @@ import React, {useEffect} from 'react';
 import {BalanceScreen} from 'screens/Balance';
 import {TransfersRoutes} from 'screens/Transfers';
 
-import {WalkthroughScreen} from 'screens/Walkthrough';
 import {MnemonicRoutes} from 'screens/Mnemonic';
-import {TermsScreen} from 'screens/Terms';
 import {ImportWalletRoutes} from 'screens/Import';
 import {CreateScreen} from 'screens/Create';
 
@@ -88,19 +86,6 @@ const Router = () => {
             }}
           />
 
-          <Screen
-            name="Terms"
-            component={TermsScreen}
-            options={{
-              title: 'User service Agreement',
-              headerBackTitleVisible: false,
-              headerTitleAlign: 'center',
-              headerTitleStyle: {
-                fontSize: 16,
-                fontWeight: 'normal',
-              },
-            }}
-          />
           <Screen
             name="Create"
             component={CreateScreen}
