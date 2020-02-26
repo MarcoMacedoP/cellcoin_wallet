@@ -5,7 +5,9 @@ import styled from 'styled-components/native';
 import {ScrollView} from 'react-native';
 import {Button} from 'shared/components/Button';
 import {RadioButton} from 'shared/components/RadioButton';
+//styled-component
 import {SmallText, Title as BaseTitle} from 'shared/styled-components/Texts';
+import {PageContainer} from 'shared/styled-components/Containers';
 
 export const TermsScreen = ({route, navigation}) => {
   const [hasAccepted, setHasAccepted] = useState(false);
@@ -20,11 +22,11 @@ export const TermsScreen = ({route, navigation}) => {
   }
 
   return (
-    <Container>
+    <PageContainer light>
       <ContainerText>
         <Title>Dear user:</Title>
         <ScrollView>
-          <SmallText color="ligth">
+          <Terms color="ligth">
             The Agave Coin App is a mobile-terminal based platform provided by
             Lomelí Technology Co., for security management of digital assets
             that provides the users thereof with security management og digital
@@ -94,53 +96,46 @@ export const TermsScreen = ({route, navigation}) => {
             platform on the basis of this agreement. If the user does not agree
             to the content of this agreement, or refuses to recognize the right
             of
-          </SmallText>
+          </Terms>
         </ScrollView>
       </ContainerText>
-      <BodyBox>
-        <ContainerButtons>
-          <RadioButton
-            isActivated={hasAccepted}
-            onClick={onRadioButtonClick}
-            text="I agree to the above terms"
-          />
-          <Button
-            isActivated={hasAccepted}
-            onClick={onSubmit}
-            margin="16px 0 0">
+
+      <ContainerButtons>
+        <RadioButton
+          isActivated={hasAccepted}
+          onClick={onRadioButtonClick}
+          text="I agree to the above terms"
+        />
+        <ButtonContainer>
+          <Button isActivated={hasAccepted} onClick={onSubmit}>
             Confirm
           </Button>
-        </ContainerButtons>
-      </BodyBox>
-    </Container>
+        </ButtonContainer>
+      </ContainerButtons>
+    </PageContainer>
   );
 };
 
-const Container = styled.View`
-  padding: 22px;
-  height: 100%;
-  width: 100%;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: white;
-`;
-const BodyBox = styled.View`
-  height: 20%;
-  width: 100%;
-  align-self: flex-end;
-`;
-
 const ContainerText = styled.View`
-  padding: 22px;
   width: 100%;
   height: 80%;
 `;
 const ContainerButtons = styled.View`
-  padding: 22px;
+  padding-bottom: 8px;
+  height: 20%;
   width: 100%;
+  justify-content: flex-end;
+  align-self: flex-end;
+`;
+const ButtonContainer = styled.View`
+  margin: 8px 0 0;
 `;
 const Title = styled(BaseTitle)`
   font-size: 18px;
   margin-bottom: 8px;
+  text-transform: none;
+`;
+const Terms = styled(SmallText)`
+  text-align: left;
   text-transform: none;
 `;

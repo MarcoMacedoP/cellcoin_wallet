@@ -100,6 +100,5 @@ const ButtonDeactivaded = styled.View<StyleProps>`
   ${BaseButtonStyles}
   background-color: ${colors.blackLigth};
   width: ${props => (props.width ? props.width : '100%')};
-  ${props => props.margin && `margin: ${props.margin}`};
   ${props => props.isActivated && 'min-height: 50px;'}
 `;
