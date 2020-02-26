@@ -48,11 +48,10 @@ export const TransfersHistoryComponent: React.FC<TransfersHistoryComponentProps>
           received: receivedTransactions,
         });
       } catch (error) {
-        console.log(error);
       }
     }
 
-    getTxtEth().then(() => console.log(transactions));
+    getTxtEth().then(() => {});
   }, []);
 
   const renderTransactions = (transactions: []) =>

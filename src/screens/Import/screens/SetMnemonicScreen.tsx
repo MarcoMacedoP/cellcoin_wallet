@@ -28,14 +28,10 @@ export function SetMnemonicScreen({navigation}) {
       await AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress)).then( (res) => {
         setMainAddress(address[0].address);
         setAddress(address);
-    
-        console.log({mainAddress});
         return address;
       }).catch((err) => {
-        console.log(err);
       });
     }).catch((err) => {
-      console.log(err);
     });
   }
 
@@ -43,7 +39,6 @@ export function SetMnemonicScreen({navigation}) {
     Wallet.numAddr = 10;
     const keystore = await Wallet.createdStored();
     Wallet.keystore = keystore;
-    console.log({ keystore: true });
     return keystore;
   }
   async function createAddress() {
@@ -52,13 +47,11 @@ export function SetMnemonicScreen({navigation}) {
     Wallet.address = address;
     await AsyncStorage.setItem('addresses', JSON.stringify(address));
     await AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress));
-    console.log({ mainAddress });
     return address;
   }
   async function encodeKeystore() {
     const json = await Wallet.encodeJson();
     await AsyncStorage.setItem('keystore', json);
-    console.log({ storaged: true });
   }
 
 
@@ -67,8 +60,7 @@ export function SetMnemonicScreen({navigation}) {
       'digital cargo wing output welcome lens burst choice funny seed rain jar';
     Wallet.seed = __testingSeed;
     setIsLoading(true);
-    console.log(text);
-    // Wallet.seed = text;
+    Wallet.seed = text;
     try {
       const keystore = await createKeystore();
       const address = await createAddress();

@@ -14,8 +14,6 @@ export function useFindWalletInStorage() {
   const [mainAddress, setMainAddress] = useGlobalState('mainAddress');
   const [, setAddresses] = useGlobalState('addresses');
   useEffect(() => {
-    console.log({mainAddress});
-
     async function getWallet() {
       try {
         setLoading(true);
@@ -46,7 +44,5 @@ async function getDecodedWallet() {
 async function getAdress() {
   const adresses = JSON.parse(await AsyncStorage.getItem('addresses'));
   const mainAddress = JSON.parse(await AsyncStorage.getItem('mainAddress'));
-  console.log({mainAddress});
-
   return {adresses, mainAddress};
 }

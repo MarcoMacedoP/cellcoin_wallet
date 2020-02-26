@@ -34,13 +34,11 @@ export const CreateScreen = ({navigation}) => {
         ? setStep(2)
         : Toast.show('Invalid password', Toast.SHORT);
     } else {
-      console.log({...state});
       if (state.pass === state.passConfirm) {
         setLoading(true);
         Wallet.password = state.pass;
         try {
           Wallet.seed = await Wallet.createSeed();
-          console.log(Wallet.seed);
           setLoading(false);
           navigation.navigate('Mnemonic');
         } catch (error) {

@@ -29,7 +29,6 @@ export const BalanceScreen = ({navigation}) => {
     ...CURRENCYS,
   ]);
   const [mainAdress] = useGlobalState('mainAddress');
-  console.log({mainAdress});
 
   const balance = useGetBalance();
   const {ethBalance, generalBalance, tokenBalance, fetchBalance} = balance;

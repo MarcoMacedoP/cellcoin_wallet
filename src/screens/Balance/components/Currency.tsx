@@ -14,7 +14,6 @@ export const BalanceCurrencyComponent: React.FC<BalanceCurrencyComponentProps> =
     onClick,
     currency: {name, type, value},
   } = props;
-  console.log(value);
 
   return (
     <Container onPress={onClick} underlayColor={colors.whiteDark}>

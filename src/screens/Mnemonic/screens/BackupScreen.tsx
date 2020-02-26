@@ -18,7 +18,6 @@ export const BackupScreen = ({navigation}) => {
   const [hint, setHint] = useState([]);
   const [normalizedHint, setNormalizedHint] = useState('');
   useEffect(() => {
-    console.log({hint, labels});
   }, [labels]);
   useEffect(() => setNormalizedHint(hint.toString().replace(/,/g, ' ')), [
     hint,
@@ -26,14 +25,12 @@ export const BackupScreen = ({navigation}) => {
 
   const onLabelSelection = index => {
     if (step === 2) {
-      console.log(labels[index]);
       setHint([...hint, shuffledLabels[index]]);
     }
   };
   const onLabelUnselection = selectedLabelText => {
     if (step === 2) {
       const tempArr = hint.filter(text => text !== selectedLabelText && text);
-      console.log({tempArr, hint, selectedLabelText});
       setHint(tempArr);
     }
   };

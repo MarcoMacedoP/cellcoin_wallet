@@ -60,7 +60,6 @@ const TouchableLabel = ({onPress, children, onUnselect, canSelect}) => {
         setIsSelected(true);
         onPress();
       }
-      console.log({isSelected});
     }
   };
 
