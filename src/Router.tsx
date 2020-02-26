@@ -5,20 +5,22 @@ import {
 } from '@react-navigation/stack';
 import React, {useEffect} from 'react';
 //screens
-import {WalkthroughScreen} from 'screens/Walkthrough';
 import {BalanceScreen} from 'screens/Balance';
 import {TransfersRoutes} from 'screens/Transfers';
+
+import {WalkthroughScreen} from 'screens/Walkthrough';
 import {MnemonicRoutes} from 'screens/Mnemonic';
 import {TermsScreen} from 'screens/Terms';
+import {ImportWalletRoutes} from 'screens/Import';
+import {CreateScreen} from 'screens/Create';
 
 import {LayoutHeader} from 'shared/components/LayoutHeader';
 import {StatusBar} from 'react-native';
 import {NotificationsScreen} from 'screens/Notifications/Notifications';
-import {CreateScreen} from 'screens/Create';
 
 import {colors} from 'shared/styles/variables';
 import {useGlobalState} from 'globalState';
-import {ImportWalletRoutes} from 'screens/Import';
+import {CreateWalletRoutes} from 'screens/CreateWallet';
 const {Navigator, Screen} = createStackNavigator();
 
 const balanceOptions: StackNavigationOptions = {
@@ -56,20 +58,17 @@ const Router = () => {
         backgroundColor="transparent"
       />
       <NavigationContainer>
-        <Navigator screenOptions={commonScreenOptions} mode="card">
-          {hasKeystore ? (
-            <Screen
-              name="Balance"
-              component={BalanceScreen}
-              options={balanceOptions}
-            />
-          ) : (
-            <Screen
-              name="Walkthrough"
-              component={WalkthroughScreen}
-              options={walkthroughOptions}
-            />
-          )}
+        <Navigator
+          screenOptions={{...commonScreenOptions, headerShown: false}}
+          mode="card">
+          <Screen name="CreateWallet" component={CreateWalletRoutes} />
+
+          <Screen
+            name="Balance"
+            component={BalanceScreen}
+            options={balanceOptions}
+          />
+
           <Screen
             name="Transfers"
             component={TransfersRoutes}
