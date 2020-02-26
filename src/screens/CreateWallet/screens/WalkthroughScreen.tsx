@@ -93,10 +93,10 @@ export const WalkthroughScreen = ({navigation}) => {
         </GestureRecognizer>
 
         <ContainerButtons>
-          <Button onClick={onCreateWallet} accent margin="24px 0 8px">
+          <Button onClick={onCreateWallet} margin="24px 0 8px">
             Create Wallet
           </Button>
-          <Button onClick={onImportWallet} outline>
+          <Button onClick={onImportWallet} secondary>
             Import Wallet
           </Button>
         </ContainerButtons>
@@ -111,7 +111,7 @@ const Container = styled.ScrollView`
   flex-direction: column;
 `;
 const BodyBox = styled.View`
-  padding: 22px 22px 8px;
+  padding: 22px;
   height: ${Dimensions.get('window').height}px;
   width: ${Dimensions.get('window').width}px;
 `;
@@ -152,10 +152,11 @@ const DotButtonContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-bottom: 16px;
 `;
 const DotButton = styled.TouchableOpacity<{isSelected: boolean}>`
   background-color: ${props =>
-    props.isSelected ? colors.primary : colors.gray};
+    props.isSelected ? colors.accent : colors.gray};
   border-radius: 50px;
   margin: 4px;
   width: 12px;
