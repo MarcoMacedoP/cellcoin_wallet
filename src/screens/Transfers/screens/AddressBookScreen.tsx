@@ -60,7 +60,6 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
           cleanList();
         }
       } catch (error) {
-        console.log(error);
       }
     }
     async function cleanList() {
@@ -103,8 +102,6 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
     const tempArray = listAddress.filter(
       data => data.index !== item.index && data,
     );
-
-    // console.log(tempArray);
     setListAddress(tempArray);
     await AsyncStorage.setItem('contacts', JSON.stringify(tempArray));
   };

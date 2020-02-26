@@ -58,17 +58,12 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
    */
   function onPasswordFilled(password: string) {
     setState({...state, password});
-    console.log({state});
-
     currency.type == 'ETH' ? getGasLimitETH() : getGasLimitToken();
   }
 
   useEffect(() => {
     const parsedTransfer = parseFloat(transferValue);
-    console.log(transferValue);
     const transferIsValid = parsedTransfer <= state.balance;
-    console.log({transferIsValid});
-
     if (!transferIsValid && transferValue !== '') {
       setTransferValue(state.balance);
     }
@@ -89,7 +84,6 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
         sendTokenss(response);
       })
       .catch(error => {
-        console.log(error);
         Toast.show('Insufficient funds for gas', Toast.SHORT);
         setIsLoading(false);
       });
@@ -99,11 +93,9 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     setIsLoading(true);
     await calculateGasLimitETH(mainAddress, state.to, transferValue)
       .then(response => {
-        console.log(response);
         sendETH(response);
       })
       .catch(error => {
-        console.log(error);
         if (
           (error =
             'invalid argument 0: hex string has length 0, want 40 for common.Address')
@@ -176,10 +168,8 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
           if (res != 0) {
             try {
               txOptions.nonce = Wallet.web3.toHex(res);
-              console.log('nonce: ', txOptions.nonce);
             } catch (error) {
-              // reject(error);
-              console.log('err: ', error);
+              reject(error);
             }
           } else {
             txOptions.nonce = res;
@@ -211,17 +201,14 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   };
 
   const sendETH = async function (gass) {
-    console.log(state.password);
     
     await sendETHE(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
-        console.log(response);
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
         navigation.navigate('Balance');
         setIsLoading(false);
       })
       .catch(error => {
-        console.log(error);
         if ((error = 'insufficient funds for gas * price + value')) {
           Toast.show('Insufficient funds for gas', Toast.SHORT);
         }
@@ -230,17 +217,13 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   };
 
   const sendTokenss = async function(gass) {
-    console.log(state.password);
-    
     await sendTokens(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
-        console.log(response);
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
         navigation.navigate('Balance');
         setIsLoading(false);
       })
       .catch(error => {
-        console.log(error);
         if ((error = 'insufficient funds for gas * price + value')) {
           Toast.show('Insufficient funds for gas', Toast.SHORT);
         }
@@ -249,8 +232,6 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   };
 
   const sendETHE = (password, from, to, value, gasPrice, gasLimit) => {
-    // console.log(password, from, to, value, gasPrice, gasLimit);
-
     return new Promise((resolve, reject) => {
       try {
         Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
@@ -340,15 +321,13 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
                 from: from,
               });
             } catch (error) {
-              console.log(error);
+              reject(error);
             }
             await Wallet.web3.eth.getTransactionCount(
               from,
               'pending',
               async (err, res) => {
                 txOptions.nonce = res;
-                console.log(res);
-                console.log(txOptions);
                 let contractData = txutils.createContractTx(from, txOptions);
                 try {
                   let signedTx =

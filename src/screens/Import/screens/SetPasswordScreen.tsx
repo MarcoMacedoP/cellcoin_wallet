@@ -37,7 +37,6 @@ export const SetPasswordScreen = ({navigation}) => {
         ? setStep(2)
         : Toast.show('Invalid password', Toast.SHORT);
     } else {
-      console.log({...state});
       if (state.pass === state.passConfirm) {
         setLoading(true);
         Wallet.password = state.pass;

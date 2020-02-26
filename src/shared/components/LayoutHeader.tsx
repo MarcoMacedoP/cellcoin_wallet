@@ -65,7 +65,6 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
         // dismissed
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
 

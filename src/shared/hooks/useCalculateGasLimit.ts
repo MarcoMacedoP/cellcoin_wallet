@@ -17,5 +17,4 @@ async function fetchGasLimit(localDirection, destDirection, quantity) {
     destDirection,
     quantity,
   );
-  console.log(response);
 }
