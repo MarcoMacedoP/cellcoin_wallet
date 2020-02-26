@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import {Image, Dimensions, View, Text, Share} from 'react-native';
+import {Dimensions, Share} from 'react-native';
 import {colors} from '../styles';
 import {useNavigation} from '@react-navigation/native';
 import {Label} from 'shared/styled-components';
@@ -37,6 +37,8 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
       return <FIcon name="arrow-left" size={20} color={colors.white} />;
     else if (leftIcon == 'back-black')
       return <FIcon name="arrow-left" size={20} color={colors.black} />;
+    else if (leftIcon == 'x')
+      return <FIcon name="x" size={20} color={colors.black} />;
     else return null;
   };
   const renderRightIcon = () => {
@@ -46,7 +48,7 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
       return <FIcon name="share" size={20} color={colors.white} />;
     else if (rightIcon == 'add')
       return <FIcon name="plus" size={20} color={colors.black} />;
-    else return <Icon name="qrcode" size={20} color={colors.black} />;
+    else return <Icon name="qrcode" size={20} color={colors.white} />;
   };
 
   const onShare = async () => {
@@ -71,8 +73,7 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
   return light == false ? (
     <Container light={light}>
       <NotificationsIcon
-        onPress={handlePressNotifications}
-        underlayColor={colors.primaryLigth}>
+        onPress={handlePressNotifications}>
         <MIcon
           name="ios-notifications-outline"
           size={25}
@@ -94,7 +95,7 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
     </Container>
   ) : (
     <Container light={light} transparency={rightIcon}>
-      <NotificationsIcon onPress={handlePressBack} underlayColor={colors.white}>
+      <NotificationsIcon onPress={handlePressBack}>
         <>{renderLeftIcon()}</>
       </NotificationsIcon>
       <LabelHeader titleColor={titleColor}>
@@ -111,8 +112,7 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
           } else {
             setModalQR(!modalQR);
           }
-        }}
-        underlayColor={colors.white}>
+        }}>
         <>{renderRightIcon()}</>
       </Shared>
     </Container>
@@ -130,9 +130,7 @@ const Container = styled.View<StyleProps>`
   justify-content: ${props => (props.light ? 'space-between' : 'space-around')};
   flex-direction: row;
   padding: 0 16px;
-  margin-top: -20px;
-  background-color: ${props =>
-    props.transparency == 'qr' ? colors.whiteDark : 'transparent'};
+  background-color: transparent;
 `;
 const LogoImage = styled.Image`
   margin: 0 auto;

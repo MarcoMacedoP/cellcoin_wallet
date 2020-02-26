@@ -4,7 +4,8 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import {TransfersScreen} from './screens/TransfersScreen';
-import {SendTransferScreen} from './screens/SendScreen';
+// import {SendTransferScreen} from './screens/SendScreen';
+import { SendScreen } from './screens/Send';
 import {RecieveTransferScreen} from './screens/RecieveScreen';
 import Router, {commonScreenOptions} from 'Router';
 import {colors} from 'shared/styles';
@@ -31,13 +32,13 @@ const balanceOptions: StackNavigationOptions = {
 };
 
 const sendOptions: StackNavigationOptions = {
-  headerTransparent: true,
+  headerTransparent: false,
   headerTitle: props => (
     <LayoutHeader
       {...props}
       light
       titleColor={'black'}
-      leftIcon="back-black"
+      leftIcon="x"
       rightIcon="qr"
     />
   ),
@@ -87,27 +88,11 @@ export function TransfersRoutes() {
       />
       <Transfers.Screen
         name="send"
-        component={SendTransferScreen}
+        component={SendScreen}
         options={({route}: {route: any}) => ({
           ...sendOptions,
-          title: route.params.currency.type + ' Send',
+          title: 'Send ' + route.params.currency.type,
         })}
-        //  options={({route}: {route: any}) => ({
-        //    ...commonScreenOptions,
-        //    title: `${route.params.currency.type} Send`,
-        //     // headerShown: false,
-        //    headerBackTitleVisible: false,
-        //    headerTitleStyle: {
-        //      fontSize: 16,
-        //      fontWeight: 'normal',
-        //    },
-        //    headerStyle: {
-        //      backgroundColor: colors.whiteDark,
-        //      shadowColor: 'transparent',
-        //      shadowRadius: 0,
-        //      elevation: 0,
-        //    },
-        //  })}
       />
       <Transfers.Screen
         name="address"
