@@ -55,7 +55,7 @@ export function MnemonicImport({navigation}) {
       'digital cargo wing output welcome lens burst choice funny seed rain jar';
     Wallet.seed = __testingSeed;
     setIsLoading(true);
-    Wallet.seed = text;
+    // Wallet.seed = text;
     try {
       const keystore = await createKeystore();
       const address = await createAddress();

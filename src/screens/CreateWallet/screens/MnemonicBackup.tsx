@@ -16,16 +16,14 @@ export const MnemonicBackup = ({navigation}) => {
   const [step, setStep] = useState<1 | 2>(1);
   const [hint, setHint] = useState([]);
   const [normalizedHint, setNormalizedHint] = useState('');
-  useEffect(() => {}, [labels]);
+
   useEffect(() => setNormalizedHint(hint.toString().replace(/,/g, ' ')), [
     hint,
   ]);
 
-  const onLabelSelection = index => {
-    if (step === 2) {
-      setHint([...hint, shuffledLabels[index]]);
-    }
-  };
+  const onLabelSelection = index =>
+    step === 2 && setHint([...hint, shuffledLabels[index]]);
+
   const onLabelUnselection = selectedLabelText => {
     if (step === 2) {
       const tempArr = hint.filter(text => text !== selectedLabelText && text);
@@ -43,11 +41,11 @@ export const MnemonicBackup = ({navigation}) => {
     if (hasError) {
       Toast.show("Words aren't in correct order");
     } else {
-      navigation.navigate('CreateAdress');
+      navigation.navigate('LoadWalletScreen');
     }
   };
   const onSubmit = () => {
-    if (step == 1) {
+    if (step === 1) {
       suffleLables();
       setStep(2);
     } else {
@@ -76,22 +74,21 @@ export const MnemonicBackup = ({navigation}) => {
             </SmallText>
           )}
         </View>
-        {step === 2 ? (
+        {step === 2 && (
           <TextArea multiline={true} editable={false} value={normalizedHint} />
-        ) : null}
+        )}
 
-        {shuffledLabels.length > 0 ? (
+        {shuffledLabels.length > 0 && (
           <MnemonicListComponent
             labels={shuffledLabels}
             canSelectLabels={step === 2}
             onLabelSelection={onLabelSelection}
             onLabelUnselection={onLabelUnselection}
           />
-        ) : null}
+        )}
 
         <Button
           width="100%"
-          margin="0 0 0 0"
           onClick={onSubmit}
           isActivated={step === 2 ? hint.length === labels.length : true}>
           {step == 1 ? 'Next' : 'Confirm'}

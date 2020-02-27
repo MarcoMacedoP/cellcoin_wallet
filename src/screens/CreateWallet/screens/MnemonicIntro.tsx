@@ -9,8 +9,9 @@ export const MnemonicIntro = ({navigation}) => {
     modalVisible: false,
   });
 
-  var image = require('assets/images/agave_cellphone.png');
-  var webcam = require('assets/icons/webcam.png');
+  const image = require('assets/images/agave_cellphone.png');
+
+  const webcam = require('assets/icons/webcam.png');
 
   const config = {
     velocityThreshold: 0.3,
@@ -94,7 +95,7 @@ export const MnemonicIntro = ({navigation}) => {
         <ContainerButtons>
           <Button
             onClick={() => {
-              navigation.push('Backup');
+              navigation.push('MnemonicBackup');
               setState({
                 modalVisible: false,
               });

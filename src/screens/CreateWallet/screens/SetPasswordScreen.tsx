@@ -35,7 +35,6 @@ export const SetPasswordScreen = ({navigation, route}) => {
     const canUserSubmit = validateSubmit();
     if (canUserSubmit) {
       Wallet.password = state.pass;
-
       //create the seed to the wallet
       if (route.params.action === 'create') {
         setLoading(true);

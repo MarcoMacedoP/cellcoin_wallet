@@ -24,7 +24,11 @@ export const CreateWalletRoutes = () => {
         component={LoadWalletScreen}
       />
       <CreateWallet.Screen name="MnemonicBackup" component={MnemonicBackup} />
-      <CreateWallet.Screen name="MnemonicImport" component={MnemonicImport} />
+      <CreateWallet.Screen
+        name="MnemonicImport"
+        component={MnemonicImport}
+        options={MnemonicImportOptions}
+      />
       <CreateWallet.Screen
         name="MnemonicIntro"
         component={MnemonicIntro}
@@ -61,4 +65,7 @@ const setPasswordScreenOptions = props => ({
 });
 const MnemonicIntroOptions: StackNavigationOptions = {
   headerShown: false,
+};
+const MnemonicImportOptions: StackNavigationOptions = {
+  title: 'Import Wallet',
 };
