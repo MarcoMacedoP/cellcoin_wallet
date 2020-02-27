@@ -1,17 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import Toast from 'react-native-simple-toast';
-import {Button, Loading} from 'shared/components';
+import {Loading} from 'shared/components';
 import {Label, PageContainer, H4 as BaseTitle} from 'shared/styled-components';
-import Wallet from 'erc20-wallet';
 
-import {useGlobalState} from 'globalState';
-import AsyncStorage from '@react-native-community/async-storage';
 import {Image} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useCreateWallet} from '../hooks/useCreateWallet';
 
-export const CreateAdressScreen = () => {
+export const LoadWalletScreen = () => {
   const check = require('assets/icons/check_icon.png');
   const navigation = useNavigation();
   const {isCreated, error} = useCreateWallet();

@@ -8,8 +8,6 @@ import React from 'react';
 import {BalanceScreen} from 'screens/Balance';
 import {TransfersRoutes} from 'screens/Transfers';
 
-import {MnemonicRoutes} from 'screens/Mnemonic';
-
 import {LayoutHeader} from 'shared/components/LayoutHeader';
 import {StatusBar} from 'react-native';
 import {NotificationsScreen} from 'screens/Notifications/Notifications';
@@ -35,7 +33,7 @@ const balanceOptions: StackNavigationOptions = {
 
 export const commonScreenOptions: StackNavigationOptions = {
   headerTitleAlign: 'center',
-  headerTitleStyle: {fontSize: 24, fontWeight: 'bold', color: colors.black},
+  headerTitleStyle: {fontSize: 16, fontWeight: 'normal', color: colors.black},
   headerStyle: {elevation: 0, backgroundColor: colors.white},
 };
 
@@ -73,18 +71,6 @@ const Router = () => {
             options={{
               title: 'Notification Center',
               gestureDirection: 'horizontal-inverted',
-              headerTitleStyle: {
-                fontSize: 16,
-                fontWeight: 'normal',
-              },
-            }}
-          />
-
-          <Screen
-            name="Mnemonic"
-            component={MnemonicRoutes}
-            options={{
-              headerBackTitleVisible: false,
               headerTitleStyle: {
                 fontSize: 16,
                 fontWeight: 'normal',

@@ -48,7 +48,7 @@ export const SetPasswordScreen = ({navigation, route}) => {
       }
       const {action} = route.params;
       const urlToRedirect =
-        action === 'create' ? 'MnemonicIntro' : 'MnemonicBackup';
+        action === 'create' ? 'MnemonicIntro' : 'MnemonicImport';
 
       navigation.navigate(urlToRedirect);
     }
