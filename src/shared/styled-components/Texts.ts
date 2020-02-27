@@ -10,7 +10,7 @@ export const Title = styled.Text`
 export const H4 = styled.Text`
   font-weight: bold;
   font-size: 25px;
-  text-align: center;
+  text-align: left;
   color: ${colors.black};
 `;
 export const Subtitle = styled(Title)`

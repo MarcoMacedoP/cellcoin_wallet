@@ -40,7 +40,7 @@ type ContainerProps = {
 const Container = styled.View<ContainerProps>`
   align-self: center;
   background-color: ${props => (props.light ? colors.white : colors.whiteDark)};
-  margin: 25px;
+  margin: 21px 0;
 `;
 const LabelsContainer = styled.View`
   flex-direction: row;
@@ -69,13 +69,16 @@ const TouchableLabel = ({onPress, children, onUnselect, canSelect}) => {
     </Touchable>
   );
 };
-const Touchable = styled.TouchableOpacity`
+
+type StyledProps = {isSelected: boolean};
+
+const Touchable = styled.TouchableOpacity<StyledProps>`
   background-color: ${props =>
     props.isSelected ? colors.whiteDark : colors.accentLight};
   margin: 8px;
   border-radius: 5px;
 `;
-const Label = styled(Text)`
+const Label = styled(Text)<StyledProps>`
   font-size: 12px;
   padding: 10px 15px 10px;
   font-weight: bold;

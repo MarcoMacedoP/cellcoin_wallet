@@ -23,7 +23,7 @@ export const Label = styled(Text).attrs(() => ({
 `;
 export const TextArea = styled.TextInput`
   height: 150px;
-  width: 95%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   text-align: center;
