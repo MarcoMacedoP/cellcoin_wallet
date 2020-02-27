@@ -50,16 +50,16 @@ export const WalkthroughScreen = ({navigation}) => {
   const onNextStep = () => {
     count !== 1 ? setCount(count - 1) : setCount(3);
   };
-
+  //
   const onCreateWallet = () =>
     navigation.navigate('Terms', {
       name: 'Create Wallet',
-      url: 'Create',
+      action: 'create',
     });
   const onImportWallet = () =>
     navigation.navigate('Terms', {
       name: 'Import Wallet',
-      url: 'Import',
+      action: 'import',
     });
 
   const gestureRecognizerConfig = {

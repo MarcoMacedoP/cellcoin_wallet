@@ -6,7 +6,7 @@ import Wallet from 'erc20-wallet';
 import {useGlobalState} from 'globalState';
 import AsyncStorage from '@react-native-community/async-storage';
 
-export function SetMnemonicScreen({navigation}) {
+export function MnemonicBackup({navigation}) {
   const [, setKeystore] = useGlobalState('keystore');
   const [, setMainAddress] = useGlobalState('mainAddress');
   const [, setAddress] = useGlobalState('addresses');

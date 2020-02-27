@@ -12,7 +12,7 @@ import {PasswordLabelBox} from '../components/PasswordLabelBox';
 import {usePasswordValidations} from '../hooks/usePasswordValidations';
 import {colors} from 'shared/styles';
 
-export const SetPasswordScreen = ({navigation}) => {
+export const SetPasswordScreen = ({navigation, route}) => {
   const [state, setState] = useState({
     pass: '',
     passConfirm: '',
@@ -20,7 +20,9 @@ export const SetPasswordScreen = ({navigation}) => {
   const {validations, isValidPassword} = usePasswordValidations(state.pass);
   const [isLoading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-
+  useEffect(() => {
+    console.log(route.params);
+  }, []);
   const onTextChange = text => {
     if (step === 1) {
       setState({...state, pass: text});
@@ -30,29 +32,37 @@ export const SetPasswordScreen = ({navigation}) => {
   };
 
   async function onSubmit() {
-    if (step === 1) {
-      isValidPassword
-        ? setStep(2)
-        : Toast.show('Invalid password', Toast.SHORT);
-    } else {
-      console.log({...state});
-      if (state.pass === state.passConfirm) {
+    const canUserSubmit = validateSubmit();
+    if (canUserSubmit) {
+      Wallet.password = state.pass;
+
+      //create the seed to the wallet
+      if (route.params.action === 'create') {
         setLoading(true);
-        Wallet.password = state.pass;
         try {
           Wallet.seed = await Wallet.createSeed();
-          console.log(Wallet.seed);
           setLoading(false);
-          navigation.navigate('Mnemonic');
         } catch (error) {
-          console.error(error);
+          Toast.show('Error: ' + error);
         }
-      } else {
-        Toast.show("Passwords didn't match", Toast.SHORT);
       }
+      const {action} = route.params;
+      const urlToRedirect =
+        action === 'create' ? 'MnemonicIntro' : 'MnemonicBackup';
+
+      navigation.navigate(urlToRedirect);
     }
   }
-
+  function validateSubmit() {
+    if (step === 1) {
+      if (isValidPassword) {
+        setStep(2);
+        return false;
+      }
+    } else {
+      return state.pass === state.passConfirm;
+    }
+  }
   return (
     <Container keyboardShouldPersistTaps="handled">
       {step === 1 ? (

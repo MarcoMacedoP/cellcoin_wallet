@@ -8,6 +8,8 @@ import {WalkthroughScreen} from './screens/WalkthroughScreen';
 import {TermsScreen} from './screens/TermsScreen';
 import {SetPasswordScreen} from './screens/SetPasswordScreen';
 import {commonScreenOptions} from 'Router';
+import {MnemonicBackup} from './screens/MnemonicBackup';
+import {MnemonicIntro} from './screens/MnemonicIntro';
 const CreateWallet = createStackNavigator();
 
 export const CreateWalletRoutes = () => {
@@ -30,6 +32,8 @@ export const CreateWalletRoutes = () => {
         component={SetPasswordScreen}
         options={setPasswordScreenOptions}
       />
+      <CreateWallet.Screen name="MnemonicBackup" component={MnemonicBackup} />
+      <CreateWallet.Screen name="MnemonicIntro" component={MnemonicIntro} />
     </CreateWallet.Navigator>
   );
 };
