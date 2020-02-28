@@ -14,6 +14,7 @@ export const colors = {
   blackTransparentLight: 'rgba(0,0,0,0.3)',
   gray: '#cfd8dc',
   lightGray: '#eceff1',
+  error: 'rgba(221, 44, 0, 0.87)',
 };
 
 export const borderRadius = (percentage: number) =>

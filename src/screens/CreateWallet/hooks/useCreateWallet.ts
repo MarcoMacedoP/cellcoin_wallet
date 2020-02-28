@@ -4,7 +4,7 @@ import {
   createKeystore,
   createAddress,
   encodeKeystore,
-} from 'screens/CreateWallet/functions/wallet';
+} from 'shared/libs/Wallet';
 
 export function useCreateWallet() {
   const [, setKeyStore] = useGlobalState('keystore');

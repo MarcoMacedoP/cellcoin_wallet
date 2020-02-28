@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {
   createStackNavigator,
@@ -23,16 +23,20 @@ export const CreateWalletRoutes = () => {
         name="LoadWalletScreen"
         component={LoadWalletScreen}
       />
-      <CreateWallet.Screen name="MnemonicBackup" component={MnemonicBackup} />
+      <CreateWallet.Screen
+        name="MnemonicBackup"
+        component={MnemonicBackup}
+        options={{title: 'Create Wallet'}}
+      />
       <CreateWallet.Screen
         name="MnemonicImport"
         component={MnemonicImport}
-        options={MnemonicImportOptions}
+        options={{title: 'Import Wallet'}}
       />
       <CreateWallet.Screen
         name="MnemonicIntro"
         component={MnemonicIntro}
-        options={MnemonicIntroOptions}
+        options={{title: 'Create Wallet'}}
       />
       <CreateWallet.Screen
         name="SetPassword"
@@ -63,9 +67,6 @@ const termsScreenOptions: StackNavigationOptions = {
 const setPasswordScreenOptions = props => ({
   title: props.route.params.name,
 });
-const MnemonicIntroOptions: StackNavigationOptions = {
-  headerShown: false,
-};
-const MnemonicImportOptions: StackNavigationOptions = {
-  title: 'Import Wallet',
+const MnemonicOptions: StackNavigationOptions = {
+  title: 'Mnemonic',
 };
