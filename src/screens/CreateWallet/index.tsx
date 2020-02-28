@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {
   createStackNavigator,
@@ -21,6 +21,7 @@ export const CreateWalletRoutes = () => {
       initialRouteName="Walkthrough">
       <CreateWallet.Screen
         name="LoadWalletScreen"
+        options={{title: 'Loading Wallet'}}
         component={LoadWalletScreen}
       />
       <CreateWallet.Screen
@@ -67,6 +68,3 @@ const termsScreenOptions: StackNavigationOptions = {
 const setPasswordScreenOptions = props => ({
   title: props.route.params.name,
 });
-const MnemonicOptions: StackNavigationOptions = {
-  title: 'Mnemonic',
-};

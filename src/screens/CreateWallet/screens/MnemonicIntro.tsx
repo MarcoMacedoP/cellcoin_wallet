@@ -13,11 +13,6 @@ export const MnemonicIntro = ({navigation}) => {
 
   const webcam = require('assets/icons/webcam.png');
 
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
-  };
-
   return (
     <Container>
       <ImageBox>

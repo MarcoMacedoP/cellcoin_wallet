@@ -29,7 +29,7 @@ export function useCreateWallet() {
         setError(error);
       }
     }
-    !isCreated && createWallet();
+    !isCreated && createWallet().catch(err => setError(err));
   }, []);
 
   return {error, isCreated};

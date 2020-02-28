@@ -14,12 +14,15 @@ export const LoadWalletScreen = () => {
   const {isCreated, error} = useCreateWallet();
   useEffect(() => {
     if (isCreated) {
+      const goBalance = () => navigation.navigate('Balance');
       setTimeout(goBalance, 800);
     } else if (error) {
-      Toast.show(error);
+      console.log(error);
+      Toast.show('Ups, someting goes wrong, try again later');
+      const goBack = () => navigation.goBack();
+      setTimeout(goBack, 1000);
     }
   }, [isCreated, error]);
-  const goBalance = () => navigation.navigate('Balance');
 
   return (
     <PageContainer light>
@@ -28,7 +31,7 @@ export const LoadWalletScreen = () => {
           <CreatedContainer>
             <Image source={check} />
             <ContainerText>
-              <Title>Wallet created. </Title>
+              <Title>Wallet loaded. </Title>
               <Label>
                 Please secure your mnemonic words safety. Make sure you store
                 them safely and do not leak information to others
@@ -38,7 +41,7 @@ export const LoadWalletScreen = () => {
         ) : (
           <Loading
             image={require('assets/images/agave_wallet_create.png')}
-            text="Wallet is being created, please wait a moment"
+            text="Wallet is being loaded, please wait a moment"
           />
         )}
       </BodyBox>
@@ -47,6 +50,7 @@ export const LoadWalletScreen = () => {
 };
 
 const BodyBox = styled.View`
+  margin-top: 32px;
   height: 100%;
   width: 100%;
 `;

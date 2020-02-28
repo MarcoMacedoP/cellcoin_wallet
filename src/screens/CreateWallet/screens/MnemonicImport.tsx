@@ -2,32 +2,24 @@ import React, {useState, useEffect} from 'react';
 import {TextArea, PageContainer, Text} from 'shared/styled-components';
 import {Button} from 'shared/components';
 import Wallet from 'erc20-wallet';
-import {useValidation} from 'shared/hooks/useValidation';
-import {validations} from 'shared/validations/index';
+
 import styled from 'styled-components/native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {colors} from 'shared/styles';
+
+import {isValid} from 'bitcore-mnemonic';
+
 export function MnemonicImport({navigation}) {
   const [text, setText] = useState(null);
-  const [isValidate] = useValidation({
-    text,
-    validation: validations.walletSeed,
-  });
+
   const [hasError, setError] = useState(null);
-  useEffect(() => {
-    if (text && text.length > 0) {
-      setError(!isValidate);
-    } else {
-      console.log('error');
-      setError(null);
-    }
-  }, [text, isValidate]);
+  useEffect(
+    () => (text && text.length > 0 ? setError(!isValid(text)) : setError(null)),
+    [text],
+  );
 
   function handleClick() {
-    const __testingSeed =
-      'digital cargo wing output welcome lens burst choice funny seed rain jar';
-    Wallet.seed = __testingSeed;
-    // Wallet.seed = text;
+    Wallet.seed = text;
     navigation.navigate('LoadWalletScreen');
   }
   function handleChangeText(txt: string) {
@@ -59,7 +51,9 @@ export function MnemonicImport({navigation}) {
           />
         </TextContainer>
 
-        <Button onClick={handleClick} isActivated={isValidate}>
+        <Button
+          onClick={handleClick}
+          isActivated={text ? (text.length > 0 ? !hasError : false) : false}>
           Import wallet
         </Button>
       </PageContainer>
@@ -74,4 +68,5 @@ const Label = styled(Text)<{hasError: boolean}>`
   color: ${props => (props.hasError ? colors.error : colors.black)};
   margin-bottom: 12px;
   padding-left: 4px;
+  text-transform: none;
 `;
