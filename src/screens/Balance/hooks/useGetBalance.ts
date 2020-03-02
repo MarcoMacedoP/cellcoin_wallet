@@ -24,21 +24,19 @@ export function useGetBalance() {
         ethBalance,
         tokenBalance,
       );
-      const ethUsd = parseFloat((eth * ethBalance * 1).toFixed(4));
-      const tokenUsd = parseFloat((token * tokenBalance * 1).toFixed(4));
-      const totalUsd = ethUsd + tokenUsd;
+      const totalUsd = eth + token;
       
       setState({
         ...state,
         isLoading: false,
         tokenBalance: {
           original: tokenBalance.toFixed(8),
-          usd: tokenUsd.toFixed(2),
+          usd: token.toFixed(2),
         },
         generalBalance: totalUsd.toFixed(2),
         ethBalance: {
           original: ethBalance.toFixed(8),
-          usd: ethUsd.toFixed(2),
+          usd: eth.toFixed(2),
         },
       });
       setBalance({...state, fetchBalance: getBalance});
