@@ -95,7 +95,7 @@ export const MnemonicBackup = ({navigation}) => {
   );
 };
 
-const Container = styled.View`
+const Container = styled.ScrollView`
   padding: 15px 0;
   width: 100%;
 `;
