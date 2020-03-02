@@ -21,9 +21,12 @@ export const Label = styled(Text).attrs(() => ({
   text-align: ${props => (props.center ? 'center' : 'justify')};
   text-transform: none;
 `;
-export const TextArea = styled.TextInput`
+type TextAreaProps = {
+  hasError?: boolean;
+};
+export const TextArea = styled.TextInput<TextAreaProps>`
   height: 150px;
-  width: 95%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -31,4 +34,6 @@ export const TextArea = styled.TextInput`
   padding: 16px;
   background-color: ${colors.whiteDark};
   border-radius: 15px;
+  color: ${props => (props.hasError ? colors.error : colors.black)};
+  border: ${props => (props.hasError ? `1px ${colors.error}` : 'none')};
 `;

@@ -4,14 +4,15 @@ import styled from 'styled-components/native';
 import Toast from 'react-native-simple-toast';
 import Wallet from 'erc20-wallet';
 
-import {Button} from 'shared/components/Button';
 //components
+import {Button} from 'shared/components/Button';
+import {PasswordForm} from '../components/PasswordForm';
+import {PasswordLabelBox} from '../components/PasswordLabelBox';
 
-import {PasswordForm} from './components/PasswordForm';
-import {PasswordLabelBox} from './components/PasswordLabelBox';
-import {usePasswordValidations} from './hooks/usePasswordValidations';
+import {usePasswordValidations} from '../hooks/usePasswordValidations';
 import {colors} from 'shared/styles';
-export const CreateScreen = ({navigation}) => {
+
+export const SetPasswordScreen = ({navigation, route}) => {
   const [state, setState] = useState({
     pass: '',
     passConfirm: '',
@@ -19,7 +20,9 @@ export const CreateScreen = ({navigation}) => {
   const {validations, isValidPassword} = usePasswordValidations(state.pass);
   const [isLoading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-
+  useEffect(() => {
+    console.log(route.params);
+  }, []);
   const onTextChange = text => {
     if (step === 1) {
       setState({...state, pass: text});
@@ -29,27 +32,36 @@ export const CreateScreen = ({navigation}) => {
   };
 
   async function onSubmit() {
-    if (step === 1) {
-      isValidPassword
-        ? setStep(2)
-        : Toast.show('Invalid password', Toast.SHORT);
-    } else {
-      if (state.pass === state.passConfirm) {
+    const canUserSubmit = validateSubmit();
+    if (canUserSubmit) {
+      Wallet.password = state.pass;
+      //create the seed to the wallet
+      if (route.params.action === 'create') {
         setLoading(true);
-        Wallet.password = state.pass;
         try {
           Wallet.seed = await Wallet.createSeed();
           setLoading(false);
-          navigation.navigate('Mnemonic');
         } catch (error) {
-          console.error(error);
+          Toast.show('Error: ' + error);
         }
-      } else {
-        Toast.show("Passwords didn't match", Toast.SHORT);
       }
+      const {action} = route.params;
+      const urlToRedirect =
+        action === 'create' ? 'MnemonicIntro' : 'MnemonicImport';
+
+      navigation.navigate(urlToRedirect);
     }
   }
-
+  function validateSubmit() {
+    if (step === 1) {
+      if (isValidPassword) {
+        setStep(2);
+        return false;
+      }
+    } else {
+      return state.pass === state.passConfirm;
+    }
+  }
   return (
     <Container keyboardShouldPersistTaps="handled">
       {step === 1 ? (

@@ -1,28 +1,28 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import Toast from 'react-native-simple-toast';
-import {Button, Loading} from 'shared/components';
+import {Loading} from 'shared/components';
 import {Label, PageContainer, H4 as BaseTitle} from 'shared/styled-components';
-import Wallet from 'erc20-wallet';
 
-import {useGlobalState} from 'globalState';
-import AsyncStorage from '@react-native-community/async-storage';
 import {Image} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useCreateWallet} from '../hooks/useCreateWallet';
 
-export const CreateAdressScreen = () => {
+export const LoadWalletScreen = () => {
   const check = require('assets/icons/check_icon.png');
   const navigation = useNavigation();
   const {isCreated, error} = useCreateWallet();
   useEffect(() => {
     if (isCreated) {
+      const goBalance = () => navigation.navigate('Balance');
       setTimeout(goBalance, 800);
     } else if (error) {
-      Toast.show(error);
+      console.log(error);
+      Toast.show('Ups, someting goes wrong, try again later');
+      const goBack = () => navigation.goBack();
+      setTimeout(goBack, 1000);
     }
   }, [isCreated, error]);
-  const goBalance = () => navigation.navigate('Balance');
 
   return (
     <PageContainer light>
@@ -31,7 +31,7 @@ export const CreateAdressScreen = () => {
           <CreatedContainer>
             <Image source={check} />
             <ContainerText>
-              <Title>Wallet created. </Title>
+              <Title>Wallet loaded. </Title>
               <Label>
                 Please secure your mnemonic words safety. Make sure you store
                 them safely and do not leak information to others
@@ -41,7 +41,7 @@ export const CreateAdressScreen = () => {
         ) : (
           <Loading
             image={require('assets/images/agave_wallet_create.png')}
-            text="Wallet is being created, please wait a moment"
+            text="Wallet is being loaded, please wait a moment"
           />
         )}
       </BodyBox>
@@ -50,6 +50,7 @@ export const CreateAdressScreen = () => {
 };
 
 const BodyBox = styled.View`
+  margin-top: 32px;
   height: 100%;
   width: 100%;
 `;

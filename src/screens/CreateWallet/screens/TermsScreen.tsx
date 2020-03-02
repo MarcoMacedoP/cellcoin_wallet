@@ -1,19 +1,32 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components/native';
-import styles from './styles/styles';
-import Toast from 'react-native-simple-toast';
 
 //components
-import {TouchableOpacity, Text, View, ScrollView} from 'react-native';
+import {ScrollView} from 'react-native';
+import {Button} from 'shared/components/Button';
+import {RadioButton} from 'shared/components/RadioButton';
+//styled-component
+import {SmallText, Title as BaseTitle} from 'shared/styled-components/Texts';
+import {PageContainer} from 'shared/styled-components/Containers';
+
 export const TermsScreen = ({route, navigation}) => {
-  const [count, setCount] = useState(2);
+  const [hasAccepted, setHasAccepted] = useState(false);
+
+  function onRadioButtonClick() {
+    const toggledRadioButtonValue = hasAccepted ? false : true;
+    setHasAccepted(toggledRadioButtonValue);
+  }
+
+  function onSubmit() {
+    navigation.navigate('SetPassword', route.params);
+  }
 
   return (
-    <Container>
+    <PageContainer light>
       <ContainerText>
-        <Title>Dear User,</Title>
+        <Title>Dear user:</Title>
         <ScrollView>
-          <Label>
+          <Terms color="ligth">
             The Agave Coin App is a mobile-terminal based platform provided by
             Lomelí Technology Co., for security management of digital assets
             that provides the users thereof with security management og digital
@@ -82,90 +95,47 @@ export const TermsScreen = ({route, navigation}) => {
             the user shall not be entitled to use the services provided by the
             platform on the basis of this agreement. If the user does not agree
             to the content of this agreement, or refuses to recognize the right
-            of{' '}
-          </Label>
+            of
+          </Terms>
         </ScrollView>
       </ContainerText>
-      <BodyBox>
-        <ContainerButtons>
-          <TouchableOpacity
-            style={styles.dotBox}
-            onPress={() => {
-              if (count == 1) {
-                setCount(2);
-              } else {
-                setCount(1);
-              }
-            }}>
-            <View style={styles.dotBlueRound}>
-              <View style={count == 1 ? styles.dotBlue : styles.dotGray}></View>
-            </View>
-            <LabelGreen>I agree to the above terms </LabelGreen>
-          </TouchableOpacity>
-          {count == 1 ? (
-            <TouchableOpacity
-              style={[{height: 50, backgroundColor: '#2FA0A8'}, styles.button]}
-              onPress={() => {
-                if (count == 1) {
-                  navigation.replace(route.params.url, route.params);
-                } else {
-                  Toast.show(
-                    'Acepta los terminos y condiciones para continuar',
-                    Toast.SHORT,
-                  );
-                }
-              }}>
-              <Text style={{color: 'white', fontSize: 18}}>Confirm</Text>
-            </TouchableOpacity>
-          ) : (
-            <View
-              style={[{height: 50, backgroundColor: '#E2E3E5'}, styles.button]}>
-              <Text style={{color: 'white', fontSize: 18}}>Confirm</Text>
-            </View>
-          )}
-        </ContainerButtons>
-      </BodyBox>
-    </Container>
+
+      <ContainerButtons>
+        <RadioButton
+          isActivated={hasAccepted}
+          onClick={onRadioButtonClick}
+          text="I agree to the above terms"
+        />
+        <ButtonContainer>
+          <Button isActivated={hasAccepted} onClick={onSubmit}>
+            Confirm
+          </Button>
+        </ButtonContainer>
+      </ContainerButtons>
+    </PageContainer>
   );
 };
 
-const Container = styled.View`
-  padding: 22px;
-  height: 100%;
-  width: 100%;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: white;
-`;
-const BodyBox = styled.View`
-  height: 20%;
-  width: 100%;
-  align-self: flex-end;
-`;
-
 const ContainerText = styled.View`
-  padding: 22px;
   width: 100%;
   height: 80%;
 `;
 const ContainerButtons = styled.View`
-  padding: 22px;
+  padding-bottom: 8px;
+  height: 20%;
   width: 100%;
+  justify-content: flex-end;
+  align-self: flex-end;
 `;
-const Title = styled.Text`
+const ButtonContainer = styled.View`
+  margin: 8px 0 0;
+`;
+const Title = styled(BaseTitle)`
   font-size: 18px;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #8d8d8d;
+  margin-bottom: 8px;
+  text-transform: none;
 `;
-const Label = styled.Text`
-  font-size: 12px;
-  color: #8d8d8d;
-  text-align: justify;
-`;
-const LabelGreen = styled.Text`
-  font-size: 15px;
-  margin-left: 5px;
-  color: #2fa0a8;
-  text-align: center;
+const Terms = styled(SmallText)`
+  text-align: left;
+  text-transform: none;
 `;

@@ -12,11 +12,11 @@ export const PasswordLabelBox = ({isValid, text}) => (
     <LabelAlert isValid={isValid}>{text}</LabelAlert>
   </LabelBox>
 );
-const Icon = styled(BaseIcon)`
+const Icon = styled(BaseIcon)<{isValid: boolean}>`
   color: ${props => (props.isValid ? 'green' : 'red')};
   margin-right: 12px;
 `;
-const LabelAlert = styled.Text`
+const LabelAlert = styled.Text<{isValid: boolean}>`
   font-size: 15px;
   color: ${props => (props.isValid ? 'green' : 'red')};
   text-align: justify;

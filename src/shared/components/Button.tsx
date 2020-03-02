@@ -1,5 +1,8 @@
 import React from 'react';
 import {UIActivityIndicator} from 'react-native-indicators';
+import styled from 'styled-components/native';
+import {colors} from '../styles';
+
 type ButtonProps = {
   outline?: boolean;
   secondary?: boolean;
@@ -42,7 +45,7 @@ export const Button: React.FC<ButtonProps> = ({
       <Label outline={outline}>{children}</Label>
     </ButtonContainer>
   ) : (
-    <ButtonDeactivaded width={width} isActivated={isActivated}>
+    <ButtonDeactivaded width={width} isActivated={isActivated} margin={margin}>
       {isActivated ? (
         <UIActivityIndicator color={colors.black} size={30} />
       ) : (
@@ -52,9 +55,6 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
-import styled from 'styled-components/native';
-import {colors} from '../styles';
-import {color} from 'react-native-reanimated';
 type StyleProps = {
   margin?: string;
   width?: string;

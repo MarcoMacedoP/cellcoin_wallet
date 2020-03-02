@@ -4,14 +4,13 @@ import {colors} from '../styles';
 export const Title = styled.Text`
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 40px;
+  font-size: 30px;
   color: ${colors.black};
-  margin-left: 8px;
 `;
 export const H4 = styled.Text`
   font-weight: bold;
   font-size: 25px;
-  text-align: center;
+  text-align: left;
   color: ${colors.black};
 `;
 export const Subtitle = styled(Title)`

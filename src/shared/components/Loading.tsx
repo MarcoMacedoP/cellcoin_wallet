@@ -5,8 +5,8 @@ import {UIActivityIndicator} from 'react-native-indicators';
 import {ImageSource} from 'react-native-vector-icons/Icon';
 
 type LoadingProps = {
-  image: ImageSource;
-  text: string;
+  image?: ImageSource;
+  text?: string;
 };
 /**
  * A component for show a loading state.
@@ -22,9 +22,11 @@ export const Loading: React.FC<LoadingProps> = ({image, text}) => (
       <UIActivityIndicator size={50} color="#65DDB9" />
     </LoaderContainer>
 
-    <ContainerText>
-      <Label center>{text}</Label>
-    </ContainerText>
+    {text && (
+      <ContainerText>
+        <Label center>{text}</Label>
+      </ContainerText>
+    )}
   </Container>
 );
 const Container = styled.View`
