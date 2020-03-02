@@ -13,10 +13,16 @@ export function MnemonicImport({navigation}) {
   const [text, setText] = useState(null);
 
   const [hasError, setError] = useState(null);
-  useEffect(
-    () => (text && text.length > 0 ? setError(!isValid(text)) : setError(null)),
-    [text],
-  );
+  useEffect(() => {
+    if (text && text.length > 0) {
+      try {
+        const isValidInput = isValid(text);
+        setError(!isValidInput);
+      } catch (error) {
+        setError(error);
+      }
+    } else setError(null);
+  }, [text]);
 
   function handleClick() {
     Wallet.seed = text;
@@ -53,7 +59,7 @@ export function MnemonicImport({navigation}) {
 
         <Button
           onClick={handleClick}
-          isActivated={text ? (text.length > 0 ? !hasError : false) : false}>
+          isActivated={text?.length > 0 ? !hasError : false}>
           Import wallet
         </Button>
       </PageContainer>
