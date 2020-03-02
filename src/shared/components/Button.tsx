@@ -84,12 +84,12 @@ const BaseButtonStyles = `
 const ButtonContainer = styled.TouchableOpacity<StyleProps>`
   ${BaseButtonStyles}
   width: ${props => (props.width ? props.width : '100%')};
-  border: ${props => (props.outline ? `2px solid ${colors.primary}` : 'none')};
+  border: ${props => (props.outline ? `2px solid ${colors.lightGray}` : 'none')};
   background-color: ${props =>
     props.accent
       ? colors.accent
       : props.outline
-      ? 'transparent'
+      ? colors.lightGray
       : props.secondary
       ? colors.primaryLigth
       : colors.primary};

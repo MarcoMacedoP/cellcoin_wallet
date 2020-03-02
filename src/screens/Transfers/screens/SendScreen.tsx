@@ -58,7 +58,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
    */
   function onPasswordFilled(password: string) {
     setState({...state, password});
-    currency.type == 'ETH' ? getGasLimitETH() : getGasLimitToken();
+    currency.type == 'ETH' ? getGasLimitETH(password) : getGasLimitToken(password);
   }
 
   const seteaElText = ( text ) => {
@@ -96,7 +96,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     setIsLoading(true);
     await calculateGasLimitETH(mainAddress, state.to, transferValue)
       .then(response => {
-        sendETH(response);
+        sendETH(response, pass);
       })
       .catch(error => {
         if (
@@ -203,7 +203,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     });
   };
 
-  const sendETH = async function (gass) {
+  const sendETH = async function (gass, pass) {
     
     await sendETHE(pass, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
@@ -214,13 +214,15 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
       .catch(error => {
         if ((error = 'insufficient funds for gas * price + value')) {
           Toast.show('Insufficient funds for gas', Toast.SHORT);
+        } else {
+          Toast.show('Error: ' + error, Toast.SHORT);
         }
         setIsLoading(false);
       });
   };
 
-  const sendTokenss = async function(gass) {
-    await sendTokens(state.password, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
+  const sendTokenss = async function (gass, pass) {
+    await sendTokens(pass, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
       .then(response => {
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
         navigation.navigate('Balance');
@@ -229,6 +231,8 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
       .catch(error => {
         if ((error = 'insufficient funds for gas * price + value')) {
           Toast.show('Insufficient funds for gas', Toast.SHORT);
+        } else {
+          Toast.show('Error: ' + error, Toast.SHORT);
         }
         setIsLoading(false);
       });
