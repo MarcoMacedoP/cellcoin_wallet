@@ -1,5 +1,4 @@
 import {Dimensions} from 'react-native';
-
 export const colors = {
   primary: '#2fa0a8',
   primaryLigth: '#50cdd5',

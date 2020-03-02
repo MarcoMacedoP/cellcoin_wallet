@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
+import {spacings} from 'shared/styles';
 
 type ViewProps = {
   light?: boolean;
@@ -8,7 +9,7 @@ type ViewProps = {
 };
 
 export const PageContainer = styled.View<ViewProps>`
-  padding: 0 16px 22px;
+  padding: ${spacings.top}px ${spacings.right}px ${spacings.bottom}px;
   height: 100%;
   width: 100%;
   justify-content: ${props => (props.justify ? props.justify : 'flex-start')};

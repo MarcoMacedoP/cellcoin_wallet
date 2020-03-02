@@ -1,56 +1,35 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components/native';
-import GestureRecognizer from 'react-native-swipe-gestures';
 //components
 import {Dimensions} from 'react-native';
-
+import SideSwipe from 'react-native-sideswipe';
 import {Button} from 'shared/components/Button';
-import {colors} from 'shared/styles';
+import {WalkthroughItem} from '../components/WalkthroughItem';
+//styles
+import {colors, spacings} from 'shared/styles';
 
-export const WalkthroughScreen = ({navigation}) => {
-  const [count, setCount] = useState(1);
-  const image = require('assets/tutorial/tutorial_one.png');
-  const image2 = require('assets/tutorial/tutorial_two.png');
-  const image3 = require('assets/tutorial/tutorial_three.png');
-  const initialCopyState = {
-    img: image,
+const WALKTHROUGH_DATA = [
+  {
+    image: require('assets/tutorial/tutorial_one.png'),
     title: 'Multi-chain Wallet',
     desc: 'Supporting BTC, AgaveCoin,etc.',
-  };
-  const [copy, setCopy] = useState(initialCopyState);
+  },
+  {
+    image: require('assets/tutorial/tutorial_two.png'),
+    title: 'Designed for Simplicity',
+    desc:
+      ' Add and manage cryptocurrencies with one click Manage multiple addresses easily',
+  },
+  {
+    image: require('assets/tutorial/tutorial_three.png'),
+    title: 'Agave Coin Secure',
+    desc:
+      'Full control over assets by managing private keys independently. \n Produced by Agave Coin security team',
+  },
+];
 
-  /**Changes the copy when the count changes */
-  useEffect(() => {
-    if (count === 1) {
-      setCopy({
-        img: image,
-        title: 'Multi-chain Wallet',
-        desc: 'Supporting BTC, AgaveCoin,etc.',
-      });
-    } else if (count === 2) {
-      setCopy({
-        img: image2,
-        title: 'Designed for Simplicity',
-        desc:
-          ' Add and manage cryptocurrencies with one click Manage multiple addresses easily',
-      });
-    } else {
-      setCopy({
-        img: image3,
-        title: 'Agave Coin Secure',
-        desc:
-          'Full control over assets by managing private keys independently. \n Produced by Agave Coin security team',
-      });
-    }
-  }, [count]);
-
-  const onLastStep = () => {
-    count !== 3 ? setCount(count + 1) : setCount(1);
-  };
-  const onNextStep = () => {
-    count !== 1 ? setCount(count - 1) : setCount(3);
-  };
-  //
+export const WalkthroughScreen = ({navigation}) => {
+  const [count, setCount] = useState(0);
   const onCreateWallet = () =>
     navigation.navigate('Terms', {
       name: 'Create Wallet',
@@ -62,36 +41,26 @@ export const WalkthroughScreen = ({navigation}) => {
       action: 'import',
     });
 
-  const gestureRecognizerConfig = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
-  };
-
   return (
     <Container>
       <BodyBox>
-        <GestureRecognizer
-          onSwipeLeft={onLastStep}
-          onSwipeRight={onNextStep}
-          config={gestureRecognizerConfig}
-          style={{
-            flex: 1,
-          }}>
-          <ImageBox>
-            <Image source={copy.img} />
-          </ImageBox>
-
-          <ContainerText>
-            <Title>{copy.title}</Title>
-            <Label>{copy.desc}</Label>
-          </ContainerText>
+        <CarrouselContainer>
+          <SideSwipe
+            index={count}
+            style={{
+              width:
+                Dimensions.get('window').width - spacings.right - spacings.left,
+            }}
+            data={WALKTHROUGH_DATA}
+            onIndexChange={index => setCount(index)}
+            renderItem={({item}) => <WalkthroughItem {...item} />}
+          />
           <DotButtonContainer>
+            <DotButton isSelected={count === 0} onPress={() => setCount(0)} />
             <DotButton isSelected={count === 1} onPress={() => setCount(1)} />
             <DotButton isSelected={count === 2} onPress={() => setCount(2)} />
-            <DotButton isSelected={count === 3} onPress={() => setCount(3)} />
           </DotButtonContainer>
-        </GestureRecognizer>
-
+        </CarrouselContainer>
         <ContainerButtons>
           <Button onClick={onCreateWallet} margin="24px 0 8px">
             Create Wallet
@@ -115,39 +84,14 @@ const BodyBox = styled.View`
   height: ${Dimensions.get('window').height}px;
   width: ${Dimensions.get('window').width}px;
 `;
-const Image = styled.Image`
-  width: 100%;
-  height: 100%;
-  resize-mode: contain;
-`;
-const ImageBox = styled.View`
-  width: 100%;
-  height: 70%;
-  margin-bottom: 16px;
-  justify-content: center;
-  align-items: center;
-`;
 
-const ContainerText = styled.View`
-  padding: 22px;
-  width: 100%;
-  height: 25%;
-`;
 const ContainerButtons = styled.View`
   padding: 0;
   width: 100%;
+  height: 30%;
+  justify-content: flex-end;
 `;
-const Title = styled.Text`
-  font-size: 30px;
-  margin-bottom: 5px;
-  font-weight: bold;
-  text-align: center;
-`;
-const Label = styled.Text`
-  font-size: 12px;
-  color: #8d8d8d;
-  text-align: center;
-`;
+
 const DotButtonContainer = styled.View`
   flex-direction: row;
   align-items: center;
@@ -159,6 +103,11 @@ const DotButton = styled.TouchableOpacity<{isSelected: boolean}>`
     props.isSelected ? colors.accent : colors.gray};
   border-radius: 50px;
   margin: 4px;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
+`;
+
+const CarrouselContainer = styled.View`
+  height: 70%;
+  width: 100%;
 `;
