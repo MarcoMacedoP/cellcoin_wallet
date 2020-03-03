@@ -48,7 +48,9 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
       return <FIcon name="share" size={20} color={colors.white} />;
     else if (rightIcon == 'add')
       return <FIcon name="plus" size={20} color={colors.black} />;
-    else return <Icon name="qrcode" size={20} color={colors.white} />;
+    else if (rightIcon == 'qr')
+      return <Icon name="qrcode" size={20} color={colors.black} />;
+    else return null;
   };
 
   const onShare = async () => {

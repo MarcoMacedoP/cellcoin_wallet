@@ -4,7 +4,8 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import {TransfersScreen} from './screens/TransfersScreen';
-import {SendTransferScreen} from './screens/SendScreen';
+import {SetAddressScreen} from './screens/SetAddressScreen';
+
 import { SendScreen } from './screens/Send';
 import {RecieveTransferScreen} from './screens/RecieveScreen';
 import Router, {commonScreenOptions} from 'Router';
@@ -45,7 +46,6 @@ const sendOptions: StackNavigationOptions = {
       light
       titleColor={'black'}
       leftIcon="x"
-      rightIcon="qr"
     />
   ),
   headerBackTitleVisible: false,
@@ -82,6 +82,27 @@ const addressOptions: StackNavigationOptions = {
   headerLeft: null,
 };
 
+const setAddressOptions: StackNavigationOptions = {
+  headerTransparent: false,
+  headerStyle: {
+    shadowRadius: 0,
+    shadowOffset: {
+        height: 0,
+    },
+  },
+  headerTitle: props => (
+    <LayoutHeader
+      {...props}
+      light
+      titleColor={'black'}
+      leftIcon="x"
+      rightIcon="qr"
+    />
+  ),
+  headerBackTitleVisible: false,
+  headerLeft: null,
+};
+
 export function TransfersRoutes() {
   return (
     <Transfers.Navigator
@@ -102,8 +123,11 @@ export function TransfersRoutes() {
       />
       <Transfers.Screen
         name="setAddress"
-        component={SendTransferScreen}
-        options={addressOptions}
+        component={SetAddressScreen}
+        options={({route}: {route: any}) => ({
+          ...setAddressOptions,
+          title: 'Send ' + route.params.currency.type,
+        })}
       />
       <Transfers.Screen
         name="address"
