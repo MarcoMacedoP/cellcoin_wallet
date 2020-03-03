@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
 import styled from 'styled-components/native';
 import {RefreshControl, Dimensions} from 'react-native';
 import {BalanceHeaderComponent} from '../components/Header';
