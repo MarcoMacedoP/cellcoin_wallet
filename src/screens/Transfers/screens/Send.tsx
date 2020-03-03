@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
 import { CurrencyType } from 'shared/types';
 import { colors } from 'shared/styles/variables';
 import { Label } from 'shared/styled-components';
@@ -16,7 +17,9 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
     const [ activeCurrency, setActiveCurrency ] = useState('USD')
     const [quantity, setQuantity] = useState('0');
     const [quantityCurrenncy, setQuantityCurrency] = useState('0');
+    const [address, setAddress] = useState('');
     const [ModalVisible, setModalVisible] = useState(false);
+    const navigation = useNavigation();
     const toggleModal = () => {
       setModalVisible(!ModalVisible);
     };
@@ -26,7 +29,6 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
         else setActiveCurrency(currency.type);
     }
     const setQuantity_ = (val) => {
-        console.log(val);
         
         if (val === '') {
             setQuantity('0');
@@ -34,168 +36,123 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
         } else {
             if (activeCurrency === currency.type) {
                 setQuantityCurrency(val)
-                let usd = parseFloat(val) * parseFloat(currency.value.usd)
+                let usd = parseFloat(currency.value.usd) / parseFloat(currency.value.original);
+                let valUsd = val * usd;
                 if (quantity !== '0') {
-                    setQuantity(usd.toFixed(2));
+                    setQuantity(valUsd.toFixed(2));
                 } else {
-                    setQuantity(usd.toFixed(0));
+                    setQuantity(valUsd.toFixed(0));
                 }
             } else {
                 setQuantity(val)
-                let usd = parseFloat(val) / parseFloat(currency.value.usd)
-                setQuantityCurrency(usd.toFixed(8));
-                
+                let usd = parseFloat(currency.value.usd) / parseFloat(currency.value.original);
+                let valUsd = val / usd;
+                if (parseFloat(val) === 0) {
+                  setQuantityCurrency('0.00000000');
+                } else {
+                  setQuantityCurrency(valUsd.toFixed(8));
+                }
             }
         }
     }
     const setMaximun = () => {
-        const total = parseFloat(currency.value.original) * parseFloat(currency.value.usd);
         if (activeCurrency === currency.type)
             setQuantity_(currency.value.original);
         else
-            setQuantity_(total.toFixed(2));
+          setQuantity_(currency.value.usd);
+    }
+    const renderContent = () => {
+      return (
+        <>
+          <Header>
+            <TouchableHeader onPress={activateCurrency}>
+              <LabelCurrency
+                active={activeCurrency === 'USD' ? true : false}>
+                {quantity} USD
+                    </LabelCurrency>
+            </TouchableHeader>
+            <Hr />
+            <TouchableHeader onPress={activateCurrency}>
+              <LabelCurrency
+                active={activeCurrency === currency.type ? true : false}>
+                {quantityCurrenncy} {currency.type}
+              </LabelCurrency>
+            </TouchableHeader>
+            <Button
+              onClick={() => {
+                setMaximun();
+              }}
+              outline>
+              <Label>
+                Use maximun available:
+                      {activeCurrency === currency.type
+                  ? currency.value.original
+                  : currency.value.usd
+                }
+              </Label>
+            </Button>
+          </Header>
+          <Body>
+            <VirtualKeyboard
+              color="black"
+              text={
+                activeCurrency === currency.type
+                  ? quantityCurrenncy === '0'
+                    ? ''
+                    : quantityCurrenncy
+                  : quantity === '0'
+                    ? ''
+                    : quantity
+              }
+              pressMode="string"
+              onPress={val => {
+                setQuantity_(val);
+              }}
+              decimal={true}
+              rowStyle={{ width: Dimensions.get('window').width }}
+              cellStyle={{ height: 60 }}
+            />
+
+            <Button secondary margin={'10px 0'} onClick={() => {navigation.navigate('setAddress', {currency})}}>
+              NEXT
+            </Button>
+          </Body>
+
+          <RawModal isShowed={ModalVisible} onClose={toggleModal}>
+            <Label> Please select the destination </Label>
+            <Button secondary margin={'10px 0'}>
+              <Icon name="qrcode" size={15} color={colors.white} /> Qr
+              reader
+                  </Button>
+            <Button accent margin={'10px 0'} onClick={() =>
+                { 
+                  toggleModal();
+                  navigation.navigate('Transfers', {
+                    screen: 'address',
+                    params: {
+                      setAddress: address => setAddress(address),
+                    },
+                  })
+                }
+              }>
+              <Icon name="address-book" size={15} color={colors.white} />{' '}
+              Address Book
+                  </Button>
+          </RawModal>
+        </>
+      )
     }
     return (
       <>
         {height < 700 ? (
           <Container>
             <PageContainer>
-              <Header>
-                <TouchableHeader onPress={activateCurrency}>
-                  <LabelCurrency
-                    active={activeCurrency === 'USD' ? true : false}>
-                    {quantity} USD
-                  </LabelCurrency>
-                </TouchableHeader>
-                <Hr />
-                <TouchableHeader onPress={activateCurrency}>
-                  <LabelCurrency
-                    active={activeCurrency === currency.type ? true : false}>
-                    {quantityCurrenncy} {currency.type}
-                  </LabelCurrency>
-                </TouchableHeader>
-                <Button
-                  onClick={() => {
-                    setMaximun();
-                  }}
-                  outline>
-                  <Label>
-                    Use maximun available:{' '}
-                    {activeCurrency === currency.type
-                      ? currency.value.original
-                      : (
-                          parseFloat(currency.value.original) *
-                          parseFloat(currency.value.usd)
-                        ).toFixed(2)}
-                  </Label>
-                </Button>
-              </Header>
-              <Body>
-                <VirtualKeyboard
-                  color="black"
-                  text={
-                    activeCurrency === currency.type
-                      ? quantityCurrenncy === '0'
-                        ? ''
-                        : quantityCurrenncy
-                      : quantity === '0'
-                      ? ''
-                      : quantity
-                  }
-                  pressMode="string"
-                  onPress={val => {
-                    setQuantity_(val);
-                  }}
-                  decimal={true}
-                  rowStyle={{width: Dimensions.get('window').width}}
-                  cellStyle={{height: 60}}
-                />
-
-                <Button secondary margin={'10px 0'} onClick={toggleModal}>
-                  NEXT
-                </Button>
-              </Body>
-
-              <RawModal isShowed={ModalVisible} onClose={toggleModal}>
-                <Label> Please select the destination </Label>
-                <Button secondary margin={'10px 0'} onClick={toggleModal}>
-                  <Icon name="qrcode" size={15} color={colors.white} /> Qr
-                  reader
-                </Button>
-                <Button accent margin={'10px 0'} onClick={toggleModal}>
-                  <Icon name="address-book" size={15} color={colors.white} />{' '}
-                  Address Book
-                </Button>
-              </RawModal>
+              {renderContent()}
             </PageContainer>
           </Container>
         ) : (
           <PageContainer>
-            <Header>
-              <TouchableHeader onPress={activateCurrency}>
-                <LabelCurrency active={activeCurrency === 'USD' ? true : false}>
-                  {quantity} USD
-                </LabelCurrency>
-              </TouchableHeader>
-              <Hr />
-              <TouchableHeader onPress={activateCurrency}>
-                <LabelCurrency
-                  active={activeCurrency === currency.type ? true : false}>
-                  {quantityCurrenncy} {currency.type}
-                </LabelCurrency>
-              </TouchableHeader>
-              <Button
-                onClick={() => {
-                  setMaximun();
-                }}
-                outline>
-                <Label>
-                  Use maximun available:{' '}
-                  {activeCurrency === currency.type
-                    ? currency.value.original
-                    : (
-                        parseFloat(currency.value.original) *
-                        parseFloat(currency.value.usd)
-                      ).toFixed(2)}
-                </Label>
-              </Button>
-            </Header>
-            <Body>
-              <VirtualKeyboard
-                color="black"
-                text={
-                  activeCurrency === currency.type
-                    ? quantityCurrenncy === '0'
-                      ? ''
-                      : quantityCurrenncy
-                    : quantity === '0'
-                    ? ''
-                    : quantity
-                }
-                pressMode="string"
-                onPress={val => {
-                  setQuantity_(val);
-                }}
-                decimal={true}
-                rowStyle={{width: Dimensions.get('window').width}}
-                cellStyle={{height: 60}}
-              />
-
-              <Button secondary margin={'10px 0'} onClick={toggleModal}>
-                NEXT
-              </Button>
-            </Body>
-
-            <RawModal isShowed={ModalVisible} onClose={toggleModal}>
-              <Label> Please select the destination </Label>
-              <Button secondary margin={'10px 0'} onClick={toggleModal}>
-                <Icon name="qrcode" size={15} color={colors.white} /> Qr reader
-              </Button>
-              <Button accent margin={'10px 0'} onClick={toggleModal}>
-                <Icon name="address-book" size={15} color={colors.white} />{' '}
-                Address Book
-              </Button>
-            </RawModal>
+              {renderContent()}
           </PageContainer>
         )}
       </>
