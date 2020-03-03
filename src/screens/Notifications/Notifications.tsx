@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import {StyleSheet, Dimensions, View} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Dimensions, View} from 'react-native';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import {TabBar} from 'shared/components/TabBar';
 import {TransferMessages} from './components/TransferMessages';
 import {SystemMessages} from './components/SystemMessages';
-import { UIActivityIndicator } from 'react-native-indicators';
-import { colors } from 'shared/styles/variables';
+import {UIActivityIndicator} from 'react-native-indicators';
+import {colors} from 'shared/styles/variables';
 import styled from 'styled-components/native';
 const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
-const initialLayout = {width: Dimensions.get('window').width};
 
 export function NotificationsScreen() {
   const [index, setIndex] = React.useState(0);
@@ -30,7 +29,7 @@ export function NotificationsScreen() {
       }
       async function setInitialization() {
         const initialization = await getInitialization();
-        setNotifications(initialization)
+        setNotifications(initialization);
         setHasInitilization(true);
       }
       setInitialization();
@@ -40,15 +39,23 @@ export function NotificationsScreen() {
 
   const hasInitialized = useInitilizeView();
 
+  const initialLayout = {width: Dimensions.get('window').width};
+
   const renderScene = SceneMap({
     first: () => (
       <Container>
-        <TransferMessages notifications={notifications} updateNotifications={useInitilizeView} />
+        <TransferMessages
+          notifications={notifications}
+          updateNotifications={useInitilizeView}
+        />
       </Container>
-    ) ,
+    ),
     second: () => (
       <Container>
-        <SystemMessages notifications={notifications} updateNotifications={useInitilizeView}/>
+        <SystemMessages
+          notifications={notifications}
+          updateNotifications={useInitilizeView}
+        />
       </Container>
     ),
   });
@@ -62,18 +69,12 @@ export function NotificationsScreen() {
       renderTabBar={props => <TabBar {...props} />}
     />
   ) : (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',}}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <UIActivityIndicator color={colors.accent} size={30} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-  },
-});
 const Container = styled.View`
   justify-content: flex-start;
-  padding-top
 `;
