@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
 import { CurrencyType } from 'shared/types';
 import { colors } from 'shared/styles/variables';
 import { Label } from 'shared/styled-components';
@@ -16,7 +17,9 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
     const [ activeCurrency, setActiveCurrency ] = useState('USD')
     const [quantity, setQuantity] = useState('0');
     const [quantityCurrenncy, setQuantityCurrency] = useState('0');
+    const [address, setAddress] = useState('');
     const [ModalVisible, setModalVisible] = useState(false);
+    const navigation = useNavigation();
     const toggleModal = () => {
       setModalVisible(!ModalVisible);
     };
@@ -110,22 +113,32 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
               cellStyle={{ height: 60 }}
             />
 
-            <Button secondary margin={'10px 0'} onClick={toggleModal}>
+            <Button secondary margin={'10px 0'} onClick={() => {navigation.navigate('setAddress', {currency})}}>
               NEXT
-                  </Button>
+            </Button>
           </Body>
 
           <RawModal isShowed={ModalVisible} onClose={toggleModal}>
-          <Label> Please select the destination </Label>
-          <Button secondary margin={'10px 0'} onClick={toggleModal}>
-            <Icon name="qrcode" size={15} color={colors.white} /> Qr
-            reader
-                </Button>
-          <Button accent margin={'10px 0'} onClick={toggleModal}>
-            <Icon name="address-book" size={15} color={colors.white} />{' '}
-            Address Book
-                </Button>
-        </RawModal>
+            <Label> Please select the destination </Label>
+            <Button secondary margin={'10px 0'}>
+              <Icon name="qrcode" size={15} color={colors.white} /> Qr
+              reader
+                  </Button>
+            <Button accent margin={'10px 0'} onClick={() =>
+                { 
+                  toggleModal();
+                  navigation.navigate('Transfers', {
+                    screen: 'address',
+                    params: {
+                      setAddress: address => setAddress(address),
+                    },
+                  })
+                }
+              }>
+              <Icon name="address-book" size={15} color={colors.white} />{' '}
+              Address Book
+                  </Button>
+          </RawModal>
         </>
       )
     }
