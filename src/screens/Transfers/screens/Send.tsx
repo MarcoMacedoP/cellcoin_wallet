@@ -79,16 +79,10 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
               </LabelCurrency>
             </TouchableHeader>
             <Button
-              onClick={() => {
-                setMaximun();
-              }}
+              onClick={setMaximun}
               outline>
               <Label>
-                Use maximun available:
-                      {activeCurrency === currency.type
-                  ? currency.value.original
-                  : currency.value.usd
-                }
+                Use maximun available: {activeCurrency === currency.type ? currency.value.original : currency.value.usd}
               </Label>
             </Button>
           </Header>
@@ -113,7 +107,7 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
               cellStyle={{ height: 60 }}
             />
 
-            <Button secondary margin={'10px 0'} onClick={() => {navigation.navigate('setAddress', {currency})}}>
+            <Button secondary isActivated={quantity !== '0'} onClick={() => {navigation.navigate('setAddress', {currency, quantityCurrenncy})}}>
               NEXT
             </Button>
           </Body>

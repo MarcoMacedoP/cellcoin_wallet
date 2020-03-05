@@ -24,29 +24,29 @@ let lightwallet = require('eth-lightwallet');
 let txutils = lightwallet.txutils;
 let signing = lightwallet.signing;
 let web3 = require('web3');
-type SendTransferScreenProps = {
+type SetAddressScreenProps = {
   route: {params: {currency: CurrencyType}};
 };
 
-export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
+export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
   route: {params},
 }) => {
-  const {currency} = params;
+  const navigation = useNavigation();
+  const {currency, quantityCurrenncy} = params;
   const recomendation = 21000;
   const [modalQR, setModalQR] = useGlobalState('modalQR');
-  const [transferValue, setTransferValue] = useState();
+  const [modalIsShowed, setModalIsShowed] = useState(false);
   const [mainAddress] = useGlobalState('mainAddress');
   const [gasLimit, setGasLimit] = useState(21000);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [modalIsShowed, setModalIsShowed] = useState(false);
+  const [minerFee, setMinerFee] = useState(21000);
+  
   const [state, setState] = useState({
-    amount: 0,
+    amount: quantityCurrenncy,
     to: '',
     balance: parseFloat(currency.value.original),
     password: '',
   });
-
   /**
    * Open the modal for enter the user password
    */
@@ -61,17 +61,6 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     currency.type == 'ETH' ? getGasLimitETH(password) : getGasLimitToken(password);
   }
 
-  const seteaElText = ( text ) => {
-    const parsedTransfer = parseFloat(transferValue);
-    const transferIsValid = parsedTransfer <= state.balance;
-    if (!transferIsValid && transferValue !== '') {
-      setTransferValue(state.balance);
-    } else {
-      setTransferValue(text)
-    }
-  }
-  
-
   const setWeb3Provider = async function() {
     let web3Provider = new HookedWeb3Provider({
       host: Wallet.provider,
@@ -82,7 +71,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
 
   const getGasLimitToken = async (pass) => {
     setIsLoading(true);
-    await calculateGasLimitToken(mainAddress, state.to, transferValue)
+    await calculateGasLimitToken(mainAddress, state.to, state.amount)
       .then(response => {
         sendTokenss(response, pass);
       })
@@ -94,7 +83,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
 
   const getGasLimitETH = async (pass) => {
     setIsLoading(true);
-    await calculateGasLimitETH(mainAddress, state.to, transferValue)
+    await calculateGasLimitETH(mainAddress, state.to, state.amount)
       .then(response => {
         sendETH(response, pass);
       })
@@ -205,10 +194,11 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
 
   const sendETH = async function (gass, pass) {
     
-    await sendETHE(pass, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
+    await sendETHE(pass, mainAddress, state.to, state.amount, gass.gasPrice, gass.gasLimit)
       .then(response => {
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
         navigation.navigate('Balance');
+        setModalIsShowed(false)
         setIsLoading(false);
       })
       .catch(error => {
@@ -222,10 +212,11 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
   };
 
   const sendTokenss = async function (gass, pass) {
-    await sendTokens(pass, mainAddress, state.to, transferValue, gass.gasPrice, gass.gasLimit)
+    await sendTokens(pass, mainAddress, state.to, state.amount, gass.gasPrice, gass.gasLimit)
       .then(response => {
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
         navigation.navigate('Balance');
+        setModalIsShowed(false)
         setIsLoading(false);
       })
       .catch(error => {
@@ -379,91 +370,54 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     });
   };
 
-  const onTextAddressChange = text => {
-    setState({...state, to: text});
-  };
-
-  const [minerFee, setMinerFee] = useState(21000);
-  const navigation = useNavigation();
-  const onMaxTransfersClick = () =>
-    transferValue === state.balance
-      ? setTransferValue(false)
-      : setTransferValue(state.balance);
+  const setAddressText = (text) => {
+    setState({...state, to: text})
+  }
 
   const onRecomendationClick = () => setMinerFee(recomendation);
 
   return (
     <>
       <PasswordModal
+        transactionData={{
+          currency: currency.type,
+          amount: state.amount,
+          usd: (parseFloat(currency.value.usd) / parseFloat(currency.value.original)) * parseFloat(state.amount),
+        }}
         isShowed={modalIsShowed}
         onClose={() => setModalIsShowed(false)}
         onDoned={onPasswordFilled}
+        loading={isLoading}
       />
       <ScrollView
         contentContainerStyle={{backgroundColor: colors.white}}
         style={{backgroundColor: colors.white}}>
-        <StatusBar
-          backgroundColor={colors.whiteDark}
-          barStyle="light-content"
-        />
-        <Header>
-          <Title>Transfer Amount</Title>
-          <TransfersContainer>
-            <TransferInputContainer>
-              <TransferInput
-                placeholder={`Balance ${state.balance}`}
-                align="left"
-                keyboardType="numeric"
-                onChangeText={text => seteaElText(text)}>
-                <TransferText>{transferValue}</TransferText>
-              </TransferInput>
-              <TouchableOpacity
-                onPress={() => {
-                  onMaxTransfersClick();
-                }}>
-                <MaxTransfer>
-                  {transferValue === state.balance ? 'Min' : 'Max'}
-                </MaxTransfer>
-              </TouchableOpacity>
-            </TransferInputContainer>
-            {!isNaN(transferValue) && transferValue ? (
-              <FeeText style={{textTransform: 'uppercase'}}>
-                {transferValue} {currency.type}= $
-                {transferValue * currency.value.usd}
-              </FeeText>
-            ) : null}
-          </TransfersContainer>
-        </Header>
-        <PageContainer style={{paddingTop: 8, alignItems: 'flex-start'}} light>
-          <InputContainer>
-            <Label>To</Label>
+        <Container light>
+          <Label style={{fontSize: 14,}}>Amount to send: {state.amount}</Label>
+          <InputBox>
+            <Label style={{marginHorizontal: 5,}}>To</Label>
+            <InputButton>
+              <FromInput
+                value={state.to}
+                maxLength={42}
+                keyboardAppearance={'dark'}
+                onChangeText={value => setAddressText(value)}
+              />
 
-            <FromInput
-              align="left"
-              value={state.to}
-              keyboardAppearance={'dark'}
-              onChangeText={value => onTextAddressChange(value)}
-            />
-
-            <IconContainer
-              onPress={() =>
-                navigation.navigate('Transfers', {
-                  screen: 'address',
-                  params: {
-                    setAddress: address => setState({...state, to: address}),
-                  },
-                })
-              }>
-              <Icon name="address-book" size={20} color={colors.accent} />
-            </IconContainer>
-          </InputContainer>
-
-          <InputContainer>
-            <Label>From</Label>
-            <FromInput align="left">{mainAddress}</FromInput>
-          </InputContainer>
-
-          <InputContainer>
+              <IconContainer
+                onPress={() =>
+                  navigation.navigate('Transfers', {
+                    screen: 'address',
+                    params: {
+                      setAddress: address => setState({...state, to: address}),
+                    },
+                  })
+                }>
+                <Icon name="address-book" size={20} color={colors.accent} />
+              </IconContainer>
+            </InputButton>
+          </InputBox>
+          <InputBox style={{paddingHorizontal: 5,}}>
             <Label>Gas fee</Label>
             <FeeText ligth={false} style={{textTransform: 'uppercase'}}>
               {minerFee} gwei= $ {minerFee * 1050000000}
@@ -472,7 +426,7 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
               minimumValue={21000}
               maximumValue={81000}
               value={minerFee}
-              onValueChange={setMinerFee}
+              onSlidingComplete={setMinerFee}
             />
             <FeeSpeedContainer>
               <SmallText color="ligth">Slow</SmallText>
@@ -483,14 +437,15 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
                 Recomended: {recomendation} gwei/b
               </RecomendedFeed>
             </TouchableOpacity>
-          </InputContainer>
+          </InputBox>
           <Button
-            isActivated={true}
+            secondary
+            isActivated={state.to.length === 42}
             onClick={handleSubmit}
             isLoading={isLoading}>
             Confirm
           </Button>
-        </PageContainer>
+        </Container>
         <Modal
           isShowed={modalQR}
           icon={'x'}
@@ -508,37 +463,42 @@ export const SendTransferScreen: React.FC<SendTransferScreenProps> = ({
     </>
   );
 };
-
-const Header = styled(PageContainer)`
-  background-color: ${colors.whiteDark};
-  height: auto;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  margin-top: 60px;
+const Container = styled(PageContainer)`
+  flex: 1;
+  padding-top: 8px;e
 `;
 const Title = styled(Text)``;
 const Label = styled(BaseLabel)`
-  position: relative;
   top: 4px;
 `;
-
-const TransfersContainer = styled.View`
-  width: 100%;
+const InputBox = styled.View`
+  border-radius: 4px;
+  margin: 8px 0;
+  background-color: ${colors.lightGray};
+  width: 103%;
 `;
-const TransferInputContainer = styled.View`
+const InputButton = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  width:100%;
+  justify-content: space-around;
   align-items: center;
-  padding-right: 16px;
+`;
+const IconContainer = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;
+const FromInput = styled(Input)`
+  flex: 9;
+  font-size: 13px;
+  padding-right: 0px;
+  padding-left: 10px;
+  background-color: ${colors.lightGray};
+  justify-content: center;
+  text-align: left;
 `;
 const MaxTransfer = styled(SmallText)`
   color: ${colors.primary};
-`;
-const FromInput = styled(Input)`
-  font-size: 13px;
-  font-weight: normal;
-  width: 100%;
 `;
 const TransferInput = styled(Input)`
   font-size: 14px;
@@ -548,28 +508,10 @@ const TransferText = styled(Text)`
   font-weight: bold;
   font-size: 18px;
 `;
-const InputContainer = styled.View`
-  margin: 8px 0;
-  padding: 4px 8px;
-  width: 100%;
-  background-color: ${colors.whiteDark};
-  border-radius: 4px;
-`;
-const IconContainer = styled.TouchableOpacity`
-  position: absolute;
-  right: 12px;
-  bottom: 28px;
-  justify-content: center;
-  align-items: center;
-`;
 const FeeSlider = styled(Slider)`
-  width: 105%;
-  position: relative;
-  right: 8px;
-  padding: 0;
-  margin: 0;
 `;
 const FeeText = styled(Label)`
+  width: 100%;
   font-size: 12px;
   color: ${colors.black};
   margin: 8px 0 12px;
