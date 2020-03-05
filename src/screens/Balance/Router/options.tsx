@@ -1,35 +1,32 @@
 import React from 'react';
-import {colors} from 'shared/styles';
+import {colors, spacings} from 'shared/styles';
 import styled from 'styled-components/native';
 import {IconContainer} from 'shared/styled-components';
 import MIcon from 'react-native-vector-icons/Ionicons';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
+import {StackNavigationOptions} from '@react-navigation/stack';
 
-const balanceScreen: any = ({navigation}) => ({
+const balanceScreen = ({navigation}): StackNavigationOptions => ({
   title: 'AgaveCoin',
   headerTitleAlign: 'center',
-  headerTitleStyle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+
   headerTransparent: true,
-  headerBackTitleVisible: true,
   headerLeftContainerStyle: {
-    padding: 16,
+    paddingHorizontal: spacings.right,
   },
   headerRightContainerStyle: {
-    padding: 16,
+    paddingHorizontal: spacings.right,
   },
   headerLeft: () => (
     <IconContainer onPress={() => navigation.navigate('Notifications')}>
       <MIcon name="ios-notifications-outline" size={24} color={colors.white} />
     </IconContainer>
   ),
-  headerRight: () => (
-    <IconContainer onPress={() => navigation.navigate('Balance')}>
-      <SimpleIcon name="wallet" size={18} color={colors.white} />
-    </IconContainer>
-  ),
+  // headerRight: () => (
+  //   <IconContainer onPress={() => navigation.navigate('Balance')}>
+  //     <SimpleIcon name="wallet" size={18} color={colors.white} />
+  //   </IconContainer>
+  // ),
   headerTitle: () => <Logo source={require('assets/icons/logo_mini.png')} />,
 });
 const Logo = styled.Image`
