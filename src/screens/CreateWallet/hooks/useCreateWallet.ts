@@ -7,6 +7,7 @@ import {
 } from 'shared/libs/Wallet';
 
 export function useCreateWallet() {
+  const addressTest = '0x08bd09310a970f68e01c8848785fd589dbccc77e';
   const [, setKeyStore] = useGlobalState('keystore');
   const [, setMainAddress] = useGlobalState('mainAddress');
   const [, setAddress] = useGlobalState('addresses');
@@ -19,9 +20,9 @@ export function useCreateWallet() {
         const keystore = await createKeystore();
         const address = await createAddress();
         await encodeKeystore();
-        setKeyStore(keystore);
         setMainAddress(address[0].address);
         setAddress(address);
+        setKeyStore(keystore);
         setIsCreated(true);
         setError(null);
       } catch (error) {
@@ -29,8 +30,10 @@ export function useCreateWallet() {
         setError(error);
       }
     }
-    !isCreated && createWallet().catch(err => setError(err));
-  }, []);
+    if (!isCreated) {
+      createWallet();
+    }
+  }, [isCreated]);
 
   return {error, isCreated};
 }

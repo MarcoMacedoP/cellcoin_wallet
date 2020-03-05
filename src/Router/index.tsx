@@ -1,48 +1,42 @@
 import {NavigationContainer} from '@react-navigation/native';
-import {
-  createStackNavigator,
-  StackNavigationOptions,
-} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import React, {Suspense} from 'react';
 //screens
 import {BalanceRoutes} from 'screens/Balance/Router';
 import {TransfersRoutes} from 'screens/Transfers';
-const CreateWalletRoutes = React.lazy(() => import('screens/CreateWallet'));
+const CreateWalletRoutes = React.lazy(() =>
+  import('screens/CreateWallet/Router'),
+);
 
 import {NotificationsScreen} from 'screens/Notifications/Notifications';
-
+//components
 import {StatusBar} from 'react-native';
-import {colors} from 'shared/styles/variables';
 import {useGlobalState} from 'globalState';
 import {Loading} from 'shared/components';
+//utils
+import {commonScreenOptions} from 'Router/options';
 const {Navigator, Screen} = createStackNavigator();
-
-export const commonScreenOptions: StackNavigationOptions = {
-  headerTitleAlign: 'center',
-  headerTitleStyle: {fontSize: 16, fontWeight: 'normal', color: colors.black},
-  headerStyle: {elevation: 0, backgroundColor: colors.white},
-};
 
 const Router = () => {
   const [hasKeystore] = useGlobalState('keystore');
-  return hasKeystore ? (
-    <RouterContainer>
-      <Screen name="Balance" component={BalanceRoutes} />
-      <Screen
-        name="Transfers"
-        component={TransfersRoutes}
-        options={{headerShown: false}}
-      />
-      <Screen
-        name="Notifications"
-        component={NotificationsScreen}
-        options={{headerShown: true}}
-      />
-    </RouterContainer>
-  ) : (
-    <Suspense fallback={() => <Loading />}>
+  return (
+    <Suspense fallback={<Loading />}>
       <RouterContainer>
-        <Screen name="CreateWallet" component={CreateWalletRoutes} />
+        {hasKeystore ? (
+          <Screen name="Balance" component={BalanceRoutes} />
+        ) : (
+          <Screen name="CreateWallet" component={CreateWalletRoutes} />
+        )}
+        <Screen
+          name="Transfers"
+          component={TransfersRoutes}
+          options={{headerShown: false}}
+        />
+        <Screen
+          name="Notifications"
+          component={NotificationsScreen}
+          options={{headerShown: true}}
+        />
       </RouterContainer>
     </Suspense>
   );
