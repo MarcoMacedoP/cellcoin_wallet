@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
 import styled from 'styled-components/native';
 import {RefreshControl, Dimensions} from 'react-native';
-import {BalanceHeaderComponent} from './components/Header';
-import {BalanceCurrencyComponent} from './components/Currency';
+import {BalanceHeaderComponent} from '../components/Header';
+import {BalanceCurrencyComponent} from '../components/Currency';
 import {CurrencyType} from 'shared/types';
-import {useGlobalState} from 'globalState';
-import {useGetBalance} from './hooks/useGetBalance';
+import {useGetBalance} from '../hooks/useGetBalance';
 import {colors} from 'shared/styles/variables';
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -28,7 +27,6 @@ export const BalanceScreen = ({navigation}) => {
   const [currencys, setCurrencys] = useState<Array<CurrencyType>>([
     ...CURRENCYS,
   ]);
-  const [mainAdress] = useGlobalState('mainAddress');
 
   const balance = useGetBalance();
   const {ethBalance, generalBalance, tokenBalance, fetchBalance} = balance;
@@ -85,11 +83,4 @@ const CurrencysContainer = styled.View`
   width: 100%;
   position: relative;
   top: -56px;
-`;
-const LoadingContainer = styled.View`
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: ${colors.primary};
 `;

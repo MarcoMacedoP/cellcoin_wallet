@@ -16,3 +16,7 @@ export const PageContainer = styled.View<ViewProps>`
   align-items: ${props => (props.align ? props.align : 'center')};
   background-color: ${props => (props.light ? colors.white : colors.whiteDark)};
 `;
+export const IconContainer = styled.TouchableOpacity`
+  padding: 8px;
+  border-radius: 32px;
+`;

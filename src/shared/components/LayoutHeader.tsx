@@ -17,6 +17,10 @@ type LayoutProps = {
   leftIcon?: string;
   rightIcon?: string;
 };
+
+/**
+ * @deprecated please no :(
+ */
 export const LayoutHeader: React.FC<LayoutProps> = props => {
   const {
     light = false,
@@ -68,14 +72,12 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
       } else if (result.action === Share.dismissedAction) {
         // dismissed
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return light == false ? (
     <Container light={light}>
-      <NotificationsIcon
-        onPress={handlePressNotifications}>
+      <NotificationsIcon onPress={handlePressNotifications}>
         <MIcon
           name="ios-notifications-outline"
           size={25}
