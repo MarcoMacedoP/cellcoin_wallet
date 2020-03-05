@@ -9,6 +9,8 @@ import VirtualKeyboard from '../components/virtual-keyboard-update/VirtualKeyboa
 import { Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RawModal } from 'shared/components/RawModal';
+import Toast from 'react-native-simple-toast';
+
 type SendScreenProps = {
     route: { params: { currency: CurrencyType } };
 };
@@ -29,10 +31,16 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
         else setActiveCurrency(currency.type);
     }
     const setQuantity_ = (val) => {
-        
-        if (val === '') {
+        const minumunQty =  0.5;
+        const cuantity = parseFloat(currency.value.original)
+        const value = parseFloat(val);
+        if (cuantity < minumunQty) {
+          Toast.show('No balance enough to make a transaction');
+        }
+        if (val === '' ||  cuantity < minumunQty) {
             setQuantity('0');
             setQuantityCurrency('0');
+
         } else {
             if (activeCurrency === currency.type) {
                 setQuantityCurrency(val)
@@ -107,7 +115,7 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
               cellStyle={{ height: 60 }}
             />
 
-            <Button secondary isActivated={quantity !== '0'} onClick={() => {navigation.navigate('setAddress', {currency, quantityCurrenncy})}}>
+            <Button secondary isActivated={quantity !== '0.00' && quantity !== '.0' && quantity !== '0' && quantityCurrenncy !== '0' && quantityCurrenncy !== 'NaN' && quantity !== 'NaN'} onClick={() => {navigation.navigate('setAddress', {currency, quantityCurrenncy})}}>
               NEXT
             </Button>
           </Body>
