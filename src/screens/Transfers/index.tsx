@@ -35,10 +35,11 @@ const balanceOptions: StackNavigationOptions = {
 const sendOptions: StackNavigationOptions = {
   headerTransparent: false,
   headerStyle: {
+    elevation: 0,
+    backgroundColor: colors.white,
     shadowRadius: 0,
-    shadowOffset: {
-        height: 0,
-    },
+    borderBottomWidth: 0,
+    shadowColor: 'transparent',
   },
   headerTitle: props => (
     <LayoutHeader
