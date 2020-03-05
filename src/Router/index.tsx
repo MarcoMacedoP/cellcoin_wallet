@@ -11,7 +11,6 @@ const CreateWalletRoutes = React.lazy(() =>
 import {NotificationsScreen} from 'screens/Notifications/Notifications';
 //components
 import {StatusBar} from 'react-native';
-import {colors} from 'shared/styles/variables';
 import {useGlobalState} from 'globalState';
 import {Loading} from 'shared/components';
 //utils
@@ -20,24 +19,24 @@ const {Navigator, Screen} = createStackNavigator();
 
 const Router = () => {
   const [hasKeystore] = useGlobalState('keystore');
-  return hasKeystore ? (
-    <RouterContainer>
-      <Screen name="Balance" component={BalanceRoutes} />
-      <Screen
-        name="Transfers"
-        component={TransfersRoutes}
-        options={{headerShown: false}}
-      />
-      <Screen
-        name="Notifications"
-        component={NotificationsScreen}
-        options={{headerShown: true}}
-      />
-    </RouterContainer>
-  ) : (
+  return (
     <Suspense fallback={<Loading />}>
       <RouterContainer>
-        <Screen name="CreateWallet" component={CreateWalletRoutes} />
+        {hasKeystore ? (
+          <Screen name="Balance" component={BalanceRoutes} />
+        ) : (
+          <Screen name="CreateWallet" component={CreateWalletRoutes} />
+        )}
+        <Screen
+          name="Transfers"
+          component={TransfersRoutes}
+          options={{headerShown: false}}
+        />
+        <Screen
+          name="Notifications"
+          component={NotificationsScreen}
+          options={{headerShown: true}}
+        />
       </RouterContainer>
     </Suspense>
   );

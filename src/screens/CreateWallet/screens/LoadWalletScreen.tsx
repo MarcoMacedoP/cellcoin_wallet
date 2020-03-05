@@ -1,28 +1,32 @@
 import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import Toast from 'react-native-simple-toast';
-import {Loading} from 'shared/components';
+import {Loading, Button} from 'shared/components';
 import {Label, PageContainer, H4 as BaseTitle} from 'shared/styled-components';
 
 import {Image} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useCreateWallet} from '../hooks/useCreateWallet';
+import {useGlobalState} from 'globalState';
 
 export const LoadWalletScreen = () => {
+  console.log('LoadWalletScreen');
+
   const check = require('assets/icons/check_icon.png');
   const navigation = useNavigation();
   const {isCreated, error} = useCreateWallet();
+  const goBalance = () => navigation.navigate('Balance');
+  const goBack = () => navigation.goBack();
+
   useEffect(() => {
-    if (isCreated) {
-      const goBalance = () => navigation.navigate('Balance');
-      setTimeout(goBalance, 800);
-    } else if (error) {
-      console.log(error);
+    if (error) {
       Toast.show('Ups, someting goes wrong, try again later');
-      const goBack = () => navigation.goBack();
-      setTimeout(goBack, 1000);
+      setTimeout(goBack, 3000);
     }
-  }, [isCreated, error]);
+    if (!error && isCreated) {
+      setTimeout(goBalance, 2000);
+    }
+  }, [error, isCreated]);
 
   return (
     <PageContainer light>
