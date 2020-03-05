@@ -6,11 +6,9 @@ import {
 import {TransfersScreen} from './screens/TransfersScreen';
 import {SetAddressScreen} from './screens/SetAddressScreen';
 
-import { SendScreen } from './screens/Send';
+import {SendScreen} from './screens/Send';
 import {RecieveTransferScreen} from './screens/RecieveScreen';
-import Router, {commonScreenOptions} from 'Router';
-import {colors} from 'shared/styles';
-import {useGlobalState} from 'globalState';
+import {commonScreenOptions} from 'Router/options';
 import {LayoutHeader} from 'shared/components/LayoutHeader';
 import {AddressBookScreen} from './screens/AddressBookScreen';
 
@@ -37,16 +35,11 @@ const sendOptions: StackNavigationOptions = {
   headerStyle: {
     shadowRadius: 0,
     shadowOffset: {
-        height: 0,
+      height: 0,
     },
   },
   headerTitle: props => (
-    <LayoutHeader
-      {...props}
-      light
-      titleColor={'black'}
-      leftIcon="x"
-    />
+    <LayoutHeader {...props} light titleColor={'black'} leftIcon="x" />
   ),
   headerBackTitleVisible: false,
   headerLeft: null,
@@ -87,7 +80,7 @@ const setAddressOptions: StackNavigationOptions = {
   headerStyle: {
     shadowRadius: 0,
     shadowOffset: {
-        height: 0,
+      height: 0,
     },
   },
   headerTitle: props => (

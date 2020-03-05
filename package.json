@@ -6,7 +6,7 @@
     "config": "npm install && node configScript.js",
     "android": "react-native run-android",
     "android-shake": "adb shell input keyevent 82",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --simulator='iPhone Xr'",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
