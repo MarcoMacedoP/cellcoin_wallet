@@ -25,6 +25,7 @@ const balanceScreen = ({navigation}): StackNavigationOptions => ({
   // headerRight: () => (
   //   <IconContainer onPress={() => navigation.navigate('Balance')}>
   //     <SimpleIcon name="wallet" size={18} color={colors.white} />
+  //   </IconContainer>
   // ),
   headerTitle: () => <Logo source={require('assets/icons/logo_mini.png')} />,
 });

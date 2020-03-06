@@ -9,7 +9,7 @@ import {
     Dimensions
 } from 'react-native';
 
-import styles from './VirtualKeyboard.style';
+import { styles } from './VirtualKeyboard.style';
 
 type VKeyComponentProps = {
     color?: string,
