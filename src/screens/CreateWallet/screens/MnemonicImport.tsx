@@ -8,19 +8,26 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {colors} from 'shared/styles';
 
 import {isValid} from 'bitcore-mnemonic';
+import {useValidation} from 'shared/hooks';
+import {validations} from 'shared/validations';
 
 export function MnemonicImport({navigation}) {
+  // digital cargo wing output welcome lens burst choice funny seed rain jar
   const [text, setText] = useState(null);
+
+  const [isValidInput] = useValidation({
+    validation: validations.walletSeed,
+    text,
+  });
 
   const [hasError, setError] = useState(null);
   useEffect(() => {
     if (text && text.length > 0) {
       try {
-        const isValidInput = isValid(text);
-        setError(!isValidInput);
-      } catch (error) {
-        setError(error);
-      }
+        const isValidSeed = isValid(text);
+        const hasError = isValidInput ? !isValidSeed : true;
+        setError(hasError);
+      } catch {}
     } else setError(null);
   }, [text]);
 
@@ -49,7 +56,9 @@ export function MnemonicImport({navigation}) {
             hasError={hasError}
             autoFocus
             keyboardType="name-phone-pad"
-            style={{marginBottom: 32}}
+            style={{
+              marginBottom: 32,
+            }}
             onChangeText={handleChangeText}
             multiline={true}
             value={text}
