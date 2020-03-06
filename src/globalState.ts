@@ -18,6 +18,7 @@ type globalState = {
   modalQR: boolean;
   addresses: Array<adressType>;
   mainAddress: string;
+  uuid: string;
   balance: balanceType;
   contactsQuantity: 0;
 };
@@ -29,5 +30,6 @@ export const {useGlobalState} = createGlobalState<globalState>({
   addresses: [],
   contactsQuantity: 0,
   mainAddress: undefined,
+  uuid: undefined,
   balance: null,
 });
