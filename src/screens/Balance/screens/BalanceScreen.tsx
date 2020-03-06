@@ -11,7 +11,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 const CURRENCYS: Array<CurrencyType> = [
   {
     name: 'Agave coin',
-    type: 'AGVC',
+    type: 'TOKEN',
     value: {original: '---', usd: '---'},
     image: 'assets/icons/agave_coin_icon.png',
   },

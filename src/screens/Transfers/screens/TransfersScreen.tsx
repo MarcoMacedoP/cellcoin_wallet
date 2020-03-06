@@ -8,9 +8,9 @@ import {ClipboardComponent} from 'shared/components/Clipboard';
 import {PageContainer, Title, Subtitle} from 'shared/styled-components';
 import {TransfersHistoryComponent} from '../components/History';
 import {colors} from 'shared/styles';
-import {BalanceHeaderComponent} from 'screens/Balance/components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useGlobalState} from 'globalState';
+import {getCurrencyInfo} from '../components/Functions/getCurrencyInfo';
 
 type TransfersScreenProps = {
   route: any;
@@ -25,19 +25,14 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
   const navigateToSendTransfer = () => navigation.navigate('send', {currency});
   const navigateToRecieveTransfer = () =>
     navigation.navigate('recieve', {currency});
+  const {logo, tokenName} = getCurrencyInfo(type);
 
   return (
     <>
       <Container>
         <TransactionContainer>
           <Header>
-            <Image
-              source={
-                type === 'AGVC'
-                  ? require('assets/icons/agave_coin_icon.png')
-                  : require('assets/icons/ethereum_icon.png')
-              }
-            />
+            <Image source={logo} />
             <Title>{value.original}</Title>
             <Subtitle>{'= $' + value.usd}</Subtitle>
           </Header>
@@ -62,7 +57,7 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
           </ButtonsContainer>
         </TransactionContainer>
         <HistoryContainer>
-          <TransfersHistoryComponent />
+          <TransfersHistoryComponent logo={logo} type={type} />
         </HistoryContainer>
       </Container>
     </>

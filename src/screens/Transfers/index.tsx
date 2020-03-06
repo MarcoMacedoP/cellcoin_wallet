@@ -11,7 +11,8 @@ import {RecieveTransferScreen} from './screens/RecieveScreen';
 import {commonScreenOptions} from 'Router/options';
 import {LayoutHeader} from 'shared/components/LayoutHeader';
 import {AddressBookScreen} from './screens/AddressBookScreen';
-import { colors } from 'shared/styles/variables';
+import {colors} from 'shared/styles/variables';
+import {getCurrencyInfo} from './components/Functions/getCurrencyInfo';
 
 const Transfers = createStackNavigator();
 
@@ -114,7 +115,8 @@ export function TransfersRoutes() {
         component={SendScreen}
         options={({route}: {route: any}) => ({
           ...sendOptions,
-          title: 'Send ' + route.params.currency.type,
+          title:
+            'Send ' + getCurrencyInfo(route.params.currency.type).tokenName,
         })}
       />
       <Transfers.Screen
@@ -122,7 +124,8 @@ export function TransfersRoutes() {
         component={SetAddressScreen}
         options={({route}: {route: any}) => ({
           ...setAddressOptions,
-          title: 'Send ' + route.params.currency.type,
+          title:
+            'Send ' + getCurrencyInfo(route.params.currency.type).tokenName,
         })}
       />
       <Transfers.Screen

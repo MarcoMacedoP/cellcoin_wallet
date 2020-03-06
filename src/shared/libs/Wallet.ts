@@ -1,6 +1,7 @@
 import Wallet from 'erc20-wallet';
 import AsyncStorage from '@react-native-community/async-storage';
 import lightwallet from 'eth-lightwallet';
+import api from 'etherscan-api';
 
 function createdStored() {
   return new Promise((resolve, reject) => {
@@ -50,3 +51,13 @@ export async function encodeKeystore() {
   const json = await Wallet.encodeJson();
   await AsyncStorage.setItem('keystore', json);
 }
+function initEtherScan() {
+  const etherscan = api.init(
+    'NF3VM2RDBRJMAXCGPDIBX2KMX8W5ED8SF9',
+    this.networkEtherScan,
+    3000,
+  );
+  this.etherscan = etherscan;
+  return etherscan;
+}
+Wallet.initEtherScan = initEtherScan;

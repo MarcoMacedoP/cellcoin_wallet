@@ -2,10 +2,16 @@ import React from 'react';
 import styled from 'styled-components/native';
 import {Image} from 'react-native';
 import {colors} from '../styles';
-
-export const EmptyState = ({message}) => (
+type EmptyStateProps = {
+  message: string;
+  hasImage?: boolean;
+};
+export const EmptyState: React.FC<EmptyStateProps> = ({
+  message,
+  hasImage = true,
+}) => (
   <Container>
-    <Image source={require('../../assets/icons/cart_icon.png')} />
+    {hasImage && <Image source={require('/assets/icons/cart_icon.png')} />}
     <Message>{message}</Message>
   </Container>
 );

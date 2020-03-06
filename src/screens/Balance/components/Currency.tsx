@@ -4,6 +4,7 @@ import {colors} from 'shared/styles';
 import {View} from 'react-native';
 import {CurrencyType} from 'shared/types';
 import {Text, SmallText} from 'shared/styled-components';
+import {getCurrencyInfo} from 'screens/Transfers/components/Functions/getCurrencyInfo';
 
 type BalanceCurrencyComponentProps = {
   onClick: () => void;
@@ -14,20 +15,15 @@ export const BalanceCurrencyComponent: React.FC<BalanceCurrencyComponentProps> =
     onClick,
     currency: {name, type, value},
   } = props;
+  const {logo, tokenName} = getCurrencyInfo(type);
 
   return (
     <Container onPress={onClick} underlayColor={colors.whiteDark}>
       <InfoContainer>
         <TitleContainer>
-          <Image
-            source={
-              type === 'AGVC'
-                ? require('assets/icons/agave_coin_icon.png')
-                : require('assets/icons/ethereum_icon.png')
-            }
-          />
+          <Image source={logo} />
           <View style={{marginLeft: 3, paddingLeft: 8}}>
-            <Text upperCase> {type}</Text>
+            <Text upperCase> {type === 'TOKEN' ? 'AGVC' : type}</Text>
             <SmallText style={{marginLeft: 4}}>{name}</SmallText>
           </View>
         </TitleContainer>
