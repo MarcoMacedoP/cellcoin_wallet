@@ -5,7 +5,9 @@ import { CurrencyType } from 'shared/types';
 import { colors } from 'shared/styles/variables';
 import { Label } from 'shared/styled-components';
 import { Button } from 'shared/components';
-import VirtualKeyboard from '../components/virtual-keyboard-update/VirtualKeyboard';
+// import VirtualKeyboard from '../components/virtual-keyboard-update/VirtualKeyboard';
+import { VKeyComponent } from '../components/virtual-keyboard-update/VKey';
+
 import { Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RawModal } from 'shared/components/RawModal';
@@ -95,9 +97,9 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
             </Button>
           </Header>
           <Body>
-            <VirtualKeyboard
-              color="black"
-              text={
+
+            <VKeyComponent
+              value={
                 activeCurrency === currency.type
                   ? quantityCurrenncy === '0'
                     ? ''
@@ -106,13 +108,9 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
                     ? ''
                     : quantity
               }
-              pressMode="string"
               onPress={val => {
                 setQuantity_(val);
               }}
-              decimal={true}
-              rowStyle={{ width: Dimensions.get('window').width }}
-              cellStyle={{ height: 60 }}
             />
 
             <Button secondary isActivated={quantity !== '0.00' && quantity !== '.0' && quantity !== '0' && quantityCurrenncy !== '0' && quantityCurrenncy !== 'NaN' && quantity !== 'NaN'} onClick={() => {navigation.navigate('setAddress', {currency, quantityCurrenncy})}}>

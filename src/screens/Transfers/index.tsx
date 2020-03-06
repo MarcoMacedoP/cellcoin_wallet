@@ -11,6 +11,7 @@ import {RecieveTransferScreen} from './screens/RecieveScreen';
 import {commonScreenOptions} from 'Router/options';
 import {LayoutHeader} from 'shared/components/LayoutHeader';
 import {AddressBookScreen} from './screens/AddressBookScreen';
+import { colors } from 'shared/styles/variables';
 
 const Transfers = createStackNavigator();
 
@@ -79,10 +80,11 @@ const addressOptions: StackNavigationOptions = {
 const setAddressOptions: StackNavigationOptions = {
   headerTransparent: false,
   headerStyle: {
+    elevation: 0,
+    backgroundColor: colors.white,
     shadowRadius: 0,
-    shadowOffset: {
-      height: 0,
-    },
+    borderBottomWidth: 0,
+    shadowColor: 'transparent',
   },
   headerTitle: props => (
     <LayoutHeader
