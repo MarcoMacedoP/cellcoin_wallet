@@ -1,84 +1,36 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
-import {Text, SmallText} from 'shared/styled-components/Texts';
+import {Text} from 'shared/styled-components/Texts';
 import {FlatList} from 'react-native';
 
-import Wallet from 'erc20-wallet';
 import {TransactionCard} from './TransactionCard';
-import {useGlobalState} from 'globalState';
 
-//fixings of wallet package
-import api from 'etherscan-api';
 import {TokenType} from 'shared/types';
 import {EmptyState, Loading} from 'shared/components';
 import {ScrollView} from 'react-native-gesture-handler';
-function initEtherScan() {
-  const etherscan = api.init(
-    'NF3VM2RDBRJMAXCGPDIBX2KMX8W5ED8SF9',
-    this.networkEtherScan,
-    3000,
-  );
-  this.etherscan = etherscan;
-  return etherscan;
-}
-Wallet.initEtherScan = initEtherScan;
 
 type TransfersHistoryComponentProps = {
   logo: string;
   type: TokenType;
+  isEmpty: boolean;
+  history: Array<any>;
 };
 export const TransfersHistoryComponent: React.FC<TransfersHistoryComponentProps> = ({
   type,
+  isEmpty,
+  history,
 }) => {
-  const [transactions, setTransactions] = useState([]);
-  const [mainAddress] = useGlobalState('mainAddress');
-  const initialStatus = {
-    loading: false,
-    error: null,
-  };
-  const [status, setStatus] = useState(initialStatus);
-  useEffect(() => {
-    fetchHistory();
-  }, []);
-  async function fetchHistory() {
-    setStatus({
-      loading: true,
-      error: null,
-    });
-    try {
-      const transactions =
-        type === 'TOKEN'
-          ? await Wallet.getTxtTokens(mainAddress)
-          : await Wallet.getTxtEth(mainAddress);
-      setTransactions(transactions || []);
-      setStatus({
-        error: null,
-        loading: false,
-      });
-    } catch (error) {
-      console.log(error);
-      setStatus({
-        error,
-        loading: false,
-      });
-    }
-  }
-  return status.loading ? (
-    <Loading />
-  ) : (
+  return (
     <Container>
-      <Text
-        isBold
-        style={{marginBottom: transactions.length === 0 ? 0 : 16}}
-        center={transactions.length === 0}>
+      <Text isBold style={{marginBottom: isEmpty ? 0 : 16}} center={isEmpty}>
         History
       </Text>
-      {transactions.length > 0 ? (
+      {!isEmpty ? (
         <FlatList
           scrollEnabled
-          data={transactions}
+          data={history}
           keyExtractor={item => item.blockNumber}
           renderItem={({item, index}) => (
             <TransactionCard

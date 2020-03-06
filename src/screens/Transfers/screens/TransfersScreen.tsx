@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components/native';
 //components
 
@@ -11,6 +11,9 @@ import {colors} from 'shared/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useGlobalState} from 'globalState';
 import {getCurrencyInfo} from '../components/Functions/getCurrencyInfo';
+import {ScrollView} from 'react-native-gesture-handler';
+import {Dimensions, RefreshControl} from 'react-native';
+import {useFetchHistory} from '../components/Hooks/useFetchHistory';
 
 type TransfersScreenProps = {
   route: any;
@@ -20,46 +23,76 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
   const {route, navigation} = props;
   const {currency}: {currency: CurrencyType} = route.params;
   const {value, type} = currency;
+  const {logo} = getCurrencyInfo(type);
+
   const [mainAddress] = useGlobalState('mainAddress');
+  const {history, fetchHistory, loading} = useFetchHistory(type, mainAddress);
+
+  const onRefresh = React.useCallback(() => {
+    fetchHistory();
+  }, []);
 
   const navigateToSendTransfer = () => navigation.navigate('send', {currency});
   const navigateToRecieveTransfer = () =>
     navigation.navigate('recieve', {currency});
-  const {logo, tokenName} = getCurrencyInfo(type);
 
   return (
     <>
-      <Container>
-        <TransactionContainer>
-          <Header>
-            <Image source={logo} />
-            <Title>{value.original}</Title>
-            <Subtitle>{'= $' + value.usd}</Subtitle>
-          </Header>
-          <ClipboardContainer>
-            <ClipboardComponent text={mainAddress} />
-          </ClipboardContainer>
-          <ButtonsContainer>
-            <Button
-              accent
-              width="50%"
-              margin="0 4px 0 0"
-              onClick={navigateToSendTransfer}>
-              <Icon name="send" size={15} color="white" /> Send
-            </Button>
-            <Button
-              secondary
-              width="50%"
-              margin="0 0 0 4px"
-              onClick={navigateToRecieveTransfer}>
-              <Icon name="qrcode" size={15} color="white" /> Receive
-            </Button>
-          </ButtonsContainer>
-        </TransactionContainer>
-        <HistoryContainer>
-          <TransfersHistoryComponent logo={logo} type={type} />
-        </HistoryContainer>
-      </Container>
+      <ScrollView
+        contentContainerStyle={{
+          width: Dimensions.get('screen').width,
+          height: Dimensions.get('window').height,
+        }}
+        refreshControl={
+          <RefreshControl
+            size={35}
+            tintColor={colors.white}
+            refreshing={loading}
+            style={{
+              borderWidth: 0,
+              backgroundColor: colors.primary,
+            }}
+            onRefresh={onRefresh}
+          />
+        }>
+        <Container>
+          <TransactionContainer>
+            <Header>
+              <Image source={logo} />
+              <Title>{value.original}</Title>
+              <Subtitle>{'= $' + value.usd}</Subtitle>
+            </Header>
+            <ClipboardContainer>
+              <ClipboardComponent text={mainAddress} />
+            </ClipboardContainer>
+            <ButtonsContainer>
+              <Button
+                accent
+                width="50%"
+                margin="0 4px 0 0"
+                onClick={navigateToSendTransfer}>
+                <Icon name="send" size={15} color="white" /> Send
+              </Button>
+              <Button
+                secondary
+                width="50%"
+                margin="0 0 0 4px"
+                onClick={navigateToRecieveTransfer}>
+                <Icon name="qrcode" size={15} color="white" /> Receive
+              </Button>
+            </ButtonsContainer>
+          </TransactionContainer>
+
+          <HistoryContainer>
+            <TransfersHistoryComponent
+              logo={logo}
+              type={type}
+              isEmpty={history.length === 0}
+              history={history}
+            />
+          </HistoryContainer>
+        </Container>
+      </ScrollView>
     </>
   );
 };
