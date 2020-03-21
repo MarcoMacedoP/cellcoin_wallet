@@ -33,12 +33,10 @@ type SendTransferScreenProps = {
 export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
 //   const {setAddress} = props.route.params;
   const [modalAdd, setModalAdd] = useGlobalState('modalAdd');
-  const [mainAddress, setMainAddress] = useGlobalState(
-    'contactsQuantity',
-  );
+  const [, setMainAddress] = useGlobalState('mainAddress');
 
   const [state, setState] = useState({
-    alias: '',
+    alias: 'amigos',
     address: '',
     ready: false,
   });
@@ -52,6 +50,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
   useEffect(() => {
     async function getAddress() {
       try {
+        // AsyncStorage.removeItem('addressesEdit')
         let arrayAddress: Array<any> = JSON.parse(
           await AsyncStorage.getItem('addresses'),
         );
@@ -59,11 +58,11 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
           await AsyncStorage.getItem('addressesEdit'),
         );
         setListAddressBase(arrayAddress);
-        setState({...state, address: arrayAddress[listAddressQuantity + 1].address});
         if (arrayAddressEdited.length !== 0) {
-          setListAddress(arrayAddressEdited);
+            setListAddress(arrayAddressEdited);
+            setListAddressQuantity(arrayAddressEdited.length);
         } else {
-          cleanList();
+            cleanList();
         }
       } catch (error) {
       }
@@ -71,30 +70,37 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
     async function cleanList() {
       const tempArray = listAddress.filter(data => data.index !== -1 && data);
       setListAddress(tempArray);
-      await AsyncStorage.setItem('contacts', JSON.stringify(tempArray));
+      await AsyncStorage.setItem('addressesEdit', JSON.stringify(tempArray));
     }
     getAddress();
   }, []);
   const addNewAddress = async () => {
-    setListAddressQuantity(listAddressQuantity + 1);
-    var data = {
-      alias: state.alias,
-      address: state.address,
-      index: listAddressQuantity,
-    };
-    console.log(data);
-    listAddress.push(data);
-    setListAddress(listAddress);
-    setOnAsync();
+      if (listAddressQuantity != 9) {
+        console.log(listAddressQuantity);
+        let counter = 1 + listAddressQuantity;
+        console.log(counter);
+        console.log(listAddressBase);
+        setListAddressQuantity(counter);
+        var data = {
+          alias: state.alias,
+          address: listAddressBase[counter].address,
+          index: listAddressQuantity,
+        };
+        console.log(data);
+        listAddress.push(data);
+        setListAddress(listAddress);
+        setOnAsync();
+    } else {
+        Toast.show('Limit address');
+    }
   };
   const setOnAsync = async () => {
     await AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress));
     setModalAdd(!modalAdd);
-    console.log(listAddressBase[listAddressQuantity + 1].address);
     setState({
       ...state,
       alias: '',
-      address: listAddressBase[listAddressQuantity + 1].address,
+      address: listAddressBase[listAddressQuantity].address,
     });
 
   };
@@ -175,7 +181,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
                 />
             </InputContainer>
             <Button
-                isActivated={state.alias && state.address ? true : false}
+                isActivated={state.alias ? true : false}
                 width={'90%'}
                 onClick={() => addNewAddress()}>
                 Add Address
