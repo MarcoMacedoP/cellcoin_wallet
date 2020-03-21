@@ -60,7 +60,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
         setListAddressBase(arrayAddress);
         if (arrayAddressEdited.length !== 0) {
             setListAddress(arrayAddressEdited);
-            setListAddressQuantity(arrayAddressEdited.length);
+            setListAddressQuantity(arrayAddressEdited.length -1);
         } else {
             cleanList();
         }
@@ -76,17 +76,13 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
   }, []);
   const addNewAddress = async () => {
       if (listAddressQuantity != 9) {
-        console.log(listAddressQuantity);
         let counter = 1 + listAddressQuantity;
-        console.log(counter);
-        console.log(listAddressBase);
         setListAddressQuantity(counter);
         var data = {
           alias: state.alias,
           address: listAddressBase[counter].address,
           index: listAddressQuantity,
         };
-        console.log(data);
         listAddress.push(data);
         setListAddress(listAddress);
         setOnAsync();
