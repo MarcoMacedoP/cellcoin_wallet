@@ -94,8 +94,28 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
   const onTextAliasChange = text => {
     setState({...state, alias: text});
   };
+  const isAddress = function (address) {
+      if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+          // check if it has the basic requirements of an address
+          return false;
+      } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
+          // If it's all small caps or all all caps, return true
+          return true;
+      } else {
+          // Otherwise check each case
+          return true;
+      }
+  };
   const onTextAddressChange = text => {
-    setState({...state, address: text});
+
+    let validAddress = false;
+    try {
+      validAddress = isAddress(text)
+    } catch(e) { 
+      console.log(e)
+    }
+
+    setState({...state, address: text, validAddress: validAddress});
   };
 
   const deleteAddress = async ({item}) => {
