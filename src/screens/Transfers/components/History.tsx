@@ -10,6 +10,7 @@ import {TransactionCard} from './TransactionCard';
 import {TokenType} from 'shared/types';
 import {EmptyState, Loading} from 'shared/components';
 import {ScrollView} from 'react-native-gesture-handler';
+import { DetailModal } from './DetailModal';
 
 type TransfersHistoryComponentProps = {
   logo: string;
@@ -22,6 +23,27 @@ export const TransfersHistoryComponent: React.FC<TransfersHistoryComponentProps>
   isEmpty,
   history,
 }) => {
+  const [modalDetail, setModalDetail] = useState(false);
+  const [detail, setDetail] = useState({
+    type: '',
+    timeStamp: 0,
+    value: 0,
+    hash: '',
+    from: '',
+    to: '',
+  });
+  const showDetail = (data) => {
+    setDetail({
+      type: data.type,
+      timeStamp: data.timeStamp,
+      value: data.value,
+      hash: data.hash,
+      from: data.from,
+      to: data.to,
+    })
+    setModalDetail(true);
+  };
+
   return (
     <Container>
       <Text isBold style={{marginBottom: isEmpty ? 0 : 16}} center={isEmpty}>
@@ -30,6 +52,7 @@ export const TransfersHistoryComponent: React.FC<TransfersHistoryComponentProps>
       {!isEmpty ? (
         <FlatList
           scrollEnabled
+          nestedScrollEnabled={true}
           data={history}
           keyExtractor={item => item.blockNumber}
           renderItem={({item, index}) => (
@@ -39,17 +62,29 @@ export const TransfersHistoryComponent: React.FC<TransfersHistoryComponentProps>
               timestamp={item.timeStamp}
               type={type}
               value={item.value}
+              onPress={() =>{ showDetail(item) }}
             />
           )}
         />
       ) : (
-        <ScrollView>
+        <ScrollView nestedScrollEnabled={true}>
           <EmptyState
             message="You have not made transactions yet"
             hasImage={false}
           />
         </ScrollView>
       )}
+      <DetailModal        
+        isShowed={modalDetail}
+        action={detail.type}
+        timestamp={detail.timeStamp}
+        type={type}
+        value={detail.value}
+        hash={detail.hash}
+        from={detail.from}
+        to={detail.to}
+        onClose={() => setModalDetail(false)}
+      />
     </Container>
   );
 };

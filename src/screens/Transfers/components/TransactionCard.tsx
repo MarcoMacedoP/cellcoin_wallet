@@ -8,15 +8,16 @@ import {TokenType} from 'shared/types';
 type TransactionCardProps = {
   type: TokenType;
   timestamp: number;
-  action: 'send' | 'recieved';
+  action: 'send' | 'Received';
   value: number;
+  onPress: any,
 };
 export const TransactionCard: React.FC<TransactionCardProps> = props => {
-  const {timestamp, type, action, value} = props;
+  const {timestamp, type, action, value, onPress} = props;
   const date = new Date(timestamp * 1000);
   const {logo, tokenName} = getCurrencyInfo(type);
   return (
-    <Container>
+    <Container onPress={onPress}>
       <Row>
         <LogoContainer>
           <Logo source={logo} />

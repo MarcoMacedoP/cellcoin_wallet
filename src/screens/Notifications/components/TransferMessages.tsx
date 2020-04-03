@@ -3,12 +3,10 @@ import { View, FlatList, RefreshControl, StyleSheet, Text } from 'react-native';
 import {EmptyState} from 'shared/components/EmptyState';
 import { NotificationCard } from 'shared/components';
 
-export const TransferMessages = ({notifications, updateNotifications}) => {
-  const [state, setState] = useState({
-    isLoading: false
-  });
+export const TransferMessages = ({notifications, updateNotifications, isLoading}) => {
+  
   const renderRefreshControl = () => {
-    setState({...state,  isLoading: true })
+    updateNotifications();
   }
 
   const renderRow = (notification, index) => {
@@ -25,7 +23,7 @@ export const TransferMessages = ({notifications, updateNotifications}) => {
           renderItem={({item, index}) => renderRow(item, index)}
           keyExtractor={(item, index) => item.id}
           onRefresh={() => renderRefreshControl()}
-          refreshing={state.isLoading}
+          refreshing={isLoading}
           initialNumToRender={8}
         />
       )}

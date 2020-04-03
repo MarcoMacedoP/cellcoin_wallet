@@ -108,7 +108,12 @@ export const LayoutHeader: React.FC<LayoutProps> = props => {
       <Shared
         onPress={() => {
           if (rightIcon == 'address') {
-            navigation.navigate('Transfers', {screen: 'address'});
+            navigation.navigate('Transfers', {
+              screen: 'address', 
+              params: {
+                setAddress: address => console.log(address),
+              },
+            });
           } else if (rightIcon == 'add') {
             setModalAdd(!modalAdd);
           } else if (rightIcon == 'shared') {

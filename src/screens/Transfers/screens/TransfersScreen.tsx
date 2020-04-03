@@ -39,6 +39,7 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
   return (
     <>
       <ScrollView
+        nestedScrollEnabled={true}      
         contentContainerStyle={{
           width: Dimensions.get('screen').width,
           height: Dimensions.get('window').height,
@@ -96,14 +97,14 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
     </>
   );
 };
-const Container = styled.SafeAreaView`
+const Container = styled.View`
   height: 100%;
   width: 100%;
   justify-content: flex-start;
   background-color: ${colors.white};
 `;
 const TransactionContainer = styled(PageContainer)`
-  height: 70%;
+  height: 65%;
   background: ${colors.white};
   align-items: center;
 `;
@@ -120,17 +121,6 @@ const Image = styled.Image`
   width: 30px;
   height: 30px;
 `;
-const IconsBox = styled.View`
-  width: 25px;
-  height: 25px;
-  justify-content: center;
-  align-items: center;
-`;
-const Icons = styled.Image`
-  width: 20px;
-  height: 20px;
-  margin-top: 15px;
-`;
 const ClipboardContainer = styled.View`
   margin: 16px 0;
   width: 100%;
@@ -143,8 +133,7 @@ const ButtonsContainer = styled.View`
   width: 100%;
   max-width: 100%;
 `;
-
 const HistoryContainer = styled(PageContainer)`
   background-color: ${colors.whiteDark};
-  height: 40%;
+  height: 35%;
 `;

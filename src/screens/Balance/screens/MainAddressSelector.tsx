@@ -36,7 +36,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
   const [, setMainAddress] = useGlobalState('mainAddress');
 
   const [state, setState] = useState({
-    alias: 'amigos',
+    alias: '',
     address: '',
     ready: false,
   });
@@ -101,6 +101,15 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
 
   };
 
+  const SetMainAddresAndReload = text => {
+    setMainAddress(text);
+    // navigation.goBack();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Balance' }],
+    });
+  };
+
   const onTextAliasChange = text => {
     setState({...state, alias: text});
   };
@@ -122,8 +131,9 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
               <TouchableHighlight
                 id={rowMap}
                 onPress={() => {
-                  setMainAddress(data.item.address);
-                  navigation.goBack();
+                  // setMainAddress(data.item.address);
+                  // navigation.goBack();
+                  SetMainAddresAndReload(data.item.address);
                 }}
                 underlayColor={colors.lightGray}
                 style={{

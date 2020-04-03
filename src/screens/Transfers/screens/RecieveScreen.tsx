@@ -56,7 +56,7 @@ const Box = styled.View`
   background-color: ${colors.white}
   justify-content: space-around;
   align-items: center;
-  width: 75%;
+  width: 80%;
   padding-top: 10px;
   border-radius: 25px;
 `;
@@ -67,8 +67,8 @@ const ImageBox = styled.View`
 `;
 
 const Image = styled.Image`
-  width: 200px;
-  height: 200px;
+  width: 250px;
+  height: 250px;
 `;
 const Logo = styled.Image`
   width: 150px;
