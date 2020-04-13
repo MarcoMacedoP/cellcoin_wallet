@@ -1,4 +1,4 @@
-package com.wallet_template;
+package com.wallet_agavecoin;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -13,7 +13,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "wallet_template";
+    return "wallet_agavecoin";
   }
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
