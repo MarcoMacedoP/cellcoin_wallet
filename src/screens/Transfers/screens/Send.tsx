@@ -33,7 +33,7 @@ export const SendScreen: React.FC<SendScreenProps> = ({ route: { params }, }) =>
         else setActiveCurrency(currency.type);
     }
     const setQuantity_ = (val) => {
-        const minumunQty =  0.5;
+        const minumunQty =  0.1;
         const cuantity = parseFloat(currency.value.original)
         const value = parseFloat(val);
         if (cuantity < minumunQty) {
