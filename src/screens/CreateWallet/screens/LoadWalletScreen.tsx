@@ -8,11 +8,11 @@ import {Image} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useCreateWallet} from '../hooks/useCreateWallet';
 import {useGlobalState} from 'globalState';
+const check = require('assets/icons/check_icon.png');
 
 export const LoadWalletScreen = () => {
   console.log('LoadWalletScreen');
 
-  const check = require('assets/icons/check_icon.png');
   const navigation = useNavigation();
   const {isCreated, error} = useCreateWallet();
   const goBalance = () => navigation.navigate('Balance');

@@ -14,44 +14,39 @@ const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
 //Wallet initializations
 Wallet.mySeed = 'mipalabraalfanumerica8989';
 
-
-function  useOneSignal () {
+function useOneSignal() {
   const [uuid, setUuid] = useGlobalState('uuid');
 
   const initializeOneSignal = async () => {
-    OneSignal.init("bcaa9a41-21f9-4bdf-b693-2d906840fc27", { kOSSettingsKeyAutoPrompt: true });// set kOSSettingsKeyAutoPrompt to false prompting manually on iOS
-    
+    OneSignal.init('bcaa9a41-21f9-4bdf-b693-2d906840fc27', {
+      kOSSettingsKeyAutoPrompt: true,
+    }); // set kOSSettingsKeyAutoPrompt to false prompting manually on iOS
+
     OneSignal.addEventListener('received', onReceived);
     OneSignal.addEventListener('opened', onOpened);
     OneSignal.addEventListener('ids', onIds);
-  }
-  const onOpened = (openResult) => {
+  };
+  const onOpened = openResult => {
     console.log('Message: ', openResult.notification.payload.body);
     console.log('Data: ', openResult.notification.payload.additionalData);
     console.log('isActive: ', openResult.notification.isAppInFocus);
     console.log('openResult: ', openResult);
-  }
-  const onIds = (device) => {
+  };
+  const onIds = device => {
     // console.log('Device info: ', device);
-    if(!uuid || uuid !== device.userId ){
-      setUuid(device.userId)
-      OneSignal.sendTag("slug", device.userId);
-      
+    if (!uuid || uuid !== device.userId) {
+      setUuid(device.userId);
+      OneSignal.sendTag('slug', device.userId);
     }
-  }
+  };
 
-  const onReceived = (notification) => {
+  const onReceived = notification => {
     // console.log("Notification received: ", notification);
-  }
-  useEffect(()=> {
-      initializeOneSignal();
-  }, [])
-  
+  };
+  useEffect(() => {
+    initializeOneSignal();
+  }, []);
 }
-
-
-
-
 
 /**
  * Hook that initializes the app.
@@ -76,6 +71,7 @@ function useInitilizeApp() {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       });
       const {data} = await response.json();
+      console.log({data});
       return data;
     }
     async function setInitialization() {
