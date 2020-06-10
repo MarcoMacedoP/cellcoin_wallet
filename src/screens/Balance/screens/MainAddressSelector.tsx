@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, SmallText} from 'shared/styled-components/Texts';
 import {
-  PageContainer,
+  ScreenContainer,
   Label as BaseLabel,
   Input,
 } from 'shared/styled-components';
@@ -27,11 +27,11 @@ import {useNavigation} from '@react-navigation/native';
 import {ScanScreen} from 'shared/components/QrReader';
 
 type SendTransferScreenProps = {
-//   route: {params: {setAddress: (address) => void}};
+  //   route: {params: {setAddress: (address) => void}};
 };
 
 export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
-//   const {setAddress} = props.route.params;
+  //   const {setAddress} = props.route.params;
   const [modalAdd, setModalAdd] = useGlobalState('modalAdd');
   const [, setMainAddress] = useGlobalState('mainAddress');
 
@@ -59,13 +59,12 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
         );
         setListAddressBase(arrayAddress);
         if (arrayAddressEdited.length !== 0) {
-            setListAddress(arrayAddressEdited);
-            setListAddressQuantity(arrayAddressEdited.length -1);
+          setListAddress(arrayAddressEdited);
+          setListAddressQuantity(arrayAddressEdited.length - 1);
         } else {
-            cleanList();
+          cleanList();
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     }
     async function cleanList() {
       const tempArray = listAddress.filter(data => data.index !== -1 && data);
@@ -75,19 +74,19 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
     getAddress();
   }, []);
   const addNewAddress = async () => {
-      if (listAddressQuantity != 9) {
-        let counter = 1 + listAddressQuantity;
-        setListAddressQuantity(counter);
-        var data = {
-          alias: state.alias,
-          address: listAddressBase[counter].address,
-          index: listAddressQuantity,
-        };
-        listAddress.push(data);
-        setListAddress(listAddress);
-        setOnAsync();
+    if (listAddressQuantity != 9) {
+      let counter = 1 + listAddressQuantity;
+      setListAddressQuantity(counter);
+      var data = {
+        alias: state.alias,
+        address: listAddressBase[counter].address,
+        index: listAddressQuantity,
+      };
+      listAddress.push(data);
+      setListAddress(listAddress);
+      setOnAsync();
     } else {
-        Toast.show('Limit address');
+      Toast.show('Limit address');
     }
   };
   const setOnAsync = async () => {
@@ -98,7 +97,6 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
       alias: '',
       address: listAddressBase[listAddressQuantity].address,
     });
-
   };
 
   const SetMainAddresAndReload = text => {
@@ -106,7 +104,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
     // navigation.goBack();
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Balance' }],
+      routes: [{name: 'Balance'}],
     });
   };
 
@@ -164,8 +162,8 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
               <TouchableOpacity
                 style={{
                   backgroundColor: 'transparent',
-                }}>
-              </TouchableOpacity>
+                }}
+              />
             )}
           />
         </ListContent>
@@ -176,22 +174,22 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
         onClose={() => {
           setModalAdd(!modalAdd);
         }}>
-            <InputContainer>
-                <Label>Alias</Label>
-                <Input
-                    align="left"
-                    value={state.alias}
-                    maxLength={15}
-                    keyboardAppearance={'dark'}
-                    onChangeText={value => onTextAliasChange(value)}
-                />
-            </InputContainer>
-            <Button
-                isActivated={state.alias ? true : false}
-                width={'90%'}
-                onClick={() => addNewAddress()}>
-                Add Address
-            </Button>
+        <InputContainer>
+          <Label>Alias</Label>
+          <Input
+            align="left"
+            value={state.alias}
+            maxLength={15}
+            keyboardAppearance={'dark'}
+            onChangeText={value => onTextAliasChange(value)}
+          />
+        </InputContainer>
+        <Button
+          isActivated={state.alias ? true : false}
+          width={'90%'}
+          onClick={() => addNewAddress()}>
+          Add Address
+        </Button>
       </Modal>
     </Container>
   );
@@ -200,16 +198,16 @@ const Icon = styled(BaseIcon)``;
 type ContainerProps = {
   hasData: boolean;
 };
-const Container = styled(PageContainer)<ContainerProps>`
+const Container = styled(ScreenContainer)<ContainerProps>`
   flex: 1;
-  
+
   align-items: center;
   justify-content: ${props => (props.hasData ? 'center' : 'space-around')};
   background-color: ${props =>
     props.hasData ? colors.lightGray : colors.white};
 `;
 const ListContent = styled.View`
-    margin-top: 25%;
+  margin-top: 25%;
   width: 100%;
   flex: 1;
 `;

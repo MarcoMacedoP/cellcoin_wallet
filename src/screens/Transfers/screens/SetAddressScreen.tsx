@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, SmallText} from 'shared/styled-components/Texts';
 import {
-  PageContainer,
+  ScreenContainer,
   Label as BaseLabel,
   Input,
 } from 'shared/styled-components';
@@ -40,7 +40,7 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
   const [gasLimit, setGasLimit] = useState(21000);
   const [isLoading, setIsLoading] = useState(false);
   const [minerFee, setMinerFee] = useState(21000);
-  
+
   const [state, setState] = useState({
     amount: quantityCurrenncy,
     to: '',
@@ -58,7 +58,9 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
    */
   function onPasswordFilled(password: string) {
     setState({...state, password});
-    currency.type == 'ETH' ? getGasLimitETH(password) : getGasLimitToken(password);
+    currency.type == 'ETH'
+      ? getGasLimitETH(password)
+      : getGasLimitToken(password);
   }
 
   const setWeb3Provider = async function() {
@@ -69,7 +71,7 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
     Wallet.web3.setProvider(web3Provider);
   };
 
-  const getGasLimitToken = async (pass) => {
+  const getGasLimitToken = async pass => {
     setIsLoading(true);
     await calculateGasLimitToken(mainAddress, state.to, state.amount)
       .then(response => {
@@ -81,7 +83,7 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
       });
   };
 
-  const getGasLimitETH = async (pass) => {
+  const getGasLimitETH = async pass => {
     setIsLoading(true);
     await calculateGasLimitETH(mainAddress, state.to, state.amount)
       .then(response => {
@@ -192,13 +194,19 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
     });
   };
 
-  const sendETH = async function (gass, pass) {
-    
-    await sendETHE(pass, mainAddress, state.to, state.amount, gass.gasPrice, gass.gasLimit)
+  const sendETH = async function(gass, pass) {
+    await sendETHE(
+      pass,
+      mainAddress,
+      state.to,
+      state.amount,
+      gass.gasPrice,
+      gass.gasLimit,
+    )
       .then(response => {
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
         navigation.navigate('Balance');
-        setModalIsShowed(false)
+        setModalIsShowed(false);
         setIsLoading(false);
       })
       .catch(error => {
@@ -211,12 +219,19 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
       });
   };
 
-  const sendTokenss = async function (gass, pass) {
-    await sendTokens(pass, mainAddress, state.to, state.amount, gass.gasPrice, gass.gasLimit)
+  const sendTokenss = async function(gass, pass) {
+    await sendTokens(
+      pass,
+      mainAddress,
+      state.to,
+      state.amount,
+      gass.gasPrice,
+      gass.gasLimit,
+    )
       .then(response => {
         Toast.show('Hash transaction: ' + response, Toast.SHORT);
         navigation.navigate('Balance');
-        setModalIsShowed(false)
+        setModalIsShowed(false);
         setIsLoading(false);
       })
       .catch(error => {
@@ -370,9 +385,9 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
     });
   };
 
-  const setAddressText = (text) => {
-    setState({...state, to: text})
-  }
+  const setAddressText = text => {
+    setState({...state, to: text});
+  };
 
   const onRecomendationClick = () => setMinerFee(recomendation);
 
@@ -382,7 +397,10 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
         transactionData={{
           currency: currency.type,
           amount: state.amount,
-          usd: (parseFloat(currency.value.usd) / parseFloat(currency.value.original)) * parseFloat(state.amount),
+          usd:
+            (parseFloat(currency.value.usd) /
+              parseFloat(currency.value.original)) *
+            parseFloat(state.amount),
         }}
         isShowed={modalIsShowed}
         onClose={() => setModalIsShowed(false)}
@@ -393,9 +411,9 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
         contentContainerStyle={{backgroundColor: colors.white}}
         style={{backgroundColor: colors.white}}>
         <Container light>
-          <Label style={{fontSize: 14,}}>Amount to send: {state.amount}</Label>
+          <Label style={{fontSize: 14}}>Amount to send: {state.amount}</Label>
           <InputBox>
-            <Label style={{marginHorizontal: 5,}}>To</Label>
+            <Label style={{marginHorizontal: 5}}>To</Label>
             <InputButton>
               <FromInput
                 value={state.to}
@@ -417,7 +435,7 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
               </IconContainer>
             </InputButton>
           </InputBox>
-          <InputBox style={{paddingHorizontal: 5,}}>
+          <InputBox style={{paddingHorizontal: 5}}>
             <Label>Gas fee</Label>
             <FeeText ligth={false} style={{textTransform: 'uppercase'}}>
               {minerFee} gwei= $ {minerFee * 1050000000}
@@ -463,7 +481,7 @@ export const SetAddressScreen: React.FC<SetAddressScreenProps> = ({
     </>
   );
 };
-const Container = styled(PageContainer)`
+const Container = styled(ScreenContainer)`
   flex: 1;
   padding-top: 8px;e
 `;
@@ -479,7 +497,7 @@ const InputBox = styled.View`
 `;
 const InputButton = styled.View`
   flex-direction: row;
-  width:100%;
+  width: 100%;
   justify-content: space-around;
   align-items: center;
 `;
@@ -508,8 +526,7 @@ const TransferText = styled(Text)`
   font-weight: bold;
   font-size: 18px;
 `;
-const FeeSlider = styled(Slider)`
-`;
+const FeeSlider = styled(Slider)``;
 const FeeText = styled(Label)`
   width: 100%;
   font-size: 12px;

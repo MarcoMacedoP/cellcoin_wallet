@@ -2,12 +2,15 @@ import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import Toast from 'react-native-simple-toast';
 import {Loading, Button} from 'shared/components';
-import {Label, PageContainer, H4 as BaseTitle} from 'shared/styled-components';
+import {
+  Label,
+  ScreenContainer,
+  H4 as BaseTitle,
+} from 'shared/styled-components';
 
 import {Image} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useCreateWallet} from '../hooks/useCreateWallet';
-import {useGlobalState} from 'globalState';
 const check = require('assets/icons/check_icon.png');
 
 export const LoadWalletScreen = () => {
@@ -29,7 +32,7 @@ export const LoadWalletScreen = () => {
   }, [error, isCreated]);
 
   return (
-    <PageContainer light>
+    <ScreenContainer light>
       <BodyBox>
         {isCreated ? (
           <CreatedContainer>
@@ -49,7 +52,7 @@ export const LoadWalletScreen = () => {
           />
         )}
       </BodyBox>
-    </PageContainer>
+    </ScreenContainer>
   );
 };
 

@@ -27,7 +27,7 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => (
-  <Container
+  <NativeModal
     animationType="fade"
     transparent={true}
     visible={isShowed}
@@ -36,6 +36,7 @@ export const Modal: React.FC<ModalProps> = ({
       contentContainerStyle={{
         justifyContent: 'center',
         alignItems: 'center',
+        flex: 1,
         height: Dimensions.get('window').height - 25,
       }}>
       <ContainerModal>
@@ -52,28 +53,28 @@ export const Modal: React.FC<ModalProps> = ({
             <Label>{title || 'Add new address'}</Label>
           </HeaderModal>
         )}
-        <ModalBox keyboardShouldPersistTaps="handled" contentContainerStyle={{alignItems: 'center'}}>
+        <ModalBox
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{alignItems: 'center'}}>
           {children}
         </ModalBox>
       </ContainerModal>
     </ScrollView>
-  </Container>
+  </NativeModal>
 );
-const Container = styled(NativeModal)`
-  align-items: center;
-  justify-content: center;
-`;
 const ScrollView = styled.ScrollView`
   background-color: ${colors.blackTransparent};
   height: 100%;
+  flex: 1;
 `;
 const ContainerModal = styled.View`
   justify-content: space-between;
   background-color: white;
   align-items: center;
   border-radius: 25px;
-  height: ${Dimensions.get('window').height * 0.8}px;
+  max-height: ${Dimensions.get('window').height * 0.8}px;
   width: 90%;
+  flex: 1;
 `;
 const IconButton = styled.TouchableOpacity``;
 const IconBoxModal = styled.View`

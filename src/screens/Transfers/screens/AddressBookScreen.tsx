@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, SmallText} from 'shared/styled-components/Texts';
 import {
-  PageContainer,
+  ScreenContainer,
   Label as BaseLabel,
   Input,
 } from 'shared/styled-components';
@@ -59,8 +59,7 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
         } else {
           cleanList();
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     }
     async function cleanList() {
       const tempArray = listAddress.filter(data => data.index !== -1 && data);
@@ -94,25 +93,27 @@ export const AddressBookScreen: React.FC<SendTransferScreenProps> = props => {
   const onTextAliasChange = text => {
     setState({...state, alias: text});
   };
-  const isAddress = function (address) {
-      if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-          // check if it has the basic requirements of an address
-          return false;
-      } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
-          // If it's all small caps or all all caps, return true
-          return true;
-      } else {
-          // Otherwise check each case
-          return true;
-      }
+  const isAddress = function(address) {
+    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+      // check if it has the basic requirements of an address
+      return false;
+    } else if (
+      /^(0x)?[0-9a-f]{40}$/.test(address) ||
+      /^(0x)?[0-9A-F]{40}$/.test(address)
+    ) {
+      // If it's all small caps or all all caps, return true
+      return true;
+    } else {
+      // Otherwise check each case
+      return true;
+    }
   };
   const onTextAddressChange = text => {
-
     let validAddress = false;
     try {
-      validAddress = isAddress(text)
-    } catch(e) { 
-      console.log(e)
+      validAddress = isAddress(text);
+    } catch (e) {
+      console.log(e);
     }
 
     setState({...state, address: text, validAddress: validAddress});
@@ -255,7 +256,7 @@ const Icon = styled(BaseIcon)``;
 type ContainerProps = {
   hasData: boolean;
 };
-const Container = styled<ContainerProps>(PageContainer)`
+const Container = styled<ContainerProps>(ScreenContainer)`
   height: 100%;
   align-items: center;
   justify-content: ${props => (props.hasData ? 'center' : 'space-around')};

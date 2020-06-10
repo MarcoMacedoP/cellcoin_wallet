@@ -1,124 +1,55 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
-
 //components
-import {Button, Modal} from 'shared/components';
+import {Button} from 'shared/components';
+import {MnemonicIntroModal} from '../components/MnemonicIntroModal';
+import {styles} from '../styles';
+import {View} from 'react-native';
+import {Title, Text, ScreenContainer} from 'shared/styled-components';
+
+const image = require('assets/images/agave_cellphone.png');
 
 export const MnemonicIntro = ({navigation}) => {
-  const [state, setState] = useState({
-    modalVisible: false,
-  });
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const image = require('assets/images/agave_cellphone.png');
-
-  const webcam = require('assets/icons/webcam.png');
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
+  const handleModalSubmit = () => {
+    setIsModalVisible(false);
+    navigation.push('MnemonicBackup');
+  };
+  const openModal = () => setIsModalVisible(true);
 
   return (
-    <Container>
+    <ScreenContainer light>
       <ImageBox>
-        <Image source={image} />
+        <Image source={image} resizeMode="contain" />
       </ImageBox>
-      <BodyBox>
-        <ContainerText>
-          <Title>Backup Mnermonic Phrases</Title>
-          <Label>
-            We have created Agave Coin wallet for you. The decentralized Agave
-            Coin Wallet can manage multiple crypto wallets under a single set of
-            mnemonic phrases
-          </Label>
-        </ContainerText>
-        <ContainerButtons>
-          <Button
-            onClick={() => {
-              setState({
-                modalVisible: true,
-              });
-            }}>
-            Start Backup
-          </Button>
-        </ContainerButtons>
-      </BodyBox>
-
-      <Modal
-        isShowed={state.modalVisible}
-        image={webcam}
-        onClose={() => {
-          setState({
-            modalVisible: false,
-          });
-        }}>
-        <ContainerText>
-          <Title
-            style={{
-              fontSize: 15,
-              textAlign: 'justify',
-              marginBottom: 10,
-            }}>
-            Having the mnemonic phrases can have full control over assets. Users
-            should be aware of the following matters
-          </Title>
-          <Label
-            style={{
-              fontSize: 15,
-              textAlign: 'justify',
-              marginBottom: 10,
-            }}>
-            Never take screenshots. Pay close attention to cameras around.
-          </Label>
-          <Label
-            style={{
-              fontSize: 15,
-              textAlign: 'justify',
-              marginBottom: 10,
-            }}>
-            Write down the words on paper and keep it in isolated from the
-            internet, Prohibit the disclosure or publicity of mnemonics in any
-            form or method.
-          </Label>
-          <Label
-            style={{
-              fontSize: 15,
-              textAlign: 'justify',
-              marginBottom: 10,
-            }}>
-            Please make sure to keepc a paper copy of your mnemonic phrases.
-            Agave Coin is not liable for the los of digital assets resulting
-            from the loss, damage or other loss of control over the paper copy
-            of mnemonic phrases.
-          </Label>
-        </ContainerText>
-        <ContainerButtons>
-          <Button
-            onClick={() => {
-              navigation.push('MnemonicBackup');
-              setState({
-                modalVisible: false,
-              });
-            }}>
-            Continue
-          </Button>
-        </ContainerButtons>
-      </Modal>
-    </Container>
+      <View style={styles.containerButtons}>
+        <Title center>Backup Mnemonic Phrases</Title>
+        <Text center color="ligth" style={styles.mnemonicLabel}>
+          {`\n`}
+          We have created Agave Coin wallet for you. The decentralized Agave
+          Coin Wallet can manage multiple crypto wallets under a single set of
+          mnemonic phrases
+        </Text>
+      </View>
+      <View style={styles.containerButtons}>
+        <Button onClick={openModal}>Start Backup</Button>
+      </View>
+      <MnemonicIntroModal
+        isShowed={isModalVisible}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+      />
+    </ScreenContainer>
   );
 };
 
-const Container = styled.View`
-  height: 100%;
-  width: 100%;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: white;
-`;
-
-const BodyBox = styled.View`
-  height: 60%;
-  width: 100%;
-`;
 const Image = styled.Image`
   width: 75%;
   height: 75%;
-  resize-mode: contain;
 `;
 
 const ImageBox = styled.View`
@@ -128,24 +59,4 @@ const ImageBox = styled.View`
   justify-content: center;
   align-items: center;
   background-color: white;
-`;
-
-const ContainerText = styled.View`
-  padding: 22px;
-  width: 100%;
-`;
-const ContainerButtons = styled.View`
-  padding: 22px;
-  width: 100%;
-`;
-const Title = styled.Text`
-  font-size: 30px;
-  margin-bottom: 5px;
-  font-weight: bold;
-  text-align: center;
-`;
-const Label = styled.Text`
-  font-size: 12px;
-  color: #8d8d8d;
-  text-align: center;
 `;

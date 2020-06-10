@@ -1,24 +1,14 @@
 import styled from 'styled-components/native';
-import {colors} from '../styles';
+import { colors } from '../styles';
 
-export const Title = styled.Text`
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 30px;
-  color: ${colors.black};
-`;
+
 export const H4 = styled.Text`
   font-weight: bold;
   font-size: 25px;
   text-align: left;
   color: ${colors.black};
 `;
-export const Subtitle = styled(Title)`
-  font-size: 24px;
-  text-transform: capitalize;
-  color: ${colors.blackLigth};
-  font-weight: 600;
-`;
+
 type TextProps = {
   isBold?: boolean;
   center?: boolean;
@@ -36,4 +26,16 @@ export const Text = styled.Text<TextProps>`
 `;
 export const SmallText = styled(Text)`
   font-size: 12px;
+`;
+export const Title = styled(Text)`
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 30px;
+  color: ${colors.black};
+`;
+export const Subtitle = styled(Title)`
+  font-size: 24px;
+  text-transform: capitalize;
+  color: ${colors.blackLigth};
+  font-weight: 600;
 `;

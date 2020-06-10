@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import {CurrencyType} from 'shared/types';
 import {Button} from 'shared/components/Button';
 import {ClipboardComponent} from 'shared/components/Clipboard';
-import {PageContainer, Title, Subtitle} from 'shared/styled-components';
+import {ScreenContainer, Title, Subtitle} from 'shared/styled-components';
 import {TransfersHistoryComponent} from '../components/History';
 import {colors} from 'shared/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -77,7 +77,7 @@ const Container = styled.View`
   justify-content: flex-start;
   background-color: ${colors.white};
 `;
-const TransactionContainer = styled(PageContainer)`
+const TransactionContainer = styled(ScreenContainer)`
   height: 65%;
   background: ${colors.white};
   align-items: center;
@@ -107,7 +107,7 @@ const ButtonsContainer = styled.View`
   width: 100%;
   max-width: 100%;
 `;
-const HistoryContainer = styled(PageContainer)`
+const HistoryContainer = styled(ScreenContainer)`
   background-color: ${colors.whiteDark};
   height: 35%;
 `;

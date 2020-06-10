@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import styled from 'styled-components/native';
-
+import React, {useState} from 'react';
+import {ScrollView} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import Wallet from 'erc20-wallet';
 
@@ -8,9 +7,9 @@ import Wallet from 'erc20-wallet';
 import {Button} from 'shared/components/Button';
 import {PasswordForm} from '../components/PasswordForm';
 import {PasswordLabelBox} from '../components/PasswordLabelBox';
-
+import {ScreenContainer} from 'shared/styled-components';
 import {usePasswordValidations} from '../hooks/usePasswordValidations';
-import {colors} from 'shared/styles';
+import {globalStyles} from 'shared/styles';
 
 export const SetPasswordScreen = ({navigation, route}) => {
   const [state, setState] = useState({
@@ -20,9 +19,7 @@ export const SetPasswordScreen = ({navigation, route}) => {
   const {validations, isValidPassword} = usePasswordValidations(state.pass);
   const [isLoading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-  useEffect(() => {
-    console.log(route.params);
-  }, []);
+
   const onTextChange = text => {
     if (step === 1) {
       setState({...state, pass: text});
@@ -63,69 +60,63 @@ export const SetPasswordScreen = ({navigation, route}) => {
     }
   }
   return (
-    <Container keyboardShouldPersistTaps="handled">
-      {step === 1 ? (
-        <PasswordForm
-          labelText="Please set security password"
-          value={state.pass}
-          onSubmitEditing={onSubmit}
-          onTextChange={text => onTextChange(text)}>
-          <PasswordLabelBox
-            isValid={validations.textHasMinorCase}
-            text="A lower case letter"
-          />
-          <PasswordLabelBox
-            isValid={validations.textHasUpperCase}
-            text="A uppercase letter"
-          />
-          <PasswordLabelBox
-            isValid={validations.textHasANumber}
-            text=" A number"
-          />
-          <PasswordLabelBox
-            isValid={validations.textHasValidLong}
-            text="8~32 characters"
-          />
-          <PasswordLabelBox
-            isValid={validations.textHasSpecialCharacter}
-            text="An special character"
-          />
-        </PasswordForm>
-      ) : (
-        <PasswordForm
-          labelText="Repeat password"
-          value={state.passConfirm}
-          onSubmitEditing={onSubmit}
-          onTextChange={text => onTextChange(text)}>
-          <PasswordLabelBox
-            isValid={state.pass === state.passConfirm}
-            text={
-              state.pass === state.passConfirm
-                ? 'Passwords match'
-                : "Passwords didn't match "
-            }
-          />
-        </PasswordForm>
-      )}
+    <ScreenContainer light>
+      <ScrollView
+        style={globalStyles.scrollView}
+        keyboardShouldPersistTaps="handled">
+        {step === 1 ? (
+          <PasswordForm
+            labelText="Please set security password"
+            value={state.pass}
+            onSubmitEditing={onSubmit}
+            onTextChange={text => onTextChange(text)}>
+            <PasswordLabelBox
+              isValid={validations.textHasMinorCase}
+              text="A lower case letter"
+            />
+            <PasswordLabelBox
+              isValid={validations.textHasUpperCase}
+              text="A uppercase letter"
+            />
+            <PasswordLabelBox
+              isValid={validations.textHasANumber}
+              text=" A number"
+            />
+            <PasswordLabelBox
+              isValid={validations.textHasValidLong}
+              text="8~32 characters"
+            />
+            <PasswordLabelBox
+              isValid={validations.textHasSpecialCharacter}
+              text="An special character"
+            />
+          </PasswordForm>
+        ) : (
+          <PasswordForm
+            labelText="Repeat password"
+            value={state.passConfirm}
+            onSubmitEditing={onSubmit}
+            onTextChange={text => onTextChange(text)}>
+            <PasswordLabelBox
+              isValid={state.pass === state.passConfirm}
+              text={
+                state.pass === state.passConfirm
+                  ? 'Passwords match'
+                  : "Passwords didn't match "
+              }
+            />
+          </PasswordForm>
+        )}
 
-      <Button
-        onClick={onSubmit}
-        isActivated={
-          step === 1 ? isValidPassword : state.pass === state.passConfirm
-        }
-        isLoading={isLoading}>
-        Continue
-      </Button>
-    </Container>
+        <Button
+          onClick={onSubmit}
+          isActivated={
+            step === 1 ? isValidPassword : state.pass === state.passConfirm
+          }
+          isLoading={isLoading}>
+          Continue
+        </Button>
+      </ScrollView>
+    </ScreenContainer>
   );
 };
-
-const Container = styled.ScrollView`
-  height: 100%;
-  width: 100%;
-  padding: 22px;
-  height: 100%;
-  width: 100%;
-  flex-direction: column;
-  background-color: ${colors.white};
-`;

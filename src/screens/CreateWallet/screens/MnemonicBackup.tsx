@@ -4,7 +4,7 @@ import Toast from 'react-native-simple-toast';
 
 //components
 import {MnemonicListComponent} from '../components/MnemonicList';
-import {PageContainer, H4, Text, TextArea} from 'shared/styled-components';
+import {ScreenContainer, H4, Text, TextArea} from 'shared/styled-components';
 import {Button} from 'shared/components/Button';
 //hooks
 import {useSeeds} from '../hooks/useSeeds';
@@ -53,7 +53,7 @@ export const MnemonicBackup = ({navigation}) => {
   };
 
   return (
-    <PageContainer light justify="space-between">
+    <ScreenContainer light justify="space-between">
       <Container>
         <Container>
           <H4>Back UP mnemonic phrases </H4>
@@ -91,7 +91,7 @@ export const MnemonicBackup = ({navigation}) => {
         isActivated={step === 'backup' ? hint.length === labels.length : true}>
         {step === 'beforeBackup' ? 'Next' : 'Confirm'}
       </Button>
-    </PageContainer>
+    </ScreenContainer>
   );
 };
 

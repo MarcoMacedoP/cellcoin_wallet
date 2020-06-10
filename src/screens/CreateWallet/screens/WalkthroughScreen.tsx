@@ -3,7 +3,8 @@ import styled from 'styled-components/native';
 import {StyleSheet, View} from 'react-native';
 //components
 import {Dimensions} from 'react-native';
-import {Button} from 'shared/components/Button';
+import {Button} from 'shared/components';
+import {ScreenContainer} from 'shared/styled-components';
 import {WalkthroughItem} from '../components/WalkthroughItem';
 import Carousel from '../components/Carousel';
 //styles
@@ -58,7 +59,7 @@ export const WalkthroughScreen = ({navigation}) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer light>
       <View style={styles.carrouselContainer}>
         <Carousel
           onIndexChange={setCurrentIndex}
@@ -91,17 +92,10 @@ export const WalkthroughScreen = ({navigation}) => {
           Import Wallet
         </Button>
       </View>
-    </View>
+    </ScreenContainer>
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    width: '100%',
-    flexDirection: 'column',
-    padding: 22,
-    flex: 1,
-  },
   buttonsContainer: {
     padding: '0',
     width: '100%',

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {TextArea, PageContainer, Text} from 'shared/styled-components';
+import {TextArea, ScreenContainer, Text} from 'shared/styled-components';
 import {Button} from 'shared/components';
 import Wallet from 'erc20-wallet';
 
@@ -45,7 +45,7 @@ export function MnemonicImport({navigation}) {
       contentContainerStyle={{
         flex: 1,
       }}>
-      <PageContainer light justify="space-between" align="center">
+      <ScreenContainer light justify="space-between" align="center">
         <TextContainer>
           <Label hasError={hasError}>
             {hasError
@@ -71,7 +71,7 @@ export function MnemonicImport({navigation}) {
           isActivated={text?.length > 0 ? !hasError : false}>
           Import wallet
         </Button>
-      </PageContainer>
+      </ScreenContainer>
     </ScrollView>
   );
 }
