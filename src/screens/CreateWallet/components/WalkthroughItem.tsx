@@ -18,7 +18,7 @@ export const WalkthroughItem: React.FC<WalkthroughItemProps> = ({
   return (
     <Container style={{width: containerWidth}}>
       <ImageBox>
-        <Image source={image} />
+        <Image source={image} resizeMode="contain" />
       </ImageBox>
 
       <ContainerText>
@@ -37,7 +37,6 @@ const Container = styled.View`
 const Image = styled.Image`
   width: 100%;
   height: 100%;
-  resize-mode: contain;
 `;
 const ImageBox = styled.View`
   width: 100%;
@@ -52,7 +51,7 @@ const ContainerText = styled.View`
 `;
 const Title = styled.Text`
   font-size: 30px;
-  margin-bottom: 5px;
+  margin-bottom: 16px;
   font-weight: bold;
   text-align: center;
 `;

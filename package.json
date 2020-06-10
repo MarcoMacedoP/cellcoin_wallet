@@ -54,7 +54,6 @@
     "react-native-reanimated": "^1.7.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.0.0-beta.9",
-    "react-native-sideswipe": "^1.5.0",
     "react-native-simple-toast": "^1.0.0",
     "react-native-swipe-gestures": "^1.0.4",
     "react-native-swipe-list-view": "^2.2.0",
