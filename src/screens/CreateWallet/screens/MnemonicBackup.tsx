@@ -1,15 +1,27 @@
 import React, {useState, useEffect} from 'react';
-import styled from 'styled-components/native';
 import Toast from 'react-native-simple-toast';
-
 //components
 import {MnemonicListComponent} from '../components/MnemonicList';
-import {ScreenContainer, H4, Text, TextArea} from 'shared/styled-components';
+import {
+  ScreenContainer,
+  H4,
+  Text,
+  TextArea,
+  Subtitle,
+} from 'shared/styled-components';
 import {Button} from 'shared/components/Button';
 //hooks
 import {useSeeds} from '../hooks/useSeeds';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {CreateWalletStack} from 'screens/CreateWallet/Router';
+import {ScrollView} from 'react-native-gesture-handler';
+import {globalStyles} from 'shared/styles';
 
-export const MnemonicBackup = ({navigation}) => {
+interface MnemonicBackupProps {
+  navigation: StackNavigationProp<CreateWalletStack, 'MnemonicBackup'>;
+}
+
+export const MnemonicBackup = ({navigation}: MnemonicBackupProps) => {
   const [labels, suffleLables, shuffledLabels] = useSeeds();
   const [step, setStep] = useState<'beforeBackup' | 'backup'>('beforeBackup');
   const [hint, setHint] = useState([]);
@@ -54,26 +66,16 @@ export const MnemonicBackup = ({navigation}) => {
 
   return (
     <ScreenContainer light justify="space-between">
-      <Container>
-        <Container>
-          <H4>Back UP mnemonic phrases </H4>
-          {step === 'beforeBackup' ? (
-            <Text>
-              Make a copy of the following 12 nemonic phrases in correct order.
-              We Will verify in the next step
-            </Text>
-          ) : (
-            <Text>Please enter the 12 words in the correct order</Text>
-          )}
-        </Container>
+      <ScrollView style={globalStyles.scrollView}>
+        <Subtitle>Back up mnemonic phrases </Subtitle>
+        <Text>
+          {step === 'beforeBackup'
+            ? `\nMake a copy of the following 12 nemonic phrases in correct order. We Will verify in the next step\n`
+            : `\nPlease enter the 12 words in the correct order\n`}
+        </Text>
+
         {step === 'backup' && (
-          <Container>
-            <TextArea
-              multiline={true}
-              editable={false}
-              value={normalizedHint}
-            />
-          </Container>
+          <TextArea multiline={true} editable={false} value={normalizedHint} />
         )}
 
         {shuffledLabels.length > 0 && (
@@ -84,7 +86,7 @@ export const MnemonicBackup = ({navigation}) => {
             onLabelUnselection={onLabelUnselection}
           />
         )}
-      </Container>
+      </ScrollView>
       <Button
         width="100%"
         onClick={onSubmit}
@@ -94,8 +96,3 @@ export const MnemonicBackup = ({navigation}) => {
     </ScreenContainer>
   );
 };
-
-const Container = styled.ScrollView`
-  padding: 15px 0;
-  width: 100%;
-`;

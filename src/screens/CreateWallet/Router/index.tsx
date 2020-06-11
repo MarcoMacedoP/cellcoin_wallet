@@ -11,10 +11,19 @@ import {MnemonicImport} from '../screens/MnemonicImport';
 import {MnemonicIntro} from '../screens/MnemonicIntro';
 import {MnemonicBackup} from '../screens/MnemonicBackup';
 import {LoadWalletScreen} from '../screens/LoadWalletScreen';
-const CreateWallet = createStackNavigator();
+import {createWalletStackOptions as options} from './options';
 
-import {Text} from 'react-native';
-const Hello = () => <Text> Hey </Text>;
+export type CreateWalletStack = {
+  Walkthrough: undefined;
+  LoadWalletScreen: undefined;
+  MnemonicBackup: undefined;
+  MnemonicImport: undefined;
+  MnemonicIntro: undefined;
+  SetPassword: undefined;
+  Terms: undefined;
+};
+
+const CreateWallet = createStackNavigator<CreateWalletStack>();
 
 export const CreateWalletRoutes = () => {
   return (
@@ -23,23 +32,23 @@ export const CreateWalletRoutes = () => {
       initialRouteName="Walkthrough">
       <CreateWallet.Screen
         name="LoadWalletScreen"
-        options={{title: 'Loading Wallet'}}
+        options={options.loadWalletScreen}
         component={LoadWalletScreen}
       />
       <CreateWallet.Screen
         name="MnemonicBackup"
         component={MnemonicBackup}
-        options={{title: 'Create Wallet'}}
+        options={options.mnemonicBackup}
       />
       <CreateWallet.Screen
         name="MnemonicImport"
         component={MnemonicImport}
-        options={{title: 'Import Wallet'}}
+        options={options.mnemonicImport}
       />
       <CreateWallet.Screen
         name="MnemonicIntro"
         component={MnemonicIntro}
-        options={{title: 'Create Wallet'}}
+        options={options.mnemonicIntro}
       />
       <CreateWallet.Screen
         name="SetPassword"
@@ -50,24 +59,19 @@ export const CreateWalletRoutes = () => {
       <CreateWallet.Screen
         name="Terms"
         component={TermsScreen}
-        options={termsScreenOptions}
+        options={options.terms}
       />
 
       <CreateWallet.Screen
         name="Walkthrough"
         component={WalkthroughScreen}
-        options={{
-          headerShown: false,
-        }}
+        options={options.walkthrough}
       />
     </CreateWallet.Navigator>
   );
 };
 export default CreateWalletRoutes;
 
-const termsScreenOptions: StackNavigationOptions = {
-  title: 'User service agreement',
-};
 const setPasswordScreenOptions = (props): StackNavigationOptions => ({
   title: props.route.params.name,
 });

@@ -16,13 +16,12 @@ type TextProps = {
   upperCase?: boolean;
 };
 export const Text = styled.Text<TextProps>`
-  text-transform: ${props => (props.upperCase ? 'uppercase' : 'capitalize')};
+  text-transform: ${props => (props.upperCase ? 'uppercase' : 'none')};
   font-weight: ${props => (props.isBold ? 'bold' : '400')};
   font-size: 16px;
   color: ${props =>
     props.color === 'ligth' ? colors.blackLigth : colors.black};
-
-  text-align: ${props => (props.center ? 'center' : 'justify')};
+  text-align: ${props => (props.center ? 'center' : 'left')};
 `;
 export const SmallText = styled(Text)`
   font-size: 12px;
@@ -35,7 +34,7 @@ export const Title = styled(Text)`
 `;
 export const Subtitle = styled(Title)`
   font-size: 24px;
-  text-transform: capitalize;
+  text-transform: none;
   color: ${colors.blackLigth};
   font-weight: 600;
 `;
