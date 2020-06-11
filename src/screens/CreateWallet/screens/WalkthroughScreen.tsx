@@ -97,7 +97,7 @@ export const WalkthroughScreen = ({navigation}) => {
 };
 const styles = StyleSheet.create({
   buttonsContainer: {
-    padding: '0',
+    padding: 0,
     width: '100%',
     height: '30%',
     justifyContent: 'flex-end',

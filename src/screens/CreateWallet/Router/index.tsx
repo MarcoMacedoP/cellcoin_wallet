@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   createStackNavigator,
   StackNavigationOptions,
@@ -13,6 +12,9 @@ import {MnemonicIntro} from '../screens/MnemonicIntro';
 import {MnemonicBackup} from '../screens/MnemonicBackup';
 import {LoadWalletScreen} from '../screens/LoadWalletScreen';
 const CreateWallet = createStackNavigator();
+
+import {Text} from 'react-native';
+const Hello = () => <Text> Hey </Text>;
 
 export const CreateWalletRoutes = () => {
   return (

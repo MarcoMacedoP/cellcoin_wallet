@@ -4,29 +4,22 @@ import React, {Suspense} from 'react';
 //screens
 import {BalanceRoutes} from 'screens/Balance/Router';
 import {TransfersRoutes} from 'screens/Transfers';
-const CreateWalletRoutes = React.lazy(() =>
-  import('screens/CreateWallet/Router'),
-);
-
+import {CreateWalletRoutes} from '../screens/CreateWallet/Router';
 import {NotificationsScreen} from 'screens/Notifications/Notifications';
 //components
 import {StatusBar} from 'react-native';
 import {useGlobalState} from 'globalState';
-import {Loading} from 'shared/components';
 //utils
 import {commonScreenOptions} from 'Router/options';
 const {Navigator, Screen} = createStackNavigator();
 
 const Router = () => {
   const [hasKeystore] = useGlobalState('keystore');
-  return (
-    <Suspense fallback={<Loading />}>
+
+  if (hasKeystore) {
+    return (
       <RouterContainer>
-        {hasKeystore ? (
-          <Screen name="Balance" component={BalanceRoutes} />
-        ) : (
-          <Screen name="CreateWallet" component={CreateWalletRoutes} />
-        )}
+        <Screen name="Balance" component={BalanceRoutes} />
         <Screen
           name="Transfers"
           component={TransfersRoutes}
@@ -38,8 +31,13 @@ const Router = () => {
           options={{headerShown: true}}
         />
       </RouterContainer>
-    </Suspense>
-  );
+    );
+  } else
+    return (
+      <RouterContainer>
+        <Screen name="CreateWalletRoutes" component={CreateWalletRoutes} />
+      </RouterContainer>
+    );
 };
 
 function RouterContainer({children}) {
