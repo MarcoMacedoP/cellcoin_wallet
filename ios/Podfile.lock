@@ -21,14 +21,14 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - OneSignal (2.12.6)
-  - Permission-Camera (2.0.9):
+  - OneSignal (2.13.1)
+  - Permission-Camera (2.1.5):
     - RNPermissions
-  - Permission-LocationWhenInUse (2.0.9):
+  - Permission-LocationWhenInUse (2.1.5):
     - RNPermissions
-  - Permission-Microphone (2.0.9):
+  - Permission-Microphone (2.1.5):
     - RNPermissions
-  - Permission-PhotoLibrary (2.0.9):
+  - Permission-PhotoLibrary (2.1.5):
     - RNPermissions
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
@@ -193,25 +193,25 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-camera (3.18.0):
+  - react-native-camera (3.30.0):
     - React
-    - react-native-camera/RCT (= 3.18.0)
-    - react-native-camera/RN (= 3.18.0)
-  - react-native-camera/RCT (3.18.0):
+    - react-native-camera/RCT (= 3.30.0)
+    - react-native-camera/RN (= 3.30.0)
+  - react-native-camera/RCT (3.30.0):
     - React
-  - react-native-camera/RN (3.18.0):
+  - react-native-camera/RN (3.30.0):
     - React
-  - react-native-onesignal (3.6.4):
-    - OneSignal (= 2.12.6)
+  - react-native-onesignal (3.7.3):
+    - OneSignal (= 2.13.1)
     - React (< 1.0.0, >= 0.13.0)
   - react-native-randombytes (3.5.3):
     - React
   - react-native-safe-area-context (0.7.3):
     - React
-  - react-native-simple-toast (1.0.0):
+  - react-native-simple-toast (1.1.2):
     - React
     - Toast (~> 4.0.0)
-  - react-native-slider (2.0.8):
+  - react-native-slider (2.0.9):
     - React
   - react-native-udp (2.7.0):
     - React
@@ -252,19 +252,19 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - RNBootSplash (1.2.1):
     - React
-  - RNCAsyncStorage (1.8.0):
+  - RNCAsyncStorage (1.11.0):
     - React
-  - RNCMaskedView (0.1.6):
+  - RNCMaskedView (0.1.10):
     - React
-  - RNGestureHandler (1.6.0):
+  - RNGestureHandler (1.6.1):
     - React
   - RNOS (1.2.6):
     - React
-  - RNPermissions (2.0.9):
+  - RNPermissions (2.1.5):
     - React
-  - RNReanimated (1.7.0):
+  - RNReanimated (1.9.0):
     - React
-  - RNScreens (2.0.0-beta.9):
+  - RNScreens (2.8.0):
     - React
   - RNVectorIcons (6.6.0):
     - React
@@ -435,11 +435,11 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
-  OneSignal: a6df91542d1cf133b9dd19d89f2b533d8f2d3163
-  Permission-Camera: b0fec577b27488314a885f9c74433e02f3585b9b
-  Permission-LocationWhenInUse: f5dd8f5c9a0412db5eddd299ae208d6268b595b1
-  Permission-Microphone: c46ef776bd65d251d3bcb544bedaf7160c1afe06
-  Permission-PhotoLibrary: 51718ddf8c0baf1cebf323c68cedcb2ff0cf304a
+  OneSignal: fa98eaa90372bb367b6a4a1c1622ffb9832c7600
+  Permission-Camera: afad27bf90337684d4a86f3825112d648c8c4d3b
+  Permission-LocationWhenInUse: 3624cf08c12c6019926aba3054efee7f4f8ee91e
+  Permission-Microphone: 0ffabc3fe1c75cfb260525ee3f529383c9f4368c
+  Permission-PhotoLibrary: 4d2eff62c8f4b8a27bcf045c0e36f5047efbbf20
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -449,13 +449,13 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-camera: 36536dd86a41261622967ccf3e19fb63d7dd09e3
-  react-native-onesignal: 5ee6834ff54b56fc8ea33877803e8fa92633c87b
-  react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
-  react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
-  react-native-simple-toast: 9c2f5979dfe555d0aa7b084348a06fd6ef7a6f55
-  react-native-slider: b2f361499888302147205f17f6fffa921a7bda70
-  react-native-udp: ccbd878f0f3b968217fc7e3d5eb5839fcaab8b6c
+  react-native-camera: eeb5b5f4ba4c1365fed3563af8a72007cbad7aab
+  react-native-onesignal: 417b2ae5c3148a47a6ef70b6af443186048b2022
+  react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
+  react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
+  react-native-simple-toast: 58b71ef003f01d2c0bf5dcd2fdccc75861dabade
+  react-native-slider: e51492f1264d882a8815b71c5870f8978e52887d
+  react-native-udp: ff9d13e523f2b58e6bc5d4d32321ac60671b5dc9
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -466,16 +466,16 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
-  RNBootSplash: 676e80639613a2168a718a456710e9584ac4d5b1
-  RNCAsyncStorage: 455b48eb552543bad4e3099e180e1700700771f3
-  RNCMaskedView: e5b99bc191945f157adeede68da9d424462de177
-  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
+  RNBootSplash: 823a7eacaf6aa6e4725bf8dee9f6eeb013b27bc9
+  RNCAsyncStorage: d059c3ee71738c39834a627476322a5a8cd5bf36
+  RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNPermissions: 6db7e0a4d94c9c02390d11020b1d3d187aaf77e5
-  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: 797de72842e33431e68b87d95c0c9a0b3ef09819
+  RNPermissions: ad71dd4f767ec254f2cd57592fbee02afee75467
+  RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
+  RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
-  TcpSockets: 8d839b9b14f6f344d98e4642ded13ab3112b462d
+  TcpSockets: 14306fb79f9750ea7d2ddd02d8bed182abb01797
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
