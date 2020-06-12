@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 //components
-import {Button} from 'shared/components/Button';
-import {ClipboardComponent} from 'shared/components/Clipboard';
-import {ScreenContainer, Title, Subtitle} from 'shared/styled-components';
+import {Button, ClipboardComponent, ScreenContainer} from 'shared/components';
+import {Title, Subtitle} from 'shared/styled-components';
 import {TransfersHistoryComponent} from '../components/History';
 import {colors} from 'shared/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useGlobalState} from 'globalState';
 import {getCurrencyInfo} from '../components/Functions/getCurrencyInfo';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import {AuthRootStackParams} from 'Router';
 import {RouteProp} from '@react-navigation/core';
 
@@ -18,7 +17,6 @@ type TransfersScreenProps = {
   navigation: any;
 };
 export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
-  console.log(props.route.params);
   const {route, navigation} = props;
   const {params: currency} = route;
   const {value, type} = currency;
@@ -31,17 +29,18 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
     navigation.navigate('recieve', {currency});
 
   return (
-    <ScreenContainer light>
+    <ScreenContainer light statusBarProps={{barStyle: 'dark-content'}}>
       <View style={styles.transactionsContainer}>
-        <Header>
-          <Image source={logo} />
+        <View style={styles.header}>
+          <Image style={styles.image} source={logo} resizeMode="contain" />
           <Title>{value.original}</Title>
-          <Subtitle>{'= $' + value.usd}</Subtitle>
-        </Header>
-        <ClipboardContainer>
-          <ClipboardComponent text={mainAddress} />
-        </ClipboardContainer>
-        <ButtonsContainer>
+          <View style={styles.conversionContainer}>
+            <Subtitle>{value.usd}</Subtitle>
+            <Subtitle style={styles.currency}>USD</Subtitle>
+          </View>
+        </View>
+        <ClipboardComponent style={styles.clipboard} text={mainAddress} />
+        <View style={styles.buttonsContainer}>
           <Button
             accent
             width="50%"
@@ -56,7 +55,7 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
             onClick={navigateToRecieveTransfer}>
             <Icon name="qrcode" size={15} color="white" /> Receive
           </Button>
-        </ButtonsContainer>
+        </View>
       </View>
       <TransfersHistoryComponent
         logo={logo}
@@ -69,35 +68,44 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
 
 const styles = StyleSheet.create({
   transactionsContainer: {
-    flex: 2,
+    flex: 1.5,
     width: '100%',
   },
+  header: {
+    flex: 2,
+    marginTop: 20,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  clipboard: {
+    marginVertical: 16,
+    alignItems: 'center',
+    width: '100%',
+    flex: 0.5,
+    borderRadius: 15,
+    backgroundColor: colors.whiteDark,
+  },
+  buttonsContainer: {
+    flex: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: '100%',
+  },
+  conversionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'center',
+  },
+  currency: {
+    fontSize: 14,
+    marginLeft: 4,
+  },
+  image: {
+    width: 30,
+    height: 30,
+  },
 });
-
-const Header = styled.View`
-  margin-top: 20px;
-  width: 100%;
-  height: 60%;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-const Image = styled.Image`
-  width: 30px;
-  height: 30px;
-`;
-const ClipboardContainer = styled.View`
-  margin: 16px 0;
-  width: 100%;
-  border-radius: 15px;
-  background-color: ${colors.whiteDark};
-`;
-const ButtonsContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  max-width: 100%;
-`;
-const HistoryContainer = styled(ScreenContainer)`
-  height: 35%;
-`;

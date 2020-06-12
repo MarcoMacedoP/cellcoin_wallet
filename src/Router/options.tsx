@@ -72,7 +72,6 @@ export const rootRouterOptions: RootRouterOptions = {
 
   transfer: {
     title: 'Transfers',
-    headerTransparent: true,
   },
   address: {},
   recieve: {},
