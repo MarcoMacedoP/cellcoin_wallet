@@ -43,13 +43,15 @@ export async function createAddress() {
   const address = await Wallet.generateAddress();
   const mainAddress = address[0].address;
   Wallet.address = address;
-  await AsyncStorage.setItem('addresses', JSON.stringify(address));
-  await AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress));
-  let listAddress = [{
+  const listAddress = [{
     alias: 'Main Address',
     address: mainAddress,
   }]
-  await AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress));
+  await Promise.all([
+    AsyncStorage.setItem('addresses', JSON.stringify(address)),
+    AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress)),
+    AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress)),
+  ])
   return address;
 }
 export async function encodeKeystore() {

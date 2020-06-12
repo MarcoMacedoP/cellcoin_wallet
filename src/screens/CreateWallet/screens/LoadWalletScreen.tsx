@@ -12,6 +12,7 @@ import {Image} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useCreateWallet} from '../hooks/useCreateWallet';
 const check = require('assets/icons/check_icon.png');
+const walletImage = require('assets/images/agave_wallet_create.png');
 
 export const LoadWalletScreen = () => {
   console.log('LoadWalletScreen');
@@ -47,7 +48,7 @@ export const LoadWalletScreen = () => {
           </CreatedContainer>
         ) : (
           <Loading
-            image={require('assets/images/agave_wallet_create.png')}
+            image={walletImage}
             text="Wallet is being loaded, please wait a moment"
           />
         )}

@@ -38,7 +38,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
   const [state, setState] = useState({
     alias: '',
     address: '',
-    ready: false,
+    isReady: false,
   });
 
   const [listAddress, setListAddress] = useState([]);
@@ -51,10 +51,10 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
     async function getAddress() {
       try {
         // AsyncStorage.removeItem('addressesEdit')
-        let arrayAddress: Array<any> = JSON.parse(
+        let arrayAddress: string[] = JSON.parse(
           await AsyncStorage.getItem('addresses'),
         );
-        let arrayAddressEdited: Array<any> = JSON.parse(
+        let arrayAddressEdited: string[] = JSON.parse(
           await AsyncStorage.getItem('addressesEdit'),
         );
         setListAddressBase(arrayAddress);
@@ -127,12 +127,8 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
             data={listAddress}
             renderItem={(data, rowMap) => (
               <TouchableHighlight
-                id={rowMap}
-                onPress={() => {
-                  // setMainAddress(data.item.address);
-                  // navigation.goBack();
-                  SetMainAddresAndReload(data.item.address);
-                }}
+                key={data.index}
+                onPress={() => SetMainAddresAndReload(data.item.address)}
                 underlayColor={colors.lightGray}
                 style={{
                   alignItems: 'center',
@@ -151,7 +147,6 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
                   <LabelBox>
                     <Text>{data.item.alias}</Text>
                     <Text style={{color: colors.gray, fontSize: 10}}>
-                      {' '}
                       {data.item.address}
                     </Text>
                   </LabelBox>
@@ -235,11 +230,4 @@ const LabelBox = styled.View`
 const Label = styled(BaseLabel)`
   position: relative;
   top: 4px;
-`;
-const IconContainer = styled.TouchableOpacity`
-  position: absolute;
-  right: 12px;
-  bottom: 28px;
-  justify-content: center;
-  align-items: center;
 `;

@@ -1,5 +1,5 @@
-import {useGlobalState} from 'globalState';
-import {useState, useEffect} from 'react';
+import { useGlobalState } from 'globalState';
+import { useState, useEffect } from 'react';
 import {
   createKeystore,
   createAddress,
@@ -7,7 +7,7 @@ import {
 } from 'shared/libs/Wallet';
 
 export function useCreateWallet() {
-  const addressTest = '0x08bd09310a970f68e01c8848785fd589dbccc77e';
+  // const addressTest = '0x08bd09310a970f68e01c8848785fd589dbccc77e';
   const [, setKeyStore] = useGlobalState('keystore');
   const [, setMainAddress] = useGlobalState('mainAddress');
   const [, setAddress] = useGlobalState('addresses');
@@ -16,6 +16,7 @@ export function useCreateWallet() {
 
   useEffect(() => {
     async function createWallet() {
+      console.log('creating wallet');
       try {
         const keystore = await createKeystore();
         const address = await createAddress();
@@ -35,5 +36,5 @@ export function useCreateWallet() {
     }
   }, [isCreated]);
 
-  return {error, isCreated};
+  return { error, isCreated };
 }
