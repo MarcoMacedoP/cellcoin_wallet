@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {Text, SmallText} from 'shared/styled-components/Texts';
 import {
   ScreenContainer,
   Label as BaseLabel,
@@ -7,17 +6,17 @@ import {
 } from 'shared/styled-components';
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
-import {TouchableOpacity, TouchableHighlight} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {Button} from 'shared/components/Button';
-import BaseIcon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
-import {Modal} from 'shared/components';
+import {Modal, EmptyState} from 'shared/components';
 import {useGlobalState} from 'globalState';
 import FIcon from 'react-native-vector-icons/Feather';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthRootStackParams} from 'Router';
+import {AddressItem} from '../components/AddressItem';
 
 type SendTransferScreenProps = {
   navigation: StackNavigationProp<AuthRootStackParams, 'MainAddressSelector'>;
@@ -104,13 +103,9 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     });
   };
 
-  const SetMainAddresAndReload = text => {
-    setMainAddress(text);
-    // navigation.goBack();
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'Balance'}],
-    });
+  const setMainAddresAndReload = (selectedAddress: string) => {
+    setMainAddress(selectedAddress);
+    navigation.push('Balance');
   };
 
   const onTextAliasChange = text => {
@@ -119,57 +114,30 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
 
   return (
     <Container hasData={listAddress.length === 0 ? false : true} light>
-      {listAddress.length === 0 ? (
-        <>
-          <Icon name="address-card-o" size={60} color={colors.black} />
-          <Button
-            isActivated={true}
-            onClick={() => setIsModalOpen(!isModalOpen)}>
-            Add
-          </Button>
-        </>
-      ) : (
-        <ListContent>
-          <SwipeListView
-            data={listAddress}
-            renderItem={data => (
-              <TouchableHighlight
-                key={data.index}
-                onPress={() => SetMainAddresAndReload(data.item.address)}
-                underlayColor={colors.lightGray}
-                style={{
-                  alignItems: 'center',
-                  backgroundColor: '#fff',
-                  borderRadius: 5,
-                  height: 60,
-                  marginTop: 10,
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                }}>
-                <>
-                  <IconBox>
-                    <FIcon name="user" size={25} color={colors.accent} />
-                  </IconBox>
-                  <LabelBox>
-                    <Text>{data.item.alias}</Text>
-                    <Text style={{color: colors.gray, fontSize: 10}}>
-                      {data.item.address}
-                    </Text>
-                  </LabelBox>
-                </>
-              </TouchableHighlight>
-            )}
-            renderHiddenItem={(data, rowMap) => (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: 'red',
-                }}
-              />
-            )}
-          />
-        </ListContent>
-      )}
+      <ListContent>
+        <SwipeListView
+          ListEmptyComponent={() => (
+            <EmptyState message="There is not an address to select" />
+          )}
+          data={listAddress}
+          renderItem={({item, index}) => (
+            <AddressItem
+              key={index}
+              onPress={setMainAddresAndReload}
+              address={item.address}
+              alias={item.alias}
+            />
+          )}
+          renderHiddenItem={(data, rowMap) => (
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'red',
+              }}
+            />
+          )}
+        />
+      </ListContent>
+
       <Modal
         isShowed={isModalOpen}
         icon={'x'}
@@ -196,7 +164,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     </Container>
   );
 };
-const Icon = styled(BaseIcon)``;
+
 type ContainerProps = {
   hasData: boolean;
 };
@@ -220,20 +188,7 @@ const InputContainer = styled.View`
   background-color: ${colors.whiteDark};
   border-radius: 4px;
 `;
-const InputField = styled(Input)`
-  width: 90%;
-`;
-const IconBox = styled.View`
-  width: 10%;
-  justify-content: center;
-  align-items: center;
-`;
 
-const LabelBox = styled.View`
-  width: 90%;
-  justify-content: center;
-  align-items: center;
-`;
 const Label = styled(BaseLabel)`
   position: relative;
   top: 4px;

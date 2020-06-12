@@ -53,7 +53,10 @@ export const TransfersHistoryComponent: React.FC<
 
   return (
     <Container>
-      <Text isBold style={{marginBottom: isEmpty ? 0 : 16}} center={isEmpty}>
+      <Text
+        isBold
+        style={{marginBottom: isEmpty ? 0 : 16, marginTop: 32}}
+        center={isEmpty}>
         History
       </Text>
       <FlatList
@@ -97,8 +100,7 @@ export const TransfersHistoryComponent: React.FC<
 };
 
 const Container = styled.View`
-  background-color: ${colors.whiteDark};
-  height: 100%;
   width: 100%;
   padding-top: 16px;
+  flex: 1;
 `;

@@ -3,34 +3,19 @@ import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
-import {TransfersScreen} from './screens/TransfersScreen';
-import {SetAddressScreen} from './screens/SetAddressScreen';
+import {TransfersScreen} from '../screens/TransfersScreen';
+import {SetAddressScreen} from '../screens/SetAddressScreen';
 
-import {SendScreen} from './screens/Send';
-import {RecieveTransferScreen} from './screens/RecieveScreen';
+import {SendScreen} from '../screens/Send';
+import {RecieveTransferScreen} from '../screens/RecieveScreen';
 import {commonScreenOptions} from 'Router/options';
 import {LayoutHeader} from 'shared/components/LayoutHeader';
-import {AddressBookScreen} from './screens/AddressBookScreen';
+import {AddressBookScreen} from '../screens/AddressBookScreen';
 import {colors} from 'shared/styles/variables';
-import {getCurrencyInfo} from './components/Functions/getCurrencyInfo';
-
+import {getCurrencyInfo} from '../components/Functions/getCurrencyInfo';
+import {transfersStackOptions as options} from './options';
+import {RootStack} from 'Router';
 const Transfers = createStackNavigator();
-
-const balanceOptions: StackNavigationOptions = {
-  headerTransparent: true,
-  headerTitle: props => (
-    <LayoutHeader
-      {...props}
-      light
-      titleColor={'black'}
-      title={'Send'}
-      leftIcon="back-black"
-      rightIcon="address"
-    />
-  ),
-  headerBackTitleVisible: false,
-  headerLeft: null,
-};
 
 const sendOptions: StackNavigationOptions = {
   headerTransparent: false,
@@ -102,15 +87,13 @@ const setAddressOptions: StackNavigationOptions = {
 
 export function TransfersRoutes() {
   return (
-    <Transfers.Navigator
-      initialRouteName="Transfers"
-      screenOptions={commonScreenOptions}>
-      <Transfers.Screen
+    <>
+      <RootStack.Screen
         name="home"
         component={TransfersScreen}
-        options={balanceOptions}
+        options={options.transfer}
       />
-      <Transfers.Screen
+      <RootStack.Screen
         name="send"
         component={SendScreen}
         options={({route}: {route: any}) => ({
@@ -119,7 +102,7 @@ export function TransfersRoutes() {
             'Send ' + getCurrencyInfo(route.params.currency.type).tokenName,
         })}
       />
-      <Transfers.Screen
+      <RootStack.Screen
         name="setAddress"
         component={SetAddressScreen}
         options={({route}: {route: any}) => ({
@@ -128,16 +111,16 @@ export function TransfersRoutes() {
             'Send ' + getCurrencyInfo(route.params.currency.type).tokenName,
         })}
       />
-      <Transfers.Screen
+      <RootStack.Screen
         name="address"
         component={AddressBookScreen}
         options={addressOptions}
       />
-      <Transfers.Screen
+      <RootStack.Screen
         name="recieve"
         component={RecieveTransferScreen}
         options={recieveOptions}
       />
-    </Transfers.Navigator>
+    </>
   );
 }

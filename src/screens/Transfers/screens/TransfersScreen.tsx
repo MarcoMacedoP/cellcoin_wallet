@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 //components
-
-import {CurrencyType} from 'shared/types';
 import {Button} from 'shared/components/Button';
 import {ClipboardComponent} from 'shared/components/Clipboard';
 import {ScreenContainer, Title, Subtitle} from 'shared/styled-components';
@@ -11,17 +9,18 @@ import {colors} from 'shared/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useGlobalState} from 'globalState';
 import {getCurrencyInfo} from '../components/Functions/getCurrencyInfo';
-import {ScrollView} from 'react-native-gesture-handler';
-import {Dimensions, RefreshControl} from 'react-native';
-import {useFetchHistory} from '../components/Hooks/useFetchHistory';
+import {StyleSheet, View} from 'react-native';
+import {AuthRootStackParams} from 'Router';
+import {RouteProp} from '@react-navigation/core';
 
 type TransfersScreenProps = {
-  route: any;
+  route: RouteProp<AuthRootStackParams, 'Transfers'>;
   navigation: any;
 };
 export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
+  console.log(props.route.params);
   const {route, navigation} = props;
-  const {currency}: {currency: CurrencyType} = route.params;
+  const {params: currency} = route;
   const {value, type} = currency;
   const {logo} = getCurrencyInfo(type);
 
@@ -32,56 +31,48 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
     navigation.navigate('recieve', {currency});
 
   return (
-    <>
-      <Container>
-        <TransactionContainer>
-          <Header>
-            <Image source={logo} />
-            <Title>{value.original}</Title>
-            <Subtitle>{'= $' + value.usd}</Subtitle>
-          </Header>
-          <ClipboardContainer>
-            <ClipboardComponent text={mainAddress} />
-          </ClipboardContainer>
-          <ButtonsContainer>
-            <Button
-              accent
-              width="50%"
-              margin="0 4px 0 0"
-              onClick={navigateToSendTransfer}>
-              <Icon name="send" size={15} color="white" /> Send
-            </Button>
-            <Button
-              secondary
-              width="50%"
-              margin="0 0 0 4px"
-              onClick={navigateToRecieveTransfer}>
-              <Icon name="qrcode" size={15} color="white" /> Receive
-            </Button>
-          </ButtonsContainer>
-        </TransactionContainer>
-        <HistoryContainer>
-          <TransfersHistoryComponent
-            logo={logo}
-            type={type}
-            address={mainAddress}
-          />
-        </HistoryContainer>
-      </Container>
-    </>
+    <ScreenContainer light>
+      <View style={styles.transactionsContainer}>
+        <Header>
+          <Image source={logo} />
+          <Title>{value.original}</Title>
+          <Subtitle>{'= $' + value.usd}</Subtitle>
+        </Header>
+        <ClipboardContainer>
+          <ClipboardComponent text={mainAddress} />
+        </ClipboardContainer>
+        <ButtonsContainer>
+          <Button
+            accent
+            width="50%"
+            margin="0 4px 0 0"
+            onClick={navigateToSendTransfer}>
+            <Icon name="send" size={15} color="white" /> Send
+          </Button>
+          <Button
+            secondary
+            width="50%"
+            margin="0 0 0 4px"
+            onClick={navigateToRecieveTransfer}>
+            <Icon name="qrcode" size={15} color="white" /> Receive
+          </Button>
+        </ButtonsContainer>
+      </View>
+      <TransfersHistoryComponent
+        logo={logo}
+        type={type}
+        address={mainAddress}
+      />
+    </ScreenContainer>
   );
 };
-const Container = styled.View`
-  height: 100%;
-  width: 100%;
-  justify-content: flex-start;
-  background-color: ${colors.white};
-`;
-const TransactionContainer = styled(ScreenContainer)`
-  height: 65%;
-  background: ${colors.white};
-  align-items: center;
-`;
+
+const styles = StyleSheet.create({
+  transactionsContainer: {
+    flex: 2,
+    width: '100%',
+  },
+});
 
 const Header = styled.View`
   margin-top: 20px;
@@ -108,6 +99,5 @@ const ButtonsContainer = styled.View`
   max-width: 100%;
 `;
 const HistoryContainer = styled(ScreenContainer)`
-  background-color: ${colors.whiteDark};
   height: 35%;
 `;

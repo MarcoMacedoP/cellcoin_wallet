@@ -295,7 +295,7 @@ const Label = styled(BaseLabel)`
 `;
 const Subtitle = styled(BaseLabel)`
   position: relative;
-  color: ${colors.black}
+  color: ${colors.black};
   top: 4px;
 `;
 const IconContainer = styled.TouchableOpacity`
