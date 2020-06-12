@@ -24,6 +24,8 @@ export type AuthRootStackParams = {
   Balance: undefined;
   MainAddressSelector: undefined;
   Transfers: CurrencyType;
+  Send: CurrencyType;
+  Recieve: CurrencyType;
   /** Only avaivavle when user is not logged */
   CreateWalletRoutes: undefined;
 };
@@ -77,9 +79,9 @@ const Router = () => {
           // options={addressOptions}
         />
         <RootStack.Screen
-          name="recieve"
+          name="Recieve"
           component={RecieveTransferScreen}
-          // options={recieveOptions}
+          options={options.recieve}
         />
         <RootStack.Screen
           name="Notifications"

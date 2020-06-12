@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import styled from 'styled-components/native';
+import React from 'react';
 //components
 import {Button, ClipboardComponent, ScreenContainer} from 'shared/components';
 import {Title, Subtitle} from 'shared/styled-components';
@@ -7,14 +6,17 @@ import {TransfersHistoryComponent} from '../components/History';
 import {colors} from 'shared/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useGlobalState} from 'globalState';
-import {getCurrencyInfo} from '../components/Functions/getCurrencyInfo';
-import {StyleSheet, View, Image} from 'react-native';
+import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
+import {StyleSheet, View, Image, ToastAndroid} from 'react-native';
 import {AuthRootStackParams} from 'Router';
 import {RouteProp} from '@react-navigation/core';
+import Toast from 'react-native-simple-toast';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {MINIMUN_ALLOWED_CURRENCY} from 'shared/constants';
 
 type TransfersScreenProps = {
   route: RouteProp<AuthRootStackParams, 'Transfers'>;
-  navigation: any;
+  navigation: StackNavigationProp<AuthRootStackParams, 'Transfers'>;
 };
 export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
   const {route, navigation} = props;
@@ -24,9 +26,15 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
 
   const [mainAddress] = useGlobalState('mainAddress');
 
-  const navigateToSendTransfer = () => navigation.navigate('send', {currency});
+  const navigateToSendTransfer = () => {
+    if (parseFloat(currency.value.original) > MINIMUN_ALLOWED_CURRENCY) {
+      navigation.navigate('send', {currency});
+    } else {
+      Toast.show("You don't have enough balance to make a transaction ");
+    }
+  };
   const navigateToRecieveTransfer = () =>
-    navigation.navigate('recieve', {currency});
+    navigation.navigate('Recieve', currency);
 
   return (
     <ScreenContainer light statusBarProps={{barStyle: 'dark-content'}}>

@@ -7,15 +7,23 @@ import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 import {IconContainer} from 'shared/styled-components';
 import {Image} from 'react-native';
+import {CurrencyType} from 'shared/types';
+import {AuthRootStackParams} from 'Router';
+import {RouteProp} from '@react-navigation/core';
+import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 const logoImage = require('assets/icons/logo_mini.png');
 
 interface RootRouterOptions {
   balance: ({navigation}: {navigation: any}) => StackNavigationOptions;
-  transfer: StackNavigationOptions;
+  transfer: (props: {
+    route: RouteProp<AuthRootStackParams, 'Transfers'>;
+  }) => StackNavigationOptions;
   send: StackNavigationOptions;
   setAddress: StackNavigationOptions;
   address: StackNavigationOptions;
-  recieve: StackNavigationOptions;
+  recieve: (props: {
+    route: RouteProp<AuthRootStackParams, 'Recieve'>;
+  }) => StackNavigationOptions;
   mainAdressSelector: StackNavigationOptions;
   createWalletRoutes: StackNavigationOptions;
 }
@@ -70,11 +78,18 @@ export const rootRouterOptions: RootRouterOptions = {
     ...headerContainerStyles,
   },
 
-  transfer: {
-    title: 'Transfers',
-  },
+  transfer: ({route}) => ({
+    title: `${getCurrencyInfo(route.params.type).tokenName}`,
+  }),
   address: {},
-  recieve: {},
+  recieve: ({route}) => {
+    const {tokenName} = getCurrencyInfo(route.params.type);
+    return {
+      title: `Recieve ${tokenName}`,
+      headerTintColor: colors.white,
+      headerTransparent: true,
+    };
+  },
   send: {},
   setAddress: {},
   createWalletRoutes: {
@@ -83,10 +98,10 @@ export const rootRouterOptions: RootRouterOptions = {
 };
 export const commonScreenOptions: StackNavigationOptions = {
   headerTitleAlign: 'center',
+  headerTintColor: colors.black,
   headerTitleStyle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.black,
   },
   headerStyle: {
     elevation: 0,
@@ -97,8 +112,8 @@ export const commonScreenOptions: StackNavigationOptions = {
   },
   headerBackTitle: null,
   headerBackTitleVisible: false,
-  headerBackImage: () => (
-    <FIcon name="arrow-left" size={24} color={colors.black} />
+  headerBackImage: ({tintColor}) => (
+    <FIcon name="arrow-left" size={24} color={tintColor} />
   ),
   headerLeftContainerStyle: {
     paddingLeft: 16,
