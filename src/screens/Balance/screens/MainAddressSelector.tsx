@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Text, SmallText} from 'shared/styled-components/Texts';
 import {
   ScreenContainer,
@@ -7,14 +7,7 @@ import {
 } from 'shared/styled-components';
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
-import {
-  TouchableOpacity,
-  View,
-  TouchableHighlight,
-  StyleSheet,
-  Animated,
-  Dimensions,
-} from 'react-native';
+import {TouchableOpacity, TouchableHighlight} from 'react-native';
 import {Button} from 'shared/components/Button';
 import BaseIcon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
@@ -23,16 +16,17 @@ import {useGlobalState} from 'globalState';
 import FIcon from 'react-native-vector-icons/Feather';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import AsyncStorage from '@react-native-community/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import {ScanScreen} from 'shared/components/QrReader';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {AuthRootStackParams} from 'Router';
 
 type SendTransferScreenProps = {
-  //   route: {params: {setAddress: (address) => void}};
+  navigation: StackNavigationProp<AuthRootStackParams, 'MainAddressSelector'>;
 };
 
-export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
-  //   const {setAddress} = props.route.params;
-  const [modalAdd, setModalAdd] = useGlobalState('modalAdd');
+export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
+  navigation,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [, setMainAddress] = useGlobalState('mainAddress');
 
   const [state, setState] = useState({
@@ -45,7 +39,18 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
   const [listAddressBase, setListAddressBase] = useState([]);
   const [listAddressQuantity, setListAddressQuantity] = useState(0);
 
-  const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: ({tintColor}) => (
+        <FIcon
+          name="plus"
+          size={20}
+          color={tintColor}
+          onPress={() => setIsModalOpen(true)}
+        />
+      ),
+    });
+  }, []);
 
   useEffect(() => {
     async function getAddress() {
@@ -91,7 +96,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
   };
   const setOnAsync = async () => {
     await AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress));
-    setModalAdd(!modalAdd);
+    setIsModalOpen(!isModalOpen);
     setState({
       ...state,
       alias: '',
@@ -117,7 +122,9 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
       {listAddress.length === 0 ? (
         <>
           <Icon name="address-card-o" size={60} color={colors.black} />
-          <Button isActivated={true} onClick={() => setModalAdd(!modalAdd)}>
+          <Button
+            isActivated={true}
+            onClick={() => setIsModalOpen(!isModalOpen)}>
             Add
           </Button>
         </>
@@ -125,7 +132,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
         <ListContent>
           <SwipeListView
             data={listAddress}
-            renderItem={(data, rowMap) => (
+            renderItem={data => (
               <TouchableHighlight
                 key={data.index}
                 onPress={() => SetMainAddresAndReload(data.item.address)}
@@ -156,7 +163,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
             renderHiddenItem={(data, rowMap) => (
               <TouchableOpacity
                 style={{
-                  backgroundColor: 'transparent',
+                  backgroundColor: 'red',
                 }}
               />
             )}
@@ -164,10 +171,10 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = props => {
         </ListContent>
       )}
       <Modal
-        isShowed={modalAdd}
+        isShowed={isModalOpen}
         icon={'x'}
         onClose={() => {
-          setModalAdd(!modalAdd);
+          setIsModalOpen(!isModalOpen);
         }}>
         <InputContainer>
           <Label>Alias</Label>

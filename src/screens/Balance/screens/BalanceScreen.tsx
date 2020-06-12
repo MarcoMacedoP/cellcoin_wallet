@@ -7,6 +7,8 @@ import {CurrencyType} from 'shared/types';
 import {useGetBalance} from '../hooks/useGetBalance';
 import {colors} from 'shared/styles/variables';
 import {ScrollView} from 'react-native-gesture-handler';
+import {AuthRootStackParams} from 'Router';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
@@ -22,8 +24,11 @@ const CURRENCYS: Array<CurrencyType> = [
     image: 'assets/icons/ethereum_icon.png',
   },
 ];
+interface BalanceScreenProps {
+  navigation: StackNavigationProp<AuthRootStackParams, 'Balance'>;
+}
 
-export const BalanceScreen = ({navigation}) => {
+export const BalanceScreen = ({navigation}: BalanceScreenProps) => {
   const [currencys, setCurrencys] = useState<Array<CurrencyType>>([
     ...CURRENCYS,
   ]);
@@ -44,7 +49,7 @@ export const BalanceScreen = ({navigation}) => {
   }, []);
 
   const handleCurrencyClick = currency =>
-    navigation.navigate('Transfers', {screen: 'home', params: {currency}});
+    navigation.navigate('Transfers', currency);
 
   return (
     <ScrollView
