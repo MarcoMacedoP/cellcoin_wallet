@@ -1,6 +1,6 @@
-import React, {useEffect, useState, useLayoutEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {RefreshControl, Dimensions} from 'react-native';
+import {RefreshControl, Dimensions, StatusBar} from 'react-native';
 import {BalanceHeaderComponent} from '../components/Header';
 import {BalanceCurrencyComponent} from '../components/Currency';
 import {CurrencyType} from 'shared/types';
@@ -55,15 +55,16 @@ export const BalanceScreen = ({navigation}) => {
       refreshControl={
         <RefreshControl
           size={35}
-          tintColor={colors.white}
+          colors={[colors.primary, colors.accent]}
+          tintColor={colors.accent}
           refreshing={balance.isLoading}
           style={{
-            borderWidth: 0,
             backgroundColor: colors.primary,
           }}
           onRefresh={onRefresh}
         />
       }>
+      <StatusBar barStyle="light-content" />
       <BalanceHeaderComponent assets={generalBalance} />
       <CurrencysContainer>
         {currencys.map((currency, index) => (

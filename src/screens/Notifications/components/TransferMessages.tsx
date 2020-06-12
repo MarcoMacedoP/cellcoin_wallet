@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
-import { View, FlatList, RefreshControl, StyleSheet, Text } from 'react-native';
+import React from 'react';
+import {View, FlatList} from 'react-native';
 import {EmptyState} from 'shared/components/EmptyState';
-import { NotificationCard } from 'shared/components';
-
-export const TransferMessages = ({notifications, updateNotifications, isLoading}) => {
-  
-  const renderRefreshControl = () => {
-    updateNotifications();
-  }
-
-  const renderRow = (notification, index) => {
+import {NotificationCard} from 'shared/components';
+interface TransferMessagesProps {
+  updateNotifications: () => void;
+  isLoading: boolean;
+  notifications: any[];
+}
+export const TransferMessages = ({
+  updateNotifications,
+  isLoading,
+  notifications,
+}: TransferMessagesProps) => {
+  const renderItem = (notification, index) => {
     return <NotificationCard data={notification} key={index} />;
   };
-  
+
   return (
-    <View>
-      {!notifications ? (
-        <EmptyState message="No Transfer Notifications" />
-      ) : (
-        <FlatList
-          data={notifications}
-          renderItem={({item, index}) => renderRow(item, index)}
-          keyExtractor={(item, index) => item.id}
-          onRefresh={() => renderRefreshControl()}
-          refreshing={isLoading}
-          initialNumToRender={8}
-        />
+    <FlatList
+      ListEmptyComponent={() => (
+        <EmptyState message="You don't have any notification yet" />
       )}
-    </View>
+      data={notifications}
+      renderItem={({item, index}) => renderItem(item, index)}
+      keyExtractor={item => item.uuid}
+      onRefresh={updateNotifications}
+      refreshing={isLoading}
+      initialNumToRender={8}
+    />
   );
-}
+};

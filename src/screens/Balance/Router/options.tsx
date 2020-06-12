@@ -7,11 +7,11 @@ import FIcon from 'react-native-vector-icons/Feather';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {LayoutHeader} from 'shared/components/LayoutHeader';
+const logoImage = require('assets/icons/logo_mini.png');
 
 const balanceScreen = ({navigation}): StackNavigationOptions => ({
   title: 'AgaveCoin',
   headerTitleAlign: 'center',
-
   headerTransparent: true,
   headerLeftContainerStyle: {
     paddingHorizontal: spacings.right,
@@ -29,7 +29,9 @@ const balanceScreen = ({navigation}): StackNavigationOptions => ({
       <SimpleIcon name="wallet" size={18} color={colors.white} />
     </IconContainer>
   ),
-  headerTitle: () => <Logo source={require('assets/icons/logo_mini.png')} />,
+  headerTitle: () => (
+    <Logo source={logoImage} resizeMode="contain" resizeMethod="scale" />
+  ),
 });
 
 const addressOptions: StackNavigationOptions = {
@@ -51,6 +53,5 @@ const addressOptions: StackNavigationOptions = {
 const Logo = styled.Image`
   margin: 0 auto;
   width: 110px;
-  resize-mode: contain;
 `;
 export {balanceScreen, addressOptions};

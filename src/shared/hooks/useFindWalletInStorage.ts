@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {useEffect, useState} from 'react';
-import {useGlobalState} from 'globalState';
+import { useEffect, useState } from 'react';
+import { useGlobalState } from 'globalState';
 import Wallet from 'erc20-wallet';
 
 /**
@@ -11,14 +11,14 @@ import Wallet from 'erc20-wallet';
 export function useFindWalletInStorage() {
   const [isLoading, setLoading] = useState(false);
   const [, setKeystore] = useGlobalState<any>('keystore');
-  const [mainAddress, setMainAddress] = useGlobalState('mainAddress');
+  const [, setMainAddress] = useGlobalState('mainAddress');
   const [, setAddresses] = useGlobalState('addresses');
   useEffect(() => {
     async function getWallet() {
       try {
         setLoading(true);
         const keystore = await getDecodedWallet();
-        const {adresses, mainAddress} = await getAdress();
+        const { adresses, mainAddress } = await getAdress();
         setAddresses(adresses);
         setMainAddress(mainAddress);
         setKeystore(keystore);
@@ -30,7 +30,7 @@ export function useFindWalletInStorage() {
     }
     getWallet();
   }, []);
-  return {isLoading};
+  return { isLoading };
 }
 async function getDecodedWallet() {
   const decodedKeystore = await AsyncStorage.getItem('keystore');
@@ -44,5 +44,5 @@ async function getDecodedWallet() {
 async function getAdress() {
   const adresses = JSON.parse(await AsyncStorage.getItem('addresses'));
   const mainAddress = JSON.parse(await AsyncStorage.getItem('mainAddress'));
-  return {adresses, mainAddress};
+  return { adresses, mainAddress };
 }

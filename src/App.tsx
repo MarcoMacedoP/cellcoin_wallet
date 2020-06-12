@@ -8,6 +8,8 @@ import {useFindWalletInStorage} from 'shared/hooks/useFindWalletInStorage';
 import {FadeInView} from 'shared/components';
 import {useGlobalState} from 'globalState';
 import OneSignal from 'react-native-onesignal';
+import SimpleToast from 'react-native-simple-toast';
+import {Alert} from 'react-native';
 //declarations
 declare var global: {HermesInternal: null | {}};
 const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
@@ -66,22 +68,39 @@ function useInitilizeApp() {
 
   useEffect(() => {
     async function getInitialization() {
-      const response = await fetch(`${API_URL}/data-general`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      });
-      const {data} = await response.json();
-      console.log({data});
-      return data;
+      try {
+        const response = await fetch(`${API_URL}/data-general`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        });
+        console.log(response);
+        const {data} = await response.json();
+        console.log({data});
+        return data;
+      } catch (error) {
+        return null;
+      }
     }
     async function setInitialization() {
       const initialization = await getInitialization();
-
-      for (const prop in initialization) {
-        const walletHasProp = initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop); // prettier-ignore
-        if (walletHasProp) Wallet[prop] = initialization[prop];
+      if (initialization) {
+        for (const prop in initialization) {
+          const walletHasProp = initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop); // prettier-ignore
+          if (walletHasProp) Wallet[prop] = initialization[prop];
+        }
+        setHasSetInitialization(true);
+      } else {
+        Alert.alert(
+          'Hubo un error inicializando la app',
+          'Revisa tu conexión a internet y vuelve a intentarlo.',
+          [
+            {
+              onPress: async () => await setInitialization(),
+              text: 'Reintentar',
+            },
+          ],
+        );
       }
-      setHasSetInitialization(true);
     }
     setInitialization();
   }, []);
@@ -89,7 +108,6 @@ function useInitilizeApp() {
 }
 const App = () => {
   const {hasInitialized} = useInitilizeApp();
-
   return !hasInitialized ? (
     <Splash />
   ) : (
