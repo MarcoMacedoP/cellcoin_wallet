@@ -1,15 +1,7 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {
-  ScreenContainer,
-  Label as BaseLabel,
-  Input,
-} from 'shared/styled-components';
-import styled from 'styled-components/native';
-import {colors} from 'shared/styles';
-import {TouchableOpacity} from 'react-native';
-import {Button} from 'shared/components/Button';
+import {TouchableOpacity, Text} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {Modal, EmptyState} from 'shared/components';
+import {EmptyState, ScreenContainer} from 'shared/components';
 import {useGlobalState} from 'globalState';
 import FIcon from 'react-native-vector-icons/Feather';
 import {SwipeListView} from 'react-native-swipe-list-view';
@@ -17,6 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthRootStackParams} from 'Router';
 import {AddressItem} from '../components/AddressItem';
+import {AddAddressModal} from '../components/AddAddressModal';
 
 type SendTransferScreenProps = {
   navigation: StackNavigationProp<AuthRootStackParams, 'MainAddressSelector'>;
@@ -54,11 +47,10 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   useEffect(() => {
     async function getAddress() {
       try {
-        // AsyncStorage.removeItem('addressesEdit')
-        let arrayAddress: string[] = JSON.parse(
+        const arrayAddress: string[] = JSON.parse(
           await AsyncStorage.getItem('addresses'),
         );
-        let arrayAddressEdited: string[] = JSON.parse(
+        const arrayAddressEdited: string[] = JSON.parse(
           await AsyncStorage.getItem('addressesEdit'),
         );
         setListAddressBase(arrayAddress);
@@ -77,6 +69,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     }
     getAddress();
   }, []);
+
   const addNewAddress = async () => {
     if (listAddressQuantity != 9) {
       let counter = 1 + listAddressQuantity;
@@ -93,6 +86,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
       Toast.show('Limit address');
     }
   };
+
   const setOnAsync = async () => {
     await AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress));
     setIsModalOpen(!isModalOpen);
@@ -112,84 +106,34 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     setState({...state, alias: text});
   };
 
+  function handleModalClose() {
+    setIsModalOpen(false);
+  }
   return (
-    <Container hasData={listAddress.length === 0 ? false : true} light>
-      <ListContent>
-        <SwipeListView
-          ListEmptyComponent={() => (
-            <EmptyState message="There is not an address to select" />
-          )}
-          data={listAddress}
-          renderItem={({item, index}) => (
-            <AddressItem
-              key={index}
-              onPress={setMainAddresAndReload}
-              address={item.address}
-              alias={item.alias}
-            />
-          )}
-          renderHiddenItem={(data, rowMap) => (
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'red',
-              }}
-            />
-          )}
-        />
-      </ListContent>
-
-      <Modal
-        isShowed={isModalOpen}
-        icon={'x'}
-        onClose={() => {
-          setIsModalOpen(!isModalOpen);
-        }}>
-        <InputContainer>
-          <Label>Alias</Label>
-          <Input
-            align="left"
-            value={state.alias}
-            maxLength={15}
-            keyboardAppearance={'dark'}
-            onChangeText={value => onTextAliasChange(value)}
+    <ScreenContainer statusBarProps={{barStyle: 'dark-content'}}>
+      <SwipeListView
+        ListEmptyComponent={() => (
+          <EmptyState message="There is not an address to select" />
+        )}
+        keyExtractor={({address}) => address}
+        data={listAddress}
+        renderItem={({item, index}) => (
+          <AddressItem
+            key={index}
+            onPress={setMainAddresAndReload}
+            address={item.address}
+            alias={item.alias}
           />
-        </InputContainer>
-        <Button
-          isActivated={state.alias ? true : false}
-          width={'90%'}
-          onClick={() => addNewAddress()}>
-          Add Address
-        </Button>
-      </Modal>
-    </Container>
+        )}
+      />
+
+      <AddAddressModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        alias={state.alias}
+        onAliasChange={onTextAliasChange}
+        onSubmit={addNewAddress}
+      />
+    </ScreenContainer>
   );
 };
-
-type ContainerProps = {
-  hasData: boolean;
-};
-const Container = styled(ScreenContainer)<ContainerProps>`
-  flex: 1;
-
-  align-items: center;
-  justify-content: ${props => (props.hasData ? 'center' : 'space-around')};
-  background-color: ${props =>
-    props.hasData ? colors.lightGray : colors.white};
-`;
-const ListContent = styled.View`
-  margin-top: 25%;
-  width: 100%;
-  flex: 1;
-`;
-const InputContainer = styled.View`
-  margin: 8px 0;
-  padding: 4px 8px;
-  width: 90%;
-  background-color: ${colors.whiteDark};
-  border-radius: 4px;
-`;
-
-const Label = styled(BaseLabel)`
-  position: relative;
-  top: 4px;
-`;

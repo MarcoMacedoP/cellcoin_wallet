@@ -78,6 +78,7 @@ function useInitilizeApp() {
         console.log({data});
         return data;
       } catch (error) {
+        console.log('Error on getInitialization() line 81 App.tsx', error);
         return null;
       }
     }

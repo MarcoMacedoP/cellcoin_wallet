@@ -61,7 +61,10 @@ export const rootRouterOptions: RootRouterOptions = {
     ),
   }),
   mainAdressSelector: {
-    headerTransparent: true,
+    headerTransparent: false,
+    headerStyle: {
+      backgroundColor: colors.lightGray,
+    },
     headerTitleAlign: 'center',
     title: 'Select your wallet',
     ...headerContainerStyles,
