@@ -11,7 +11,7 @@ import {useGlobalState} from 'globalState';
 import {commonScreenOptions} from 'Router/options';
 import {TransfersScreen} from 'screens/Transfers/screens/TransfersScreen';
 import {SendScreen} from 'screens/Transfers/screens/Send';
-import {SetAddressScreen} from 'screens/Transfers/screens/SetAddressScreen';
+import {ConfirmSend} from 'screens/Transfers/screens/ConfirmSend';
 import {AddressBookScreen} from 'screens/Transfers/screens/AddressBookScreen';
 import {RecieveTransferScreen} from 'screens/Transfers/screens/RecieveScreen';
 import {BalanceScreen} from 'screens/Balance/screens/BalanceScreen';
@@ -23,8 +23,12 @@ export type AuthRootStackParams = {
   Balance: undefined;
   MainAddressSelector: undefined;
   Transfers: CurrencyType;
-  Send: CurrencyType;
   Recieve: CurrencyType;
+  Send: CurrencyType;
+  ConfirmSend: {
+    currency: CurrencyType;
+    tokenQuantityToBeSended: string;
+  };
   /** Only avaivavle when user is not logged */
   CreateWalletRoutes: undefined;
 };
@@ -58,8 +62,8 @@ const Router = () => {
           options={options.send}
         />
         <RootStack.Screen
-          name="setAddress"
-          component={SetAddressScreen}
+          name="ConfirmSend"
+          component={ConfirmSend}
           // options={({route}: {route: any}) => ({
           //   ...setAddressOptions,
           //   title:

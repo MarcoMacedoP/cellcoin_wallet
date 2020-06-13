@@ -12,7 +12,10 @@ import {AuthRootStackParams} from 'Router';
 import {RouteProp} from '@react-navigation/core';
 import Toast from 'react-native-simple-toast';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {MINIMUN_ALLOWED_CURRENCY} from 'shared/constants';
+import {
+  MINIMUN_ALLOWED_CURRENCY,
+  NOT_ENOUGHT_BALANCE_MESSAGE,
+} from 'shared/constants';
 
 type TransfersScreenProps = {
   route: RouteProp<AuthRootStackParams, 'Transfers'>;
@@ -30,7 +33,7 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
     if (parseFloat(currency.value.original) > MINIMUN_ALLOWED_CURRENCY) {
       navigation.navigate('Send', currency);
     } else {
-      Toast.show("You don't have enough balance to make a transaction ");
+      Toast.show(NOT_ENOUGHT_BALANCE_MESSAGE);
     }
   };
   const navigateToRecieveTransfer = () =>

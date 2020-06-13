@@ -1,6 +1,6 @@
 import React, {useState, useMemo, useReducer, Reducer} from 'react';
 import styled from 'styled-components/native';
-import {useNavigation, RouteProp} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import {colors} from 'shared/styles/variables';
 import {Label} from 'shared/styled-components';
 import {Button, ScreenContainer} from 'shared/components';
@@ -12,13 +12,17 @@ import {AuthRootStackParams} from 'Router';
 import {TokenType, CurrencyType} from 'shared/types';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 import {View, StyleSheet} from 'react-native';
+import {NOT_ENOUGHT_BALANCE_MESSAGE} from 'shared/constants';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type SendScreenProps = {
   route: RouteProp<AuthRootStackParams, 'Send'>;
+  navigation: StackNavigationProp<AuthRootStackParams, 'Send'>;
 };
 
 export const SendScreen: React.FC<SendScreenProps> = ({
   route: {params: currency},
+  navigation,
 }) => {
   const [{token, usd}, dispatch] = useReducer(quantityReducer, {
     token: null,
@@ -28,8 +32,6 @@ export const SendScreen: React.FC<SendScreenProps> = ({
   const [activeCurrency, setActiveCurrency] = useState<'USD' | TokenType>(
     'USD',
   );
-
-  const navigation = useNavigation();
 
   const changeCurrentCurrency = () => {
     if (activeCurrency === currency.type) setActiveCurrency('USD');
@@ -52,9 +54,9 @@ export const SendScreen: React.FC<SendScreenProps> = ({
   };
 
   function handleSubmit() {
-    navigation.navigate('setAddress', {
+    navigation.navigate('ConfirmSend', {
       currency,
-      quantityCurrenncy: token,
+      tokenQuantityToBeSended: token,
     });
   }
 
@@ -94,7 +96,7 @@ export const SendScreen: React.FC<SendScreenProps> = ({
       </ScrollView>
       <Button
         secondary
-        isActivated={isValidQuantity(token)}
+        isActivated={isValidQuantity(token, currency.value.original)}
         onClick={handleSubmit}>
         Send
       </Button>
@@ -113,22 +115,23 @@ type QuantityAction = {
     currency: CurrencyType;
   };
 };
+const initialState: QuantityState = {
+  token: '0',
+  usd: '0',
+};
 
 const quantityReducer: Reducer<QuantityState, QuantityAction> = (
-  state,
+  state = initialState,
   {type, payload},
 ) => {
-  if (!isValidQuantity(payload.value)) {
-    return {
-      token: '0',
-      usd: '0',
-    };
-  }
   const {currency} = payload;
   const tokenValueInUSD =
     parseFloat(currency.value.usd) / parseFloat(currency.value.original);
   switch (type) {
     case 'set-usd': {
+      if (!isValidQuantity(payload.value, currency.value.usd)) {
+        return initialState;
+      }
       //convert usd value to token value
       const usd = payload.value;
       const tokenValueFromUSD = parseFloat(usd) / tokenValueInUSD;
@@ -139,6 +142,9 @@ const quantityReducer: Reducer<QuantityState, QuantityAction> = (
     }
     case 'set-token': {
       //convert token value to USD
+      if (!isValidQuantity(currency.value.usd, currency.value.original)) {
+        return initialState;
+      }
       const token = payload.value;
       const usdValueFromToken = parseFloat(token) * tokenValueInUSD;
       return {
@@ -151,13 +157,15 @@ const quantityReducer: Reducer<QuantityState, QuantityAction> = (
   }
 };
 
-function isValidQuantity(quantity: string): boolean {
+function isValidQuantity(quantity: string, maxQuantity: string) {
   if (!quantity || quantity === '' || quantity === '0') {
     return false;
   }
   const parsedQuantity = parseFloat(quantity);
   if (isNaN(parsedQuantity)) {
     return false;
+  } else if (parsedQuantity > parseFloat(maxQuantity)) {
+    Toast.show(NOT_ENOUGHT_BALANCE_MESSAGE);
   } else {
     return true;
   }

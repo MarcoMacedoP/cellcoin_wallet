@@ -1,32 +1,30 @@
-'use strict';
-
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {} from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
 type QRprops = {
-  closeModal: any,
+  /**
+   * A function to be called when the modal is closed with the selected address
+   */
+  closeModal: (seletedAddress: string) => void;
 };
-export class ScanScreen extends Component<QRprops> {
-  onSuccess = (e) => {
+export const ScanScreen: React.FC<QRprops> = ({closeModal}) => {
+  const onSuccess = e => {
     if (e.data.indexOf(':')) {
-      var address = e.data.split(':')
-      this.props.closeModal(address[1]);
+      const address = e.data.split(':');
+      closeModal(address[1]);
     } else {
-      this.props.closeModal(e.data);
+      closeModal(e.data);
     }
-    
-  }
-  render() {
-    return (
-      <QRCodeScanner
-        fadeIn={true}
-        showMarker={true}
-        containerStyle={{ flexDirection: 'row', alignItems: 'center',}}
-        cameraStyle={{width: 300, height: 300}}
-        onRead={this.onSuccess}
-      />
-    );
-  }
-}
+  };
+  return (
+    <QRCodeScanner
+      fadeIn={true}
+      showMarker={true}
+      containerStyle={{flexDirection: 'row', alignItems: 'center'}}
+      cameraStyle={{width: 300, height: 300}}
+      onRead={onSuccess}
+    />
+  );
+};
