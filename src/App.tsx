@@ -84,6 +84,7 @@ function useInitilizeApp() {
     }
     async function setInitialization() {
       const initialization = await getInitialization();
+      console.log(initialization);
       if (initialization) {
         for (const prop in initialization) {
           const walletHasProp = initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop); // prettier-ignore

@@ -28,7 +28,7 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
 
   const navigateToSendTransfer = () => {
     if (parseFloat(currency.value.original) > MINIMUN_ALLOWED_CURRENCY) {
-      navigation.navigate('send', {currency});
+      navigation.navigate('Send', currency);
     } else {
       Toast.show("You don't have enough balance to make a transaction ");
     }

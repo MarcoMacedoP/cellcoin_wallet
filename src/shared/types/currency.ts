@@ -1,5 +1,10 @@
 export type CurrencyType = {
-  value: {original: string; usd: string};
+  value: {
+    /**The quantity of currency */
+    original: string;
+    /**The original currency value parsed in usd */
+    usd: string
+  };
   type: TokenType;
   name: string;
   image: string;

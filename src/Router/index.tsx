@@ -11,7 +11,6 @@ import {useGlobalState} from 'globalState';
 import {commonScreenOptions} from 'Router/options';
 import {TransfersScreen} from 'screens/Transfers/screens/TransfersScreen';
 import {SendScreen} from 'screens/Transfers/screens/Send';
-import {getCurrencyInfo} from 'screens/Transfers/components/Functions/getCurrencyInfo';
 import {SetAddressScreen} from 'screens/Transfers/screens/SetAddressScreen';
 import {AddressBookScreen} from 'screens/Transfers/screens/AddressBookScreen';
 import {RecieveTransferScreen} from 'screens/Transfers/screens/RecieveScreen';
@@ -54,14 +53,9 @@ const Router = () => {
           options={options.transfer}
         />
         <RootStack.Screen
-          name="send"
+          name="Send"
           component={SendScreen}
-          // options={({route}: {route: any}) => ({
-          //   ...sendOptions,
-          //   title:
-          //     'Send ' +
-          //     getCurrencyInfo(route.params.currency.type).tokenName,
-          // })}
+          options={options.send}
         />
         <RootStack.Screen
           name="setAddress"

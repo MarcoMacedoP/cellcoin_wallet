@@ -18,7 +18,9 @@ interface RootRouterOptions {
   transfer: (props: {
     route: RouteProp<AuthRootStackParams, 'Transfers'>;
   }) => StackNavigationOptions;
-  send: StackNavigationOptions;
+  send: (props: {
+    route: RouteProp<AuthRootStackParams, 'Send'>;
+  }) => StackNavigationOptions;
   setAddress: StackNavigationOptions;
   address: StackNavigationOptions;
   recieve: (props: {
@@ -90,7 +92,9 @@ export const rootRouterOptions: RootRouterOptions = {
       headerTransparent: true,
     };
   },
-  send: {},
+  send: ({route}) => ({
+    title: `Send ${getCurrencyInfo(route.params.type).tokenName}`,
+  }),
   setAddress: {},
   createWalletRoutes: {
     headerShown: false,

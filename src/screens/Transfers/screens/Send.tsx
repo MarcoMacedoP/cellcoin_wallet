@@ -1,200 +1,186 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo, useReducer, Reducer} from 'react';
 import styled from 'styled-components/native';
-import {useNavigation} from '@react-navigation/native';
-import {CurrencyType} from 'shared/types';
+import {useNavigation, RouteProp} from '@react-navigation/native';
 import {colors} from 'shared/styles/variables';
 import {Label} from 'shared/styled-components';
-import {Button} from 'shared/components';
-// import VirtualKeyboard from '../components/virtual-keyboard-update/VirtualKeyboard';
+import {Button, ScreenContainer} from 'shared/components';
 import {VKeyComponent} from '../components/virtual-keyboard-update/VKey';
-
-import {Dimensions} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {RawModal} from 'shared/components/RawModal';
 import Toast from 'react-native-simple-toast';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {globalStyles} from 'shared/styles';
+import {AuthRootStackParams} from 'Router';
+import {TokenType, CurrencyType} from 'shared/types';
+import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
+import {View, StyleSheet} from 'react-native';
 
 type SendScreenProps = {
-  route: {params: {currency: CurrencyType}};
+  route: RouteProp<AuthRootStackParams, 'Send'>;
 };
-export const SendScreen: React.FC<SendScreenProps> = ({route: {params}}) => {
-  const {currency} = params;
-  const [activeCurrency, setActiveCurrency] = useState('USD');
-  const [quantity, setQuantity] = useState('0');
-  const [quantityCurrenncy, setQuantityCurrency] = useState('0');
-  const [address, setAddress] = useState('');
-  const [ModalVisible, setModalVisible] = useState(false);
+
+export const SendScreen: React.FC<SendScreenProps> = ({
+  route: {params: currency},
+}) => {
+  const [{token, usd}, dispatch] = useReducer(quantityReducer, {
+    token: null,
+    usd: null,
+  });
+
+  const [activeCurrency, setActiveCurrency] = useState<'USD' | TokenType>(
+    'USD',
+  );
+
   const navigation = useNavigation();
-  const toggleModal = () => {
-    setModalVisible(!ModalVisible);
-  };
-  const height = Dimensions.get('screen').height;
-  const activateCurrency = () => {
+
+  const changeCurrentCurrency = () => {
     if (activeCurrency === currency.type) setActiveCurrency('USD');
     else setActiveCurrency(currency.type);
   };
-  const setQuantity_ = val => {
-    const minumunQty = 0.1;
-    const cuantity = parseFloat(currency.value.original);
-    const value = parseFloat(val);
-    if (cuantity < minumunQty) {
-      Toast.show('No balance enough to make a transaction');
-    }
-    if (val === '' || cuantity < minumunQty) {
-      setQuantity('0');
-      setQuantityCurrency('0');
+
+  const handleQuantityChange = (value: string) => {
+    const payload = {value, currency};
+    if (activeCurrency === currency.type) {
+      dispatch({type: 'set-token', payload});
     } else {
-      if (activeCurrency === currency.type) {
-        setQuantityCurrency(val);
-        let usd =
-          parseFloat(currency.value.usd) / parseFloat(currency.value.original);
-        let valUsd = val * usd;
-        if (quantity !== '0') {
-          setQuantity(valUsd.toFixed(2));
-        } else {
-          setQuantity(valUsd.toFixed(0));
-        }
-      } else {
-        setQuantity(val);
-        let usd =
-          parseFloat(currency.value.usd) / parseFloat(currency.value.original);
-        let valUsd = val / usd;
-        if (parseFloat(val) === 0) {
-          setQuantityCurrency('0.00000000');
-        } else {
-          setQuantityCurrency(valUsd.toFixed(8));
-        }
-      }
+      dispatch({type: 'set-usd', payload});
     }
   };
+
   const setMaximun = () => {
-    if (activeCurrency === currency.type) setQuantity_(currency.value.original);
-    else setQuantity_(currency.value.usd);
+    if (activeCurrency === currency.type)
+      handleQuantityChange(currency.value.original);
+    else handleQuantityChange(currency.value.usd);
   };
-  const renderContent = () => {
-    return (
-      <>
-        <Header>
-          <TouchableHeader onPress={activateCurrency}>
-            <LabelCurrency active={activeCurrency === 'USD' ? true : false}>
-              {quantity} USD
-            </LabelCurrency>
-          </TouchableHeader>
-          <Hr />
-          <TouchableHeader onPress={activateCurrency}>
-            <LabelCurrency
-              active={activeCurrency === currency.type ? true : false}>
-              {quantityCurrenncy} {currency.type}
-            </LabelCurrency>
-          </TouchableHeader>
-          <Button onClick={setMaximun} outline>
-            <Label>
-              Use maximun available:{' '}
-              {activeCurrency === currency.type
-                ? currency.value.original
-                : currency.value.usd}
-            </Label>
-          </Button>
-        </Header>
-        <Body>
-          <VKeyComponent
-            value={
-              activeCurrency === currency.type
-                ? quantityCurrenncy === '0'
-                  ? ''
-                  : quantityCurrenncy
-                : quantity === '0'
-                ? ''
-                : quantity
-            }
-            onPress={val => {
-              setQuantity_(val);
-            }}
-          />
 
-          <Button
-            secondary
-            isActivated={
-              quantity !== '0.00' &&
-              quantity !== '.0' &&
-              quantity !== '0' &&
-              quantityCurrenncy !== '0' &&
-              quantityCurrenncy !== 'NaN' &&
-              quantity !== 'NaN'
-            }
-            onClick={() => {
-              navigation.navigate('setAddress', {currency, quantityCurrenncy});
-            }}>
-            NEXT
-          </Button>
-        </Body>
+  function handleSubmit() {
+    navigation.navigate('setAddress', {
+      currency,
+      quantityCurrenncy: token,
+    });
+  }
 
-        <RawModal isShowed={ModalVisible} onClose={toggleModal}>
-          <Label> Please select the destination </Label>
-          <Button secondary margin={'10px 0'}>
-            <Icon name="qrcode" size={15} color={colors.white} /> Qr reader
-          </Button>
-          <Button
-            accent
-            margin={'10px 0'}
-            onClick={() => {
-              toggleModal();
-              navigation.navigate('Transfers', {
-                screen: 'address',
-                params: {
-                  setAddress: address => setAddress(address),
-                },
-              });
-            }}>
-            <Icon name="address-book" size={15} color={colors.white} /> Address
-            Book
-          </Button>
-        </RawModal>
-      </>
-    );
-  };
   return (
-    <>
-      {height < 700 ? (
-        <Container>
-          <PageContainer>{renderContent()}</PageContainer>
-        </Container>
-      ) : (
-        <PageContainer>{renderContent()}</PageContainer>
-      )}
-    </>
+    <ScreenContainer light>
+      <ScrollView
+        style={globalStyles.scrollView}
+        contentContainerStyle={styles.scrollContentContainer}>
+        <TouchableOpacity
+          onPress={changeCurrentCurrency}
+          style={styles.currencyContainer}>
+          <LabelCurrency active={activeCurrency === 'USD'}>
+            {usd || '0.00'} USD
+          </LabelCurrency>
+        </TouchableOpacity>
+        <View style={styles.line} />
+        <TouchableOpacity
+          onPress={changeCurrentCurrency}
+          style={styles.currencyContainer}>
+          <LabelCurrency active={activeCurrency === currency.type}>
+            {token || '0.00'} {getCurrencyInfo(currency.type).tokenName}
+          </LabelCurrency>
+        </TouchableOpacity>
+        <Button onClick={setMaximun} outline>
+          <Label>
+            Use maximun available:{' '}
+            {activeCurrency === currency.type
+              ? currency.value.original
+              : currency.value.usd}
+          </Label>
+        </Button>
+        <VKeyComponent
+          color={colors.black}
+          value={activeCurrency === 'USD' ? usd : token}
+          onPress={handleQuantityChange}
+        />
+      </ScrollView>
+      <Button
+        secondary
+        isActivated={isValidQuantity(token)}
+        onClick={handleSubmit}>
+        Send
+      </Button>
+    </ScreenContainer>
   );
 };
 
-const PageContainer = styled.View`
-  background-color: ${colors.white};
-  height: 100%;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-`;
-const Container = styled.ScrollView`
-  background-color: ${colors.accent};
-`;
-const Header = styled.View`
-  width: 90%;
-`;
-const Hr = styled.View`
-  border-width: 0.5px;
-  border-color: ${colors.lightGray};
-`;
+type QuantityState = {
+  token: string | null;
+  usd: string | null;
+};
+type QuantityAction = {
+  type: 'set-token' | 'set-usd';
+  payload: {
+    value: string;
+    currency: CurrencyType;
+  };
+};
+
+const quantityReducer: Reducer<QuantityState, QuantityAction> = (
+  state,
+  {type, payload},
+) => {
+  if (!isValidQuantity(payload.value)) {
+    return {
+      token: '0',
+      usd: '0',
+    };
+  }
+  const {currency} = payload;
+  const tokenValueInUSD =
+    parseFloat(currency.value.usd) / parseFloat(currency.value.original);
+  switch (type) {
+    case 'set-usd': {
+      //convert usd value to token value
+      const usd = payload.value;
+      const tokenValueFromUSD = parseFloat(usd) / tokenValueInUSD;
+      return {
+        token: String(tokenValueFromUSD),
+        usd,
+      };
+    }
+    case 'set-token': {
+      //convert token value to USD
+      const token = payload.value;
+      const usdValueFromToken = parseFloat(token) * tokenValueInUSD;
+      return {
+        token,
+        usd: String(usdValueFromToken),
+      };
+    }
+    default:
+      return state;
+  }
+};
+
+function isValidQuantity(quantity: string): boolean {
+  if (!quantity || quantity === '' || quantity === '0') {
+    return false;
+  }
+  const parsedQuantity = parseFloat(quantity);
+  if (isNaN(parsedQuantity)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 type LabelCurrencyProps = {
   active?: boolean;
 };
 const LabelCurrency = styled(Label)<LabelCurrencyProps>`
   font-size: ${props => (props.active ? '25px' : '15px')};
+  color: ${props => (props.active ? colors.black : colors.blackLigth)};
 `;
-const TouchableHeader = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-  margin: 15px;
-`;
-const Body = styled.View`
-  width: 90%;
-  justify-content: flex-end;
-  align-items: center;
-`;
+
+const styles = StyleSheet.create({
+  scrollContentContainer: {
+    alignItems: 'center',
+  },
+  currencyContainer: {
+    margin: 15,
+  },
+  line: {
+    borderWidth: 1,
+    borderColor: colors.blackLigth,
+    width: '100%',
+  },
+});
