@@ -3,14 +3,14 @@ import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
 import moment from 'moment';
 import {Text, Label} from 'shared/styled-components';
-import {getCurrencyInfo} from './Functions/getCurrencyInfo';
+import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 import {TokenType} from 'shared/types';
 type TransactionCardProps = {
   type: TokenType;
   timestamp: number;
   action: 'send' | 'Received';
   value: number;
-  onPress: any,
+  onPress: any;
 };
 export const TransactionCard: React.FC<TransactionCardProps> = props => {
   const {timestamp, type, action, value, onPress} = props;

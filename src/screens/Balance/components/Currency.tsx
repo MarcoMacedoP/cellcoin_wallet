@@ -4,13 +4,15 @@ import {colors} from 'shared/styles';
 import {View} from 'react-native';
 import {CurrencyType} from 'shared/types';
 import {Text, SmallText} from 'shared/styled-components';
-import {getCurrencyInfo} from 'screens/Transfers/components/Functions/getCurrencyInfo';
+import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 
 type BalanceCurrencyComponentProps = {
   onClick: () => void;
   currency: CurrencyType;
 };
-export const BalanceCurrencyComponent: React.FC<BalanceCurrencyComponentProps> = props => {
+export const BalanceCurrencyComponent: React.FC<
+  BalanceCurrencyComponentProps
+> = props => {
   const {
     onClick,
     currency: {name, type, value},

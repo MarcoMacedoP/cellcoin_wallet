@@ -1,14 +1,13 @@
 import React from 'react';
-import {Text} from 'shared/styled-components/Texts';
+import {SmallText} from 'shared/styled-components/Texts';
 import LinearGradient from 'react-native-linear-gradient';
-import styled from 'styled-components/native';
-import {colors} from 'shared/styles';
+import {colors, spacings} from 'shared/styles';
 import {ClipboardComponent} from 'shared/components/Clipboard';
 import {useGlobalState} from 'globalState';
 import {RouteProp} from '@react-navigation/core';
 import {AuthRootStackParams} from 'Router';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
-import {ScreenContainer} from 'shared/components';
+import {StyleSheet, View, Image, StatusBar} from 'react-native';
 
 type RecieveTransferScreenProps = {
   route: RouteProp<AuthRootStackParams, 'Recieve'>;
@@ -23,76 +22,71 @@ export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({
   return (
     <LinearGradient
       colors={['#26777D', '#26777D', '#50CDD5', '#50CDD5']}
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <Box>
-        <ImageBox>
-          <Image source={logo} style={{width: 35, height: 35}} />
-          <Image
-            source={{
-              uri: `https://chart.googleapis.com/chart?chs=300x300&chld=L|1&cht=qr&chl=ethereum:${mainAddress}`,
-            }}
-          />
-        </ImageBox>
-        <AddressBox>
-          <ClipboardComponent text={mainAddress} />
-        </AddressBox>
-      </Box>
+      style={styles.gradient}>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.addressContainer}>
+        <Image source={logo} style={styles.addressTypeLogo} />
+        <Image
+          style={styles.addressQrImage}
+          source={{
+            uri: `https://chart.googleapis.com/chart?chs=300x300&chld=L|1&cht=qr&chl=ethereum:${mainAddress}`,
+          }}
+        />
+        <ClipboardComponent
+          style={styles.addressClipboard}
+          text={mainAddress}
+        />
+      </View>
 
-      <TextBox>
-        <SmallText>
-          {' '}
+      <View style={styles.informationContainer}>
+        <SmallText color="white" center>
           Attention: please do not deposit any digital assets other than{' '}
           {currency.type} to the above address
         </SmallText>
-        <Logo source={require('assets/icons/logo_mini.png')} />
-      </TextBox>
+        <Image
+          style={styles.brandLogo}
+          source={require('assets/icons/logo_mini.png')}
+        />
+      </View>
     </LinearGradient>
   );
 };
-
-const Box = styled.View`
-  background-color: ${colors.white};
-  justify-content: space-around;
-  align-items: center;
-  width: 80%;
-  padding-top: 10px;
-  border-radius: 25px;
-`;
-
-const ImageBox = styled.View`
-  justify-content: center;
-  align-items: center;
-`;
-
-const Image = styled.Image`
-  width: 150px;
-  height: 150px;
-`;
-const Logo = styled.Image`
-  width: 150px;
-  height: 150px;
-  resize-mode: contain;
-`;
-
-const SmallText = styled.Text`
-  color: rgba(255, 255, 255, 5);
-  text-align: center;
-`;
-const AddressBox = styled.View`
-  background-color: transparent;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 10px 0;
-  border-top-width: 0.5px;
-`;
-const TextBox = styled.View`
-  background-color: transparent;
-  justify-content: center;
-  align-items: center;
-  width: 80%;
-`;
+const styles = StyleSheet.create({
+  gradient: {
+    paddingTop: 100,
+    paddingLeft: spacings.left,
+    paddingRight: spacings.right,
+    flex: 1,
+  },
+  addressContainer: {
+    flex: 2,
+    backgroundColor: colors.white,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderRadius: 25,
+    padding: 10,
+  },
+  addressQrImage: {
+    flex: 5,
+    minWidth: '80%',
+    resizeMode: 'contain',
+  },
+  addressTypeLogo: {
+    width: 35,
+    flex: 1,
+    resizeMode: 'contain',
+  },
+  addressClipboard: {
+    flex: 0.5,
+  },
+  informationContainer: {
+    flex: 1,
+    marginTop: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  brandLogo: {
+    width: 150,
+    resizeMode: 'contain',
+  },
+});
