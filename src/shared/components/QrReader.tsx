@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-
-import {} from 'react-native';
-
 import QRCodeScanner from 'react-native-qrcode-scanner';
+
 type QRprops = {
   /**
    * A function to be called when the modal is closed with the selected address

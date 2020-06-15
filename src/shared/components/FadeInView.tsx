@@ -1,7 +1,11 @@
 import React, {useState} from 'react';
 import {Animated, View, ScrollView} from 'react-native';
 
-export const FadeInView = props => {
+interface FadeInViewProps {
+  style?: any;
+}
+
+export const FadeInView: React.FC<FadeInViewProps> = props => {
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
 
   React.useEffect(() => {
@@ -10,13 +14,13 @@ export const FadeInView = props => {
       duration: 1000,
     }).start();
   }, []);
+  const animatedStyles = {
+    opacity: fadeAnim,
+  };
 
   return (
     <Animated.View // Special animatable View
-      style={{
-        ...props.style,
-        opacity: fadeAnim,
-      }}>
+      style={[animatedStyles, props.style]}>
       {props.children}
     </Animated.View>
   );

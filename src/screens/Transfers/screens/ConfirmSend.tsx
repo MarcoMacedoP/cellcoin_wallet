@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {Text, SmallText} from 'shared/styled-components/Texts';
 import {
   ScreenContainer,
@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {RouteProp} from '@react-navigation/native';
 import {useGlobalState} from 'globalState';
 import {ScanScreen} from 'shared/components/QrReader';
-import {Modal} from 'shared/components';
+import {Modal, AddressScanner} from 'shared/components';
 import Toast from 'react-native-simple-toast';
 import {PasswordModal} from '../components/PasswordModal';
 import {AuthRootStackParams} from 'Router';
@@ -25,6 +25,8 @@ import {
   sendETHE,
   sendTokens,
 } from 'shared/libs/Wallet';
+import {useModal} from 'shared/hooks';
+import {StyleSheet} from 'react-native';
 
 type SetAddressScreenProps = {
   route: RouteProp<AuthRootStackParams, 'ConfirmSend'>;
@@ -35,9 +37,9 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
   route: {params},
   navigation,
 }) => {
+  const addressModal = useModal();
   const {currency, tokenQuantityToBeSended} = params;
   const recomendation = 21000;
-  const [modalQR, setModalQR] = useGlobalState('modalQR');
   const [modalIsShowed, setModalIsShowed] = useState(false);
   const [mainAddress] = useGlobalState('mainAddress');
   const [gasLimit, setGasLimit] = useState(21000);
@@ -50,6 +52,23 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
     balance: parseFloat(currency.value.original),
     password: '',
   });
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: ({tintColor}) => (
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={addressModal.open}>
+          <Icon name="qrcode" size={20} color={tintColor} />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
+  function handleAddressModalSelection(address: string) {
+    setState(state => ({...state, to: address}));
+    addressModal.close();
+  }
   /**
    * Open the modal for enter the user password
    */
@@ -179,6 +198,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
             <Label style={{marginHorizontal: 5}}>To</Label>
             <InputButton>
               <FromInput
+                align="left"
                 value={state.to}
                 maxLength={42}
                 keyboardAppearance={'dark'}
@@ -200,7 +220,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
           </InputBox>
           <InputBox style={{paddingHorizontal: 5}}>
             <Label>Gas fee</Label>
-            <FeeText ligth={false} style={{textTransform: 'uppercase'}}>
+            <FeeText color="primaryDark" style={{textTransform: 'uppercase'}}>
               {minerFee} gwei= $ {minerFee * 1050000000}
             </FeeText>
             <FeeSlider
@@ -210,8 +230,8 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
               onSlidingComplete={setMinerFee}
             />
             <FeeSpeedContainer>
-              <SmallText color="ligth">Slow</SmallText>
-              <SmallText color="ligth">Fast</SmallText>
+              <SmallText>Slow</SmallText>
+              <SmallText>Fast</SmallText>
             </FeeSpeedContainer>
             <TouchableOpacity onPress={onRecomendationClick}>
               <RecomendedFeed>
@@ -227,23 +247,22 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
             Confirm
           </Button>
         </Container>
-        <Modal
-          isShowed={modalQR}
-          icon={'x'}
-          onClose={() => {
-            setModalQR(!modalQR);
-          }}>
-          <ScanScreen
-            closeModal={data => {
-              setState({...state, to: data});
-              setModalQR(false);
-            }}
-          />
-        </Modal>
+        <AddressScanner
+          onSubmit={handleAddressModalSelection}
+          onClose={addressModal.close}
+          isOpen={addressModal.isOpen}
+        />
       </ScrollView>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    padding: 8,
+  },
+});
+
 const Container = styled(ScreenContainer)`
   flex: 1;
   padding-top: 8px;

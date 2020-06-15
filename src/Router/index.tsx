@@ -64,12 +64,7 @@ const Router = () => {
         <RootStack.Screen
           name="ConfirmSend"
           component={ConfirmSend}
-          // options={({route}: {route: any}) => ({
-          //   ...setAddressOptions,
-          //   title:
-          //     'Send ' +
-          //     getCurrencyInfo(route.params.currency.type).tokenName,
-          // })}
+          options={options.confirmSend}
         />
         <RootStack.Screen
           name="address"

@@ -6,6 +6,8 @@ import HookedWeb3Provider from 'hooked-web3-provider';
 const txutils = lightwallet.txutils;
 const signing = lightwallet.signing;
 
+console.log(txutils);
+
 function createdStored() {
   return new Promise((resolve, reject) => {
     lightwallet.keystore.createVault(

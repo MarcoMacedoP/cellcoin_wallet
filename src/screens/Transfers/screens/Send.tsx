@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
   },
   line: {
     borderWidth: 1,
+    opacity: 0.2,
     borderColor: colors.blackLigth,
     width: '100%',
   },

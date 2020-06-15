@@ -11,7 +11,12 @@ import {CurrencyType} from 'shared/types';
 import {AuthRootStackParams} from 'Router';
 import {RouteProp} from '@react-navigation/core';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
+
 const logoImage = require('assets/icons/logo_mini.png');
+
+type ConfirmSend = (props: {
+  route: RouteProp<AuthRootStackParams, 'ConfirmSend'>;
+}) => StackNavigationOptions;
 
 interface RootRouterOptions {
   balance: ({navigation}: {navigation: any}) => StackNavigationOptions;
@@ -21,6 +26,7 @@ interface RootRouterOptions {
   send: (props: {
     route: RouteProp<AuthRootStackParams, 'Send'>;
   }) => StackNavigationOptions;
+  confirmSend: ConfirmSend;
   setAddress: StackNavigationOptions;
   address: StackNavigationOptions;
   recieve: (props: {
@@ -79,7 +85,10 @@ export const rootRouterOptions: RootRouterOptions = {
     title: 'Select your wallet',
     ...headerContainerStyles,
   },
-
+  confirmSend: ({route}) => ({
+    title: `Send ${getCurrencyInfo(route.params.currency.type).tokenName}`,
+    ...headerContainerStyles,
+  }),
   transfer: ({route}) => ({
     title: `${getCurrencyInfo(route.params.type).tokenName}`,
   }),

@@ -17,6 +17,7 @@ type ModalProps = {
   icon?: string;
   image?: string;
   title?: string;
+  style?: any;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -50,7 +51,7 @@ export const Modal: React.FC<ModalProps> = ({
             <IconButton onPress={() => onClose()}>
               <FIcon name="x" size={25} color={colors.black} />
             </IconButton>
-            <Label>{title || 'Add new address'}</Label>
+            {title && <Label>{title}</Label>}
           </HeaderModal>
         )}
         <ModalBox
@@ -64,7 +65,6 @@ export const Modal: React.FC<ModalProps> = ({
 );
 const ScrollView = styled.ScrollView`
   background-color: ${colors.blackTransparent};
-  height: 100%;
   flex: 1;
 `;
 const ContainerModal = styled.View`
@@ -73,7 +73,7 @@ const ContainerModal = styled.View`
   align-items: center;
   border-radius: 25px;
   max-height: ${Dimensions.get('window').height * 0.8}px;
-  width: 90%;
+  /* width: 90%; */
   flex: 1;
 `;
 const IconButton = styled.TouchableOpacity``;
