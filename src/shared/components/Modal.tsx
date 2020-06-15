@@ -1,8 +1,8 @@
 import React from 'react';
-import {Modal as NativeModal, Dimensions} from 'react-native';
-import {colors} from 'shared/styles';
+import {Modal as NativeModal, Dimensions, StatusBar} from 'react-native';
+import {colors, spacings} from 'shared/styles';
 import styled from 'styled-components/native';
-import {Label as BaseLabel} from 'shared/styled-components';
+import {Title} from 'shared/styled-components';
 import FIcon from 'react-native-vector-icons/Feather';
 /**
  *  A component to manage modals through app.
@@ -40,6 +40,7 @@ export const Modal: React.FC<ModalProps> = ({
         flex: 1,
         height: Dimensions.get('window').height - 25,
       }}>
+      <StatusBar backgroundColor={colors.blackTransparent} />
       <ContainerModal>
         {image && (
           <IconBoxModal style={{borderRadius: 25}}>
@@ -48,10 +49,10 @@ export const Modal: React.FC<ModalProps> = ({
         )}
         {icon && (
           <HeaderModal>
+            {title && <Label>{title}</Label>}
             <IconButton onPress={() => onClose()}>
               <FIcon name="x" size={25} color={colors.black} />
             </IconButton>
-            {title && <Label>{title}</Label>}
           </HeaderModal>
         )}
         <ModalBox
@@ -73,7 +74,7 @@ const ContainerModal = styled.View`
   align-items: center;
   border-radius: 25px;
   max-height: ${Dimensions.get('window').height * 0.8}px;
-  /* width: 90%; */
+  width: 90%;
   flex: 1;
 `;
 const IconButton = styled.TouchableOpacity``;
@@ -89,18 +90,14 @@ const HeaderModal = styled.View`
   width: 100%;
   height: 10%;
   margin-top: 16px;
-  justify-content: center;
-  align-items: flex-end;
-  padding: 0 16px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 ${spacings.right}px;
   background-color: white;
   border-radius: 15px;
 `;
-const Label = styled(BaseLabel)`
-  position: relative;
-  top: 0;
-  align-self: flex-start;
-  width: 80%;
-`;
+const Label = styled(Title)``;
 const IconModal = styled.Image`
   width: 80%;
   height: 80%;

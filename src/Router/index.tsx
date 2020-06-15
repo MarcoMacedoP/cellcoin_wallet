@@ -12,12 +12,17 @@ import {commonScreenOptions} from 'Router/options';
 import {TransfersScreen} from 'screens/Transfers/screens/TransfersScreen';
 import {SendScreen} from 'screens/Transfers/screens/Send';
 import {ConfirmSend} from 'screens/Transfers/screens/ConfirmSend';
-import {AddressBookScreen} from 'screens/Transfers/screens/AddressBookScreen';
+import {ContactList} from 'screens/Transfers/screens/ContactList';
 import {RecieveTransferScreen} from 'screens/Transfers/screens/RecieveScreen';
 import {BalanceScreen} from 'screens/Balance/screens/BalanceScreen';
 import {MainAddressSelector} from 'screens/Balance/screens/MainAddressSelector';
 import {rootRouterOptions as options} from './options';
 import {CurrencyType} from 'shared/types';
+
+type BaseConfirmSendParams = {
+  currency: CurrencyType;
+  tokenQuantityToBeSended: string;
+};
 
 export type AuthRootStackParams = {
   Balance: undefined;
@@ -25,10 +30,10 @@ export type AuthRootStackParams = {
   Transfers: CurrencyType;
   Recieve: CurrencyType;
   Send: CurrencyType;
-  ConfirmSend: {
-    currency: CurrencyType;
-    tokenQuantityToBeSended: string;
+  ConfirmSend: BaseConfirmSendParams & {
+    selectedAddress?: string;
   };
+  ContactsList: BaseConfirmSendParams;
   /** Only avaivavle when user is not logged */
   CreateWalletRoutes: undefined;
 };
@@ -67,9 +72,9 @@ const Router = () => {
           options={options.confirmSend}
         />
         <RootStack.Screen
-          name="address"
-          component={AddressBookScreen}
-          // options={addressOptions}
+          name="ContactsList"
+          component={ContactList}
+          options={options.contactList}
         />
         <RootStack.Screen
           name="Recieve"

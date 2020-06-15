@@ -6,6 +6,7 @@ export * from './TabBar';
 export * from './Modal';
 export * from './Loading';
 export * from './FadeInView';
+export * from "./QrIcon";
 export { AddressScanner } from './AddressReader';
 export * from './NotificationCard';
 export { ScreenContainer } from "./ScreenContainer";

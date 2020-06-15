@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {RouteProp} from '@react-navigation/native';
 import {useGlobalState} from 'globalState';
 import {ScanScreen} from 'shared/components/QrReader';
-import {Modal, AddressScanner} from 'shared/components';
+import {Modal, AddressScanner, QrIcon} from 'shared/components';
 import Toast from 'react-native-simple-toast';
 import {PasswordModal} from '../components/PasswordModal';
 import {AuthRootStackParams} from 'Router';
@@ -56,11 +56,11 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: ({tintColor}) => (
-        <TouchableOpacity
-          style={styles.iconContainer}
-          onPress={addressModal.open}>
-          <Icon name="qrcode" size={20} color={tintColor} />
-        </TouchableOpacity>
+        <QrIcon
+          tintColor={tintColor}
+          onPress={addressModal.open}
+          style={styles.qrIcon}
+        />
       ),
     });
   }, []);
@@ -207,11 +207,9 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
 
               <IconContainer
                 onPress={() =>
-                  navigation.navigate('Transfers', {
-                    screen: 'address',
-                    params: {
-                      setAddress: address => setState({...state, to: address}),
-                    },
+                  navigation.navigate('ContactsList', {
+                    currency: params.currency,
+                    tokenQuantityToBeSended: params.tokenQuantityToBeSended,
                   })
                 }>
                 <Icon name="address-book" size={20} color={colors.accent} />
@@ -258,7 +256,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
-  iconContainer: {
+  qrIcon: {
     padding: 8,
   },
 });

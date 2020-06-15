@@ -27,6 +27,7 @@ interface RootRouterOptions {
     route: RouteProp<AuthRootStackParams, 'Send'>;
   }) => StackNavigationOptions;
   confirmSend: ConfirmSend;
+  contactList: StackNavigationOptions;
   setAddress: StackNavigationOptions;
   address: StackNavigationOptions;
   recieve: (props: {
@@ -76,6 +77,9 @@ export const rootRouterOptions: RootRouterOptions = {
       />
     ),
   }),
+  contactList: {
+    title: 'Saved address',
+  },
   mainAdressSelector: {
     headerTransparent: false,
     headerStyle: {
