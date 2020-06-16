@@ -7,6 +7,8 @@ export * from './Modal';
 export * from './Loading';
 export * from './FadeInView';
 export * from "./QrIcon";
-export { AddressScanner } from './AddressReader';
 export * from './NotificationCard';
+export * from "./Input"
 export { ScreenContainer } from "./ScreenContainer";
+export { AddressScanner } from './AddressReader';
+export { DeleteItemCard } from "./DeleteItemCard"

@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native';
 
-export type Color = "primary" | "primaryLigth" | "primaryDark" | "white";
+export type Color = "primary" | "primaryLigth" | "primaryDark" | "white" | "blackLigth" | "black";
 
 export const colors = {
   primary: '#2fa0a8',
@@ -9,7 +9,7 @@ export const colors = {
   accent: '#05c2ae',
   accentLight: '#E2F9FB',
   white: '#ffffff',
-  whiteDark: '#ebe8e8',
+  whiteDark: '#eceff1',
   black: '#575555',
   blackLigth: '#c9c5c5',
   blackTransparent: 'rgba(0,0,0,0.8)',

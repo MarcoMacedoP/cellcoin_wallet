@@ -1,8 +1,8 @@
 import styled from 'styled-components/native';
-import {Text} from './Texts';
-import {colors} from 'shared/styles';
+import { Text } from './Texts';
+import { colors } from 'shared/styles';
 
-type InputProps = {
+export type InputProps = {
   align: 'left' | 'center' | 'right';
 };
 export const Input = styled.TextInput<InputProps>`
@@ -15,9 +15,7 @@ export const Input = styled.TextInput<InputProps>`
   background-color: ${colors.whiteDark};
   padding: 0 16px;
 `;
-export const Label = styled(Text).attrs(() => ({
-  color: 'ligth',
-}))`
+export const Label = styled(Text)`
   text-align: ${props => (props.center ? 'center' : 'justify')};
   text-transform: none;
 `;

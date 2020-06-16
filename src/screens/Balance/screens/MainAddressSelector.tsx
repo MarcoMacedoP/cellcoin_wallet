@@ -3,13 +3,14 @@ import {TouchableOpacity, Text} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {EmptyState, ScreenContainer} from 'shared/components';
 import {useGlobalState} from 'globalState';
-import FIcon from 'react-native-vector-icons/Feather';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthRootStackParams} from 'Router';
 import {AddressItem} from '../components/AddressItem';
 import {AddAddressModal} from '../components/AddAddressModal';
+import {useNavigation} from '@react-navigation/core';
+import {useModal, useHeaderIcon} from 'shared/hooks';
 
 type SendTransferScreenProps = {
   navigation: StackNavigationProp<AuthRootStackParams, 'MainAddressSelector'>;
@@ -18,7 +19,7 @@ type SendTransferScreenProps = {
 export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   navigation,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const modal = useModal();
   const [, setMainAddress] = useGlobalState('mainAddress');
 
   const [state, setState] = useState({
@@ -30,19 +31,9 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   const [listAddress, setListAddress] = useState([]);
   const [listAddressBase, setListAddressBase] = useState([]);
   const [listAddressQuantity, setListAddressQuantity] = useState(0);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: ({tintColor}) => (
-        <FIcon
-          name="plus"
-          size={20}
-          color={tintColor}
-          onPress={() => setIsModalOpen(true)}
-        />
-      ),
-    });
-  }, []);
+  useHeaderIcon({
+    onPress: modal.open,
+  });
 
   useEffect(() => {
     async function getAddress() {
@@ -89,7 +80,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
 
   const setOnAsync = async () => {
     await AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress));
-    setIsModalOpen(!isModalOpen);
+    modal.close();
     setState({
       ...state,
       alias: '',
@@ -106,9 +97,6 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     setState({...state, alias: text});
   };
 
-  function handleModalClose() {
-    setIsModalOpen(false);
-  }
   return (
     <ScreenContainer statusBarProps={{barStyle: 'dark-content'}}>
       <SwipeListView
@@ -128,8 +116,8 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
       />
 
       <AddAddressModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
+        isOpen={modal.isOpen}
+        onClose={modal.close}
         alias={state.alias}
         onAliasChange={onTextAliasChange}
         onSubmit={addNewAddress}

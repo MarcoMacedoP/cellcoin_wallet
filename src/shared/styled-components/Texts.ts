@@ -33,7 +33,5 @@ export const Title = styled(Text)`
 `;
 export const Subtitle = styled(Title)`
   font-size: 24px;
-  text-transform: none;
-  color: ${colors.blackLigth};
   font-weight: 600;
 `;

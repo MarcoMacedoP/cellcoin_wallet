@@ -36,7 +36,7 @@ interface RootRouterOptions {
   mainAdressSelector: StackNavigationOptions;
   createWalletRoutes: StackNavigationOptions;
 }
-const headerContainerStyles = {
+export const headerContainerStyles = {
   headerLeftContainerStyle: {
     paddingHorizontal: spacings.right,
   },

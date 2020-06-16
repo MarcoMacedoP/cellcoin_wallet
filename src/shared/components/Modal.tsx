@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal as NativeModal, Dimensions, StatusBar} from 'react-native';
 import {colors, spacings} from 'shared/styles';
 import styled from 'styled-components/native';
-import {Title} from 'shared/styled-components';
+import {Subtitle} from 'shared/styled-components';
 import FIcon from 'react-native-vector-icons/Feather';
 /**
  *  A component to manage modals through app.
@@ -49,7 +49,11 @@ export const Modal: React.FC<ModalProps> = ({
         )}
         {icon && (
           <HeaderModal>
-            {title && <Label>{title}</Label>}
+            {title && (
+              <Subtitle color="primaryDark" upperCase>
+                {title}
+              </Subtitle>
+            )}
             <IconButton onPress={() => onClose()}>
               <FIcon name="x" size={25} color={colors.black} />
             </IconButton>
@@ -97,7 +101,6 @@ const HeaderModal = styled.View`
   background-color: white;
   border-radius: 15px;
 `;
-const Label = styled(Title)``;
 const IconModal = styled.Image`
   width: 80%;
   height: 80%;

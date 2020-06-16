@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import {Text} from '../styled-components/Texts';
 import {Image, Clipboard, StyleProp, ViewStyle} from 'react-native';
 import Toast from 'react-native-simple-toast';
+import {showAddressPreview} from 'shared/libs/Address';
 const clipboardIcon = require('assets/icons/clipboard_icon.png');
 
 interface ClipboardProps {
@@ -14,14 +15,9 @@ export const ClipboardComponent: React.FC<ClipboardProps> = ({text, style}) => {
     Clipboard.setString(text);
     Toast.show('Address copied to clipboard', Toast.SHORT);
   };
-  const parseTextToShowPreview = () => {
-    const smallerText = text.split('', 20).toString();
-    const cleanedText = smallerText.replace(/,/g, '');
-    return `${cleanedText}...`;
-  };
   return (
     <Container onPress={onClickHandler} style={style}>
-      <Text>{parseTextToShowPreview()}</Text>
+      <Text>{showAddressPreview(text)}</Text>
       <Image source={clipboardIcon} />
     </Container>
   );
