@@ -1,5 +1,4 @@
-import { StyleSheet, Dimensions, Platform } from 'react-native';
-const { height, width } = Dimensions.get('window');
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -11,7 +10,7 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     marginTop: 15,
-    width: Dimensions.get('window').width,
+    width: '100%',
   },
   number: {
     fontSize: 25,

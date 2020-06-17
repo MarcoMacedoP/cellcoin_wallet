@@ -19,8 +19,8 @@ export function useGetBalance() {
   const getBalance = async () => {
     try {
       setState({ ...state, isLoading: true });
-      // const { ethBalance, tokenBalance } = await fetchBalance(mainAddress);
-      const [ethBalance, tokenBalance] = [1, 1];
+      const { ethBalance, tokenBalance } = await fetchBalance(mainAddress);
+      // const [ethBalance, tokenBalance] = [1, 1];
       const { token, eth } = await getPrices(
         ethBalance,
         tokenBalance,
@@ -40,7 +40,7 @@ export function useGetBalance() {
           usd: eth.toFixed(2),
         },
       });
-      // setBalance({ ...state, fetchBalance: getBalance });
+      setBalance({ ...state, fetchBalance: getBalance });
     } catch (error) {
       console.log(error.message)
       Alert.alert('Error getting balances', error?.message ? error.message : error)

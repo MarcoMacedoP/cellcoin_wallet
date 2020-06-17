@@ -3,8 +3,7 @@ import styled from 'styled-components/native';
 import {RouteProp} from '@react-navigation/native';
 import {colors} from 'shared/styles/variables';
 import {Label} from 'shared/styled-components';
-import {Button, ScreenContainer} from 'shared/components';
-import {VKeyComponent} from '../components/virtual-keyboard-update/VKey';
+import {Button, ScreenContainer, NumericKeyboard} from 'shared/components';
 import Toast from 'react-native-simple-toast';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {globalStyles} from 'shared/styles';
@@ -19,15 +18,16 @@ type SendScreenProps = {
   route: RouteProp<AuthRootStackParams, 'Send'>;
   navigation: StackNavigationProp<AuthRootStackParams, 'Send'>;
 };
+const initialState: QuantityState = {
+  token: '0',
+  usd: '0',
+};
 
 export const SendScreen: React.FC<SendScreenProps> = ({
   route: {params: currency},
   navigation,
 }) => {
-  const [{token, usd}, dispatch] = useReducer(quantityReducer, {
-    token: null,
-    usd: null,
-  });
+  const [{token, usd}, dispatch] = useReducer(quantityReducer, initialState);
 
   const [activeCurrency, setActiveCurrency] = useState<'USD' | TokenType>(
     'USD',
@@ -88,8 +88,7 @@ export const SendScreen: React.FC<SendScreenProps> = ({
               : currency.value.usd}
           </Label>
         </Button>
-        <VKeyComponent
-          color={colors.black}
+        <NumericKeyboard
           value={activeCurrency === 'USD' ? usd : token}
           onPress={handleQuantityChange}
         />
@@ -115,10 +114,6 @@ type QuantityAction = {
     currency: CurrencyType;
   };
 };
-const initialState: QuantityState = {
-  token: '0',
-  usd: '0',
-};
 
 const quantityReducer: Reducer<QuantityState, QuantityAction> = (
   state = initialState,
@@ -133,11 +128,11 @@ const quantityReducer: Reducer<QuantityState, QuantityAction> = (
         return initialState;
       }
       //convert usd value to token value
-      const usd = payload.value;
-      const tokenValueFromUSD = parseFloat(usd) / tokenValueInUSD;
+      const usd = parseFloat(payload.value);
+      const tokenValueFromUSD = usd / tokenValueInUSD;
       return {
         token: String(tokenValueFromUSD),
-        usd,
+        usd: String(usd),
       };
     }
     case 'set-token': {
@@ -145,10 +140,10 @@ const quantityReducer: Reducer<QuantityState, QuantityAction> = (
       if (!isValidQuantity(currency.value.usd, currency.value.original)) {
         return initialState;
       }
-      const token = payload.value;
-      const usdValueFromToken = parseFloat(token) * tokenValueInUSD;
+      const token = parseFloat(payload.value);
+      const usdValueFromToken = token * tokenValueInUSD;
       return {
-        token,
+        token: String(token),
         usd: String(usdValueFromToken),
       };
     }
@@ -162,13 +157,28 @@ function isValidQuantity(quantity: string, maxQuantity: string) {
     return false;
   }
   const parsedQuantity = parseFloat(quantity);
+
   if (isNaN(parsedQuantity)) {
     return false;
-  } else if (parsedQuantity > parseFloat(maxQuantity)) {
+  } else if (areFirstQuantityGreater(parsedQuantity, parseFloat(maxQuantity))) {
     Toast.show(NOT_ENOUGHT_BALANCE_MESSAGE);
   } else {
     return true;
   }
+}
+
+/**
+ *  Deep compare two floats to determinate wich one is greater.
+ * @param first
+ * @param second
+ */
+function areFirstQuantityGreater(first: number, second: number) {
+  const [firstFixed, secondFixed] = [first.toFixed(9), second.toFixed(9)];
+  const [firstParsed, secondParsed] = [
+    parseFloat(firstFixed),
+    parseFloat(secondFixed),
+  ];
+  return firstParsed > secondParsed;
 }
 
 type LabelCurrencyProps = {
