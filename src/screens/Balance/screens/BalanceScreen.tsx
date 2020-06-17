@@ -9,6 +9,7 @@ import {colors} from 'shared/styles/variables';
 import {ScrollView} from 'react-native-gesture-handler';
 import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/core';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
@@ -26,9 +27,12 @@ const CURRENCYS: Array<CurrencyType> = [
 ];
 interface BalanceScreenProps {
   navigation: StackNavigationProp<AuthRootStackParams, 'Balance'>;
+  route: RouteProp<AuthRootStackParams, 'Balance'>;
 }
 
-export const BalanceScreen = ({navigation}: BalanceScreenProps) => {
+type BalanceScreenComponent = React.FC<BalanceScreenProps>;
+
+export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {params}}) => {
   const [currencys, setCurrencys] = useState<Array<CurrencyType>>([
     ...CURRENCYS,
   ]);
@@ -47,7 +51,13 @@ export const BalanceScreen = ({navigation}: BalanceScreenProps) => {
   const onRefresh = React.useCallback(() => {
     fetchBalance();
   }, []);
-
+  
+  useEffect(()=> {
+    if(params?.action === 'update'){
+      onRefresh();
+    }
+  }, [params]);
+  
   const handleCurrencyClick = currency =>
     navigation.navigate('Transfers', currency);
 

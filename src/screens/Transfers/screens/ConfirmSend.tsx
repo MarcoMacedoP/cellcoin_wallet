@@ -45,7 +45,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
 }) => {
   const addressModal = useModal();
   const {currency, tokenQuantityToBeSended, selectedAddress} = params;
-  const recomendation = 21000;
+  const recomendation = 1;
   const [modalIsShowed, setModalIsShowed] = useState(false);
   const [mainAddress] = useGlobalState('mainAddress');
   const [gasLimit, setGasLimit] = useState(21000);
@@ -110,9 +110,11 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
   };
 
   const getGasLimitETH = async pass => {
+    setModalIsShowed(false);
     setIsLoading(true);
     await calculateGasLimitETH(mainAddress, state.to, state.amount)
       .then(response => {
+        console.log('getGasLitmitETH', {response});
         sendETH(response, pass);
       })
       .catch(error => {
@@ -129,6 +131,16 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
       });
   };
 
+  function handleNavigation(hash: string) {
+    navigation.navigate('SuccessTransaction', {
+      from: mainAddress,
+      to: state.to,
+      hash,
+      quantity: tokenQuantityToBeSended,
+      type: currency.type,
+    });
+  }
+
   const sendETH = async function(gass, pass) {
     await sendETHE(
       pass,
@@ -138,18 +150,16 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
       gass.gasPrice,
       gass.gasLimit,
     )
-      .then(response => {
-        Toast.show('Hash transaction: ' + response, Toast.SHORT);
-        navigation.navigate('Balance');
-        setModalIsShowed(false);
-        setIsLoading(false);
-      })
+      .then((hash: string) => handleNavigation(hash))
       .catch(error => {
-        if ((error = 'insufficient funds for gas * price + value')) {
+        console.log({error});
+        if (error === 'insufficient funds for gas * price + value') {
           Toast.show('Insufficient funds for gas', Toast.SHORT);
         } else {
           Toast.show('Error: ' + error, Toast.SHORT);
         }
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   };
@@ -163,11 +173,10 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
       gass.gasPrice,
       gass.gasLimit,
     )
-      .then(response => {
-        Toast.show('Hash transaction: ' + response, Toast.SHORT);
-        navigation.navigate('Balance');
+      .then((hash: string) => {
         setModalIsShowed(false);
         setIsLoading(false);
+        handleNavigation(hash);
       })
       .catch(error => {
         if ((error = 'insufficient funds for gas * price + value')) {
@@ -199,7 +208,6 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
         isShowed={modalIsShowed}
         onClose={() => setModalIsShowed(false)}
         onDoned={onPasswordFilled}
-        loading={isLoading}
       />
       <ScrollView
         contentContainerStyle={{backgroundColor: colors.white}}
@@ -267,6 +275,7 @@ const styles = StyleSheet.create({
   },
   amountToSendLabel: {
     marginTop: 8,
+    textAlign: 'left',
     marginBottom: 12,
   },
 });

@@ -1,15 +1,20 @@
 import {Modal, Button} from 'shared/components';
 import React, {useState} from 'react';
-import {Text, Input, Label, SmallText, Subtitle} from 'shared/styled-components';
+import {
+  Text,
+  Input,
+  Label,
+  SmallText,
+  Subtitle,
+} from 'shared/styled-components';
 import styled from 'styled-components/native';
-import { RawModal } from 'shared/components/RawModal';
-import { colors } from 'shared/styles/variables';
+import {RawModal} from 'shared/components/RawModal';
+import {colors} from 'shared/styles/variables';
 type PasswordModalType = React.FC<{
   onDoned: (password: string) => void;
   isShowed: boolean;
   onClose: () => void;
   transactionData: any;
-  loading: boolean;
 }>;
 
 export const PasswordModal: PasswordModalType = ({
@@ -17,10 +22,11 @@ export const PasswordModal: PasswordModalType = ({
   isShowed,
   onClose,
   transactionData,
-  loading,
 }) => {
   const [password, setPassword] = useState('');
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    try {
+    } catch (error) {}
     onDoned(password);
     // onClose();
   };
@@ -34,30 +40,40 @@ export const PasswordModal: PasswordModalType = ({
             : require('assets/icons/ethereum_icon.png')
         }
       />
-      <Label style={{color: colors.black}}> {transactionData.amount} {transactionData.currency} </Label>
-      <SmallText style={{textTransform: 'uppercase', color: colors.blackLigth, fontSize: 13,}}>
+      <Label style={{color: colors.black}}>
+        {' '}
+        {transactionData.amount} {transactionData.currency}{' '}
+      </Label>
+      <SmallText
+        style={{
+          textTransform: 'uppercase',
+          color: colors.blackLigth,
+          fontSize: 13,
+        }}>
         ≈{transactionData.usd} USD
       </SmallText>
-      <Label style={{color: colors.black, fontSize: 13, marginTop: 10,}}> Insert your password to continue </Label>
-      
+      <Label style={{color: colors.black, fontSize: 13, marginTop: 10}}>
+        {' '}
+        Insert your password to continue{' '}
+      </Label>
+
       <InputBox
-          style={{marginVertical: 16}}
-          secureTextEntry
-          align="center"
-          onChangeText={text => setPassword(text)}
-          onSubmitEditing={handleSubmit}
-        />
-      <Button onClick={handleSubmit} isLoading={loading}>Send</Button>
-      <SmallText style={{color: colors.blackLigth, marginTop: 15,}}>This transaction is operated by</SmallText>
-      <SmallText style={{color: colors.blackLigth}}>Ethereum network.</SmallText>
+        style={{marginVertical: 16}}
+        secureTextEntry
+        align="center"
+        onChangeText={text => setPassword(text)}
+        onSubmitEditing={handleSubmit}
+      />
+      <Button onClick={handleSubmit}>Send</Button>
+      <SmallText style={{color: colors.blackLigth, marginTop: 15}}>
+        This transaction is operated by
+      </SmallText>
+      <SmallText style={{color: colors.blackLigth}}>
+        Ethereum network.
+      </SmallText>
     </RawModal>
   );
 };
-const Container = styled.ScrollView`
-  padding: 16px;
-  width: 100%;
-  height: 100%;
-`;
 const InputBox = styled(Input)`
   border-radius: 4px;
   background-color: ${colors.lightGray};

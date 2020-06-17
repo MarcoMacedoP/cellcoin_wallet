@@ -10,6 +10,7 @@ import {PasswordLabelBox} from '../components/PasswordLabelBox';
 import {ScreenContainer} from 'shared/styled-components';
 import {usePasswordValidations} from '../hooks/usePasswordValidations';
 import {globalStyles} from 'shared/styles';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const SetPasswordScreen = ({navigation, route}) => {
   const [state, setState] = useState({
