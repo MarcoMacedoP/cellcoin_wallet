@@ -3,6 +3,8 @@ import {Animated, View, ScrollView} from 'react-native';
 
 interface FadeInViewProps {
   style?: any;
+  delay?: number;
+  duration?: number;
 }
 
 export const FadeInView: React.FC<FadeInViewProps> = props => {
@@ -11,7 +13,8 @@ export const FadeInView: React.FC<FadeInViewProps> = props => {
   React.useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 2,
-      duration: 1000,
+      delay: props.delay || 0,
+      duration: props.duration || 1000,
     }).start();
   }, []);
   const animatedStyles = {

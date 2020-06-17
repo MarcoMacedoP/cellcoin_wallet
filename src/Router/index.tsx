@@ -17,7 +17,8 @@ import {RecieveTransferScreen} from 'screens/Transfers/screens/RecieveScreen';
 import {BalanceScreen} from 'screens/Balance/screens/BalanceScreen';
 import {MainAddressSelector} from 'screens/Balance/screens/MainAddressSelector';
 import {rootRouterOptions as options} from './options';
-import {CurrencyType} from 'shared/types';
+import {CurrencyType, TokenType} from 'shared/types';
+import {SuccessTransaction} from 'screens/Transfers/screens/SuccessTransaction';
 
 type BaseConfirmSendParams = {
   currency: CurrencyType;
@@ -25,7 +26,9 @@ type BaseConfirmSendParams = {
 };
 
 export type AuthRootStackParams = {
-  Balance: undefined;
+  Balance: {
+    action?: 'update';
+  };
   MainAddressSelector: undefined;
   Transfers: CurrencyType;
   Recieve: CurrencyType;
@@ -34,6 +37,13 @@ export type AuthRootStackParams = {
     selectedAddress?: string;
   };
   ContactsList: BaseConfirmSendParams;
+  SuccessTransaction: {
+    from: string;
+    to: string;
+    hash: string;
+    quantity: string;
+    type: TokenType;
+  };
   /** Only avaivavle when user is not logged */
   CreateWalletRoutes: undefined;
 };
@@ -85,6 +95,11 @@ const Router = () => {
           name="Notifications"
           component={NotificationsScreen}
           options={{headerShown: true}}
+        />
+        <RootStack.Screen
+          name="SuccessTransaction"
+          component={SuccessTransaction}
+          options={options.successTransaction}
         />
       </RouterContainer>
     );

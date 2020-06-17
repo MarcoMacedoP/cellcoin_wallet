@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native';
 
-export type Color = "primary" | "primaryLigth" | "primaryDark" | "white" | "blackLigth" | "black";
+export type Color = "primary" | "primaryLigth" | "primaryDark" | "white" | "blackLigth" | "black" | "success" | "whiteDark";
 
 export const colors = {
   primary: '#2fa0a8',
@@ -17,6 +17,7 @@ export const colors = {
   gray: '#cfd8dc',
   lightGray: '#eceff1',
   error: 'rgba(221, 44, 0, 0.87)',
+  success: '#4BB543'
 };
 
 export const borderRadius = (percentage: number) =>

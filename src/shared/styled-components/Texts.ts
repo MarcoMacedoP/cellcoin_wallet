@@ -29,7 +29,6 @@ export const Title = styled(Text)`
   text-transform: uppercase;
   font-weight: bold;
   font-size: 30px;
-  color: ${colors.black};
 `;
 export const Subtitle = styled(Title)`
   font-size: 24px;

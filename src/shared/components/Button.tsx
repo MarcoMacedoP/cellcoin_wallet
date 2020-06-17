@@ -12,6 +12,8 @@ type ButtonProps = {
   width?: string;
   margin?: string;
   isLoading?: boolean;
+  style?: any;
+  labelStyle?: any;
 };
 
 export const Button: React.FC<ButtonProps> = ({
@@ -24,9 +26,12 @@ export const Button: React.FC<ButtonProps> = ({
   width,
   isActivated = true,
   margin,
+  style,
+  labelStyle,
 }) => {
   return !isLoading && isActivated ? (
     <ButtonContainer
+      style={style}
       outline={outline}
       onPress={onClick}
       secondary={secondary}
@@ -42,7 +47,9 @@ export const Button: React.FC<ButtonProps> = ({
           ? colors.primary
           : colors.accent
       }>
-      <Label outline={outline}>{children}</Label>
+      <Label outline={outline} style={labelStyle}>
+        {children}
+      </Label>
     </ButtonContainer>
   ) : (
     <ButtonDeactivaded width={width} isActivated={isActivated} margin={margin}>

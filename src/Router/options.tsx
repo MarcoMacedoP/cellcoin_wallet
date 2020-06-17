@@ -35,6 +35,7 @@ interface RootRouterOptions {
   }) => StackNavigationOptions;
   mainAdressSelector: StackNavigationOptions;
   createWalletRoutes: StackNavigationOptions;
+  successTransaction: StackNavigationOptions;
 }
 export const headerContainerStyles = {
   headerLeftContainerStyle: {
@@ -111,6 +112,19 @@ export const rootRouterOptions: RootRouterOptions = {
   setAddress: {},
   createWalletRoutes: {
     headerShown: false,
+  },
+  successTransaction: {
+    headerTintColor: colors.white,
+    title: '',
+    headerStyle: {
+      backgroundColor: colors.success,
+      elevation: 0,
+      borderWidth: 0,
+      shadowRadius: 0,
+      shadowOffset: {
+        height: 0,
+      },
+    },
   },
 };
 export const commonScreenOptions: StackNavigationOptions = {
