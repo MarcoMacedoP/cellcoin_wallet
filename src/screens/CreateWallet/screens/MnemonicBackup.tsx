@@ -45,8 +45,9 @@ export const MnemonicBackup = ({navigation}: MnemonicBackupProps) => {
     let hasError = false;
     labels.forEach((text, index) => {
       const hasDiferentValues = hint[index] !== text;
+      console.log({hasDiferentValues});
       if (hasDiferentValues) {
-        // hasError = true;
+        hasError = true;
       }
     });
     if (hasError) {

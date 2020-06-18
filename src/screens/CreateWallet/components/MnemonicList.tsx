@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
-import {Text, SmallText} from 'shared/styled-components/Texts';
-import {TouchableOpacity} from 'react-native';
+import {Text} from 'shared/styled-components/Texts';
+import {StyleSheet, View} from 'react-native';
 
 type MnemonicListComponentProps = {
   labels?: Array<string>;
@@ -11,6 +11,7 @@ type MnemonicListComponentProps = {
   onLabelUnselection?: (text: string) => void;
   canSelectLabels: boolean;
 };
+
 export const MnemonicListComponent: React.FC<MnemonicListComponentProps> = ({
   labels,
   onLabelSelection,
@@ -18,35 +19,19 @@ export const MnemonicListComponent: React.FC<MnemonicListComponentProps> = ({
   canSelectLabels,
 }) => {
   return (
-    <Container light>
-      <LabelsContainer>
-        {labels.map((text, index) => (
-          <TouchableLabel
-            key={index}
-            canSelect={canSelectLabels}
-            onPress={() => onLabelSelection(index)}
-            onUnselect={() => onLabelUnselection(text)}>
-            {text}
-          </TouchableLabel>
-        ))}
-      </LabelsContainer>
-    </Container>
+    <View style={styles.container}>
+      {labels.map((text, index) => (
+        <TouchableLabel
+          key={index}
+          canSelect={canSelectLabels}
+          onPress={() => onLabelSelection(index)}
+          onUnselect={() => onLabelUnselection(text)}>
+          {text}
+        </TouchableLabel>
+      ))}
+    </View>
   );
 };
-
-type ContainerProps = {
-  light?: Boolean;
-};
-const Container = styled.View<ContainerProps>`
-  align-self: center;
-  background-color: ${props => (props.light ? colors.white : colors.whiteDark)};
-  margin: 21px 0;
-`;
-const LabelsContainer = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-`;
 
 const TouchableLabel = ({onPress, children, onUnselect, canSelect}) => {
   const [isSelected, setIsSelected] = useState(false);
@@ -85,3 +70,13 @@ const Label = styled(Text)<StyledProps>`
   text-transform: lowercase;
   color: ${props => (props.isSelected ? colors.blackLigth : colors.primary)};
 `;
+const styles = StyleSheet.create({
+  container: {
+    alignSelf: 'center',
+    backgroundColor: colors.white,
+    marginVertical: 21,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+  },
+});
