@@ -33,8 +33,8 @@ export const MnemonicIntroModal: React.FC<MnemonicIntroModalProps> = ({
             internet, Prohibit the disclosure or publicity of mnemonics in any
             form or method.
             {'\n\n'}
-            Please make sure to keepc a paper copy of your mnemonic phrases.
-            Agave Coin is not liable for the los of digital assets resulting
+            Please make sure to keep a paper copy of your mnemonic phrases.
+            Agave Coin is not liable for the loss of digital assets resulting
             from the loss, damage or other loss of control over the paper copy
             of mnemonic phrases.
           </Text>

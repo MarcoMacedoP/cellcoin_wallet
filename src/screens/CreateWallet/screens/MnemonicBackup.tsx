@@ -70,7 +70,7 @@ export const MnemonicBackup = ({navigation}: MnemonicBackupProps) => {
         <Subtitle>Back up mnemonic phrases </Subtitle>
         <Text>
           {step === 'beforeBackup'
-            ? `\nMake a copy of the following 12 nemonic phrases in correct order. We Will verify in the next step\n`
+            ? `\nMake a copy of the following 12 mnemonic phrases in correct order. We Will verify in the next step\n`
             : `\nPlease enter the 12 words in the correct order\n`}
         </Text>
 
