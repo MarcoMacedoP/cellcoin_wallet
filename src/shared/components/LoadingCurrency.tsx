@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {globalStyles} from 'shared/styles';
+import {globalStyles, colors} from 'shared/styles';
 import ContentLoader from 'react-content-loader/native';
 import {G, Rect, Path} from 'react-native-svg';
 
@@ -13,7 +13,7 @@ export const LoadingCurrency: React.FC<LoadingCurrencyProps> = ({speed}) => {
     <View style={[styles.container]}>
       <ContentLoader
         viewBox="-6 -1 247 20"
-        backgroundColor={colors.grayLigth}
+        backgroundColor={colors.lightGray}
         foregroundColor="#D7D9E0"
         width="100%"
         speed={speed}
@@ -51,6 +51,5 @@ const styles = StyleSheet.create({
   container: {
     ...globalStyles.cardShadow,
     width: '100%',
-    marginVertical: 4,
   },
 });

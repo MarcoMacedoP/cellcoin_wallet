@@ -31,10 +31,10 @@ export const MnemonicBackup = ({navigation}: MnemonicBackupProps) => {
     hint,
   ]);
 
-  const onLabelSelection = index =>
+  const onLabelSelection = (index: number) =>
     step === 'backup' && setHint([...hint, shuffledLabels[index]]);
 
-  const onLabelUnselection = selectedLabelText => {
+  const onLabelUnselection = (selectedLabelText: string) => {
     if (step === 'backup') {
       const tempArr = hint.filter(text => text !== selectedLabelText && text);
       setHint(tempArr);

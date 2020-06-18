@@ -1,31 +1,38 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import {colors} from 'shared/styles';
-import {View} from 'react-native';
+import {colors, globalStyles} from 'shared/styles';
+import {View, StyleSheet} from 'react-native';
 import {CurrencyType} from 'shared/types';
 import {Text, SmallText} from 'shared/styled-components';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
+import {LoadingCurrency, FadeInView} from 'shared/components';
+import {TouchableHighlight} from 'react-native-gesture-handler';
 
-type BalanceCurrencyComponentProps = {
+type CurrencyProps = {
   onClick: () => void;
   currency: CurrencyType;
+  isLoading: boolean;
 };
-export const BalanceCurrencyComponent: React.FC<
-  BalanceCurrencyComponentProps
-> = props => {
+export const Currency: React.FC<CurrencyProps> = props => {
   const {
     onClick,
+    isLoading,
     currency: {name, type, value},
   } = props;
   const {logo, tokenName} = getCurrencyInfo(type);
 
-  return (
-    <Container onPress={onClick} underlayColor={colors.whiteDark}>
+  return isLoading ? (
+    <LoadingCurrency speed={200} />
+  ) : (
+    <TouchableHighlight
+      style={styles.container}
+      onPress={onClick}
+      underlayColor={colors.whiteDark}>
       <InfoContainer>
         <TitleContainer>
           <Image source={logo} />
-          <View style={{marginLeft: 3, paddingLeft: 8}}>
-            <Text upperCase> {type === 'TOKEN' ? 'AGVC' : type}</Text>
+          <View style={styles.textContainer}>
+            <Text upperCase> {tokenName}</Text>
             <SmallText style={{marginLeft: 4}}>{name}</SmallText>
           </View>
         </TitleContainer>
@@ -34,18 +41,22 @@ export const BalanceCurrencyComponent: React.FC<
           <CurrencyInLocal>$={String(value.usd)}</CurrencyInLocal>
         </View>
       </InfoContainer>
-    </Container>
+    </TouchableHighlight>
   );
 };
 
-const Container = styled.TouchableHighlight`
-  background-color: ${colors.white};
-  margin-bottom: 16px;
-  padding: 16px;
-  border-bottom-width: 1.5px;
-  border-bottom-color: rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-`;
+const styles = StyleSheet.create({
+  container: {
+    ...globalStyles.cardShadow,
+    backgroundColor: colors.white,
+    padding: 16,
+  },
+  textContainer: {
+    marginLeft: 3,
+    paddingLeft: 8,
+  },
+});
+
 const InfoContainer = styled.View`
   width: 100%;
   flex-direction: row;

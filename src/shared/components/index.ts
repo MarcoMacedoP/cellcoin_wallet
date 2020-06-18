@@ -6,10 +6,11 @@ export * from './TabBar';
 export * from './Modal';
 export * from './Loading';
 export * from './FadeInView';
-export * from "./QrIcon";
+export * from './QrIcon';
 export * from './NotificationCard';
-export * from "./Input"
-export { ScreenContainer } from "./ScreenContainer";
-export { AddressScanner } from './AddressReader';
-export { DeleteItemCard } from "./DeleteItemCard"
-export * from "./NumericKeyboard";
+export * from './Input';
+export {ScreenContainer} from './ScreenContainer';
+export {AddressScanner} from './AddressReader';
+export {DeleteItemCard} from './DeleteItemCard';
+export * from './NumericKeyboard';
+export * from './LoadingCurrency';

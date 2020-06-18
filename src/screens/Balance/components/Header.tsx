@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
+import {FadeInView} from 'shared/components';
 
 const headerImage = require('assets/images/agave_background.png');
 
@@ -8,15 +9,19 @@ type BalanceHeaderComponentProps = {
   assets: string;
 };
 
-export const BalanceHeaderComponent: React.FC<BalanceHeaderComponentProps> = ({
+export const BalanceHeader: React.FC<BalanceHeaderComponentProps> = ({
   assets,
 }) => {
   return (
     <Container source={headerImage} resizeMode="cover">
-      <AssetsContainer>
-        <Title lenght={assets ? assets.length : 0}>{assets || '----'}</Title>
-        <SmallText lenght={assets ? assets.length : 0}>$</SmallText>
-      </AssetsContainer>
+      {assets && (
+        <FadeInView>
+          <AssetsContainer>
+            <Title lenght={assets.length}>{assets}</Title>
+            <SmallText lenght={assets.length}>$</SmallText>
+          </AssetsContainer>
+        </FadeInView>
+      )}
     </Container>
   );
 };
@@ -27,7 +32,8 @@ const Container = styled.ImageBackground`
   width: 100%;
   justify-content: center;
   align-items: center;
-  height: 35.6%;
+  flex: 1;
+  min-height: 300px;
   margin-bottom: 16px;
   background-color: ${colors.primary};
   margin: -16px 0;
@@ -36,7 +42,6 @@ const Container = styled.ImageBackground`
 const AssetsContainer = styled.View`
   align-items: flex-start;
   flex-direction: row;
-  justify-content: center;
   width: 100%;
 `;
 type BalanceTitleProps = {

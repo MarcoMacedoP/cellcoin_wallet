@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {RefreshControl, Dimensions, StatusBar} from 'react-native';
-import {BalanceHeaderComponent} from '../components/Header';
-import {BalanceCurrencyComponent} from '../components/Currency';
+import {RefreshControl, Dimensions, StatusBar, BackHandler, View} from 'react-native';
+import {BalanceHeader} from '../components/Header';
+import {Currency} from '../components/Currency';
 import {CurrencyType} from 'shared/types';
 import {useGetBalance} from '../hooks/useGetBalance';
 import {colors} from 'shared/styles/variables';
@@ -10,7 +10,9 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/core';
-
+import { FlatList, StyleSheet } from "react-native"
+import { spacings } from 'shared/styles';
+import { LoadingCurrency } from 'shared/components';
 const CURRENCYS: Array<CurrencyType> = [
   {
     name: 'Agave coin',
@@ -32,13 +34,11 @@ interface BalanceScreenProps {
 
 type BalanceScreenComponent = React.FC<BalanceScreenProps>;
 
-export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {params}}) => {
-  const [currencys, setCurrencys] = useState<Array<CurrencyType>>([
-    ...CURRENCYS,
-  ]);
-
+export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {params}}) => { 
+  const [currencys, setCurrencys] = useState<Array<CurrencyType>>([ ...CURRENCYS, ]); 
   const balance = useGetBalance();
   const {ethBalance, generalBalance, tokenBalance, fetchBalance} = balance;
+
   useEffect(() => {
     if (ethBalance && tokenBalance) {
       const [token, ethereum] = currencys;
@@ -56,47 +56,43 @@ export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {param
     if(params?.action === 'update'){
       onRefresh();
     }
-  }, [params]);
+  }, [params])
   
   const handleCurrencyClick = currency =>
     navigation.navigate('Transfers', currency);
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        width: Dimensions.get('screen').width,
-        height: Dimensions.get('window').height,
-      }}
-      refreshControl={
-        <RefreshControl
-          size={35}
-          colors={[colors.primary, colors.accent]}
-          tintColor={colors.accent}
-          refreshing={balance.isLoading}
-          style={{
-            backgroundColor: colors.primary,
-          }}
-          onRefresh={onRefresh}
-        />
-      }>
-      <StatusBar barStyle="light-content" />
-      <BalanceHeaderComponent assets={generalBalance} />
-      <CurrencysContainer>
-        {currencys.map((currency, index) => (
-          <BalanceCurrencyComponent
-            currency={currency}
-            key={index}
-            onClick={() => handleCurrencyClick(currency)}
-          />
-        ))}
-      </CurrencysContainer>
-    </ScrollView>
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content"/>
+      <FlatList
+        refreshing={balance.isLoading}
+        onRefresh={onRefresh}
+        ListHeaderComponent={({})=> <BalanceHeader assets={generalBalance}/>} 
+        data={currencys} 
+        keyExtractor={({type})=>type}
+        renderItem={({item, index})=>
+        <View style={[styles.currencyContainer, {top: index === 0 ? -56 : -100 }]}>
+          <Currency 
+             isLoading={balance.isLoading} 
+             currency={item} 
+             key={index} 
+             onClick={()=> handleCurrencyClick(item)}/>
+        </View>
+        }/>
+  </View>
+   
   );
 };
 
-const CurrencysContainer = styled.View`
-  padding: 22px;
-  width: 100%;
-  position: relative;
-  top: -56px;
-`;
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.whiteDark,
+    flex: 1,
+  },
+  currencyContainer:{
+    padding: 22,
+    width: '100%',
+    position: 'relative'
+  }
+})
+
