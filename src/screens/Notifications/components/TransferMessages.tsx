@@ -26,7 +26,10 @@ export const TransferMessages = ({
       keyExtractor={item => item.uuid}
       onRefresh={updateNotifications}
       refreshing={isLoading}
-      initialNumToRender={8}
+      contentContainerStyle={{
+        flex: 1,
+        width: '100%',
+      }}
     />
   );
 };

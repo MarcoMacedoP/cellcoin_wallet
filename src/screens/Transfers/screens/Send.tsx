@@ -137,7 +137,7 @@ const quantityReducer: Reducer<QuantityState, QuantityAction> = (
     }
     case 'set-token': {
       //convert token value to USD
-      if (!isValidQuantity(currency.value.usd, currency.value.original)) {
+      if (!isValidQuantity(payload.value, currency.value.original)) {
         return initialState;
       }
       const token = parseFloat(payload.value);
@@ -157,10 +157,18 @@ function isValidQuantity(quantity: string, maxQuantity: string) {
     return false;
   }
   const parsedQuantity = parseFloat(quantity);
-
+  const firstAreGreater = areFirstQuantityGreater(
+    parsedQuantity,
+    parseFloat(maxQuantity),
+  );
+  console.log({
+    quantity,
+    maxQuantity,
+    firstAreGreater,
+  });
   if (isNaN(parsedQuantity)) {
     return false;
-  } else if (areFirstQuantityGreater(parsedQuantity, parseFloat(maxQuantity))) {
+  } else if (firstAreGreater) {
     Toast.show(NOT_ENOUGHT_BALANCE_MESSAGE);
   } else {
     return true;

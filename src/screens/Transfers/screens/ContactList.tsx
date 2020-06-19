@@ -46,13 +46,15 @@ function useContacts() {
           await AsyncStorage.getItem('contacts'),
         );
         setIsLoading(false);
-        setListAddress(contacts);
+        setListAddress(contacts || []);
       },
       () => setIsLoading(false),
     );
   }
   async function addItem(contact: Contact) {
-    const updatedList = [contact, ...listAddress];
+    console.log({listAddress});
+    const updatedList =  listAddress?.length > 0 ? [contact, ...listAddress] : [contact];
+    console.log({updatedList});
     setListAddress(updatedList);
     setIsLoading(true);
     asyncStorageErrorHandler(
@@ -105,8 +107,13 @@ export const ContactList: React.FC<ContactListProps> = ({
   }, []);
 
   async function handleAddModalSubmit(contact: Contact) {
-    await contacts.add(contact);
-    addContactModal.close();
+    try {
+      console.log({contact});
+      await contacts.add(contact);
+      addContactModal.close();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function selectContact(address: string) {
