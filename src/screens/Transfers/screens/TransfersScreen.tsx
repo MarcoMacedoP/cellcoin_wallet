@@ -92,11 +92,6 @@ const styles = StyleSheet.create({
   },
   clipboard: {
     marginVertical: 16,
-    alignItems: 'center',
-    width: '100%',
-    flex: 0.5,
-    borderRadius: 15,
-    backgroundColor: colors.whiteDark,
   },
   buttonsContainer: {
     flex: 2,

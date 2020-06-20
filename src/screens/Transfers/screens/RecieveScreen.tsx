@@ -32,10 +32,7 @@ export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({
             uri: `https://chart.googleapis.com/chart?chs=300x300&chld=L|1&cht=qr&chl=ethereum:${mainAddress}`,
           }}
         />
-        <ClipboardComponent
-          style={styles.addressClipboard}
-          text={mainAddress}
-        />
+        <ClipboardComponent text={mainAddress} />
       </View>
 
       <View style={styles.informationContainer}>
@@ -75,9 +72,6 @@ const styles = StyleSheet.create({
     width: 35,
     flex: 1,
     resizeMode: 'contain',
-  },
-  addressClipboard: {
-    flex: 0.5,
   },
   informationContainer: {
     flex: 1,
