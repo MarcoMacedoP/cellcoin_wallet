@@ -10,7 +10,7 @@ import {useGlobalState} from 'globalState';
 import OneSignal from 'react-native-onesignal';
 import SimpleToast from 'react-native-simple-toast';
 import {Alert, Platform} from 'react-native';
-
+import {ONESIGNAL_APP_ID} from 'react-native-dotenv';
 const device = Platform.OS;
 
 //declarations
@@ -22,11 +22,12 @@ Wallet.mySeed = 'mipalabraalfanumerica8989';
 function useOneSignal() {
   const [uuid, setUuid] = useGlobalState('uuid');
 
-  const initializeOneSignal = async () => {
-    OneSignal.init('bcaa9a41-21f9-4bdf-b693-2d906840fc27', {
+  const initializeOneSignal = () => {
+    console.log('initializing onesignal :)');
+    OneSignal.init(ONESIGNAL_APP_ID, {
       kOSSettingsKeyAutoPrompt: true,
     }); // set kOSSettingsKeyAutoPrompt to false prompting manually on iOS
-
+    OneSignal.setLogLevel(6, 0);
     OneSignal.addEventListener('received', onReceived);
     OneSignal.addEventListener('opened', onOpened);
     OneSignal.addEventListener('ids', onIds);
@@ -46,11 +47,11 @@ function useOneSignal() {
   };
 
   const onReceived = notification => {
-    // console.log("Notification received: ", notification);
+    console.log('Notification received: ', notification);
   };
-  useEffect(() => {
-    initializeOneSignal();
-  }, []);
+  return {
+    init: initializeOneSignal,
+  };
 }
 
 /**
@@ -60,9 +61,8 @@ function useInitilizeApp() {
   const [hasInitialized, setHasInitilization] = useState(false);
   const [hasSetInitialization, setHasSetInitialization] = useState(false);
   const [hasKeystore] = useGlobalState('keystore');
-  // useOneSignal();
+  const onesignal = useOneSignal();
   const wallet = useFindWalletInStorage();
-  console.log(wallet);
   useEffect(() => {
     if (hasSetInitialization && !wallet.isLoading) {
       setHasInitilization(true);
@@ -76,9 +76,7 @@ function useInitilizeApp() {
           method: 'POST',
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         });
-        console.log(response);
         const {data} = await response.json();
-        console.log({data});
         return data;
       } catch (error) {
         console.log('Error on getInitialization() line 81 App.tsx', error);
@@ -87,22 +85,22 @@ function useInitilizeApp() {
     }
     async function setInitialization() {
       const initialization = await getInitialization();
-      console.log(initialization);
       if (initialization) {
         for (const prop in initialization) {
           const walletHasProp =
             initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop);
           if (walletHasProp) Wallet[prop] = initialization[prop];
         }
+        onesignal.init();
         setHasSetInitialization(true);
       } else {
         Alert.alert(
-          'Hubo un error inicializando la app',
-          'Revisa tu conexión a internet y vuelve a intentarlo.',
+          'There was an error initializing the app',
+          'Please check your internet connection and try again.',
           [
             {
               onPress: async () => await setInitialization(),
-              text: 'Reintentar',
+              text: 'Try again',
             },
           ],
         );
@@ -114,7 +112,6 @@ function useInitilizeApp() {
 }
 const App = () => {
   const {hasInitialized} = useInitilizeApp();
-  console.log({hasInitialized, device: Platform.OS});
   return !hasInitialized ? (
     <Splash />
   ) : (
