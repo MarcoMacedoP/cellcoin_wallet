@@ -9,7 +9,10 @@ import {FadeInView} from 'shared/components';
 import {useGlobalState} from 'globalState';
 import OneSignal from 'react-native-onesignal';
 import SimpleToast from 'react-native-simple-toast';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
+
+const device = Platform.OS;
+
 //declarations
 declare var global: {HermesInternal: null | {}};
 const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
@@ -57,9 +60,9 @@ function useInitilizeApp() {
   const [hasInitialized, setHasInitilization] = useState(false);
   const [hasSetInitialization, setHasSetInitialization] = useState(false);
   const [hasKeystore] = useGlobalState('keystore');
-  useOneSignal();
+  // useOneSignal();
   const wallet = useFindWalletInStorage();
-
+  console.log(wallet);
   useEffect(() => {
     if (hasSetInitialization && !wallet.isLoading) {
       setHasInitilization(true);
@@ -87,7 +90,8 @@ function useInitilizeApp() {
       console.log(initialization);
       if (initialization) {
         for (const prop in initialization) {
-          const walletHasProp = initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop); // prettier-ignore
+          const walletHasProp =
+            initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop);
           if (walletHasProp) Wallet[prop] = initialization[prop];
         }
         setHasSetInitialization(true);
@@ -110,6 +114,7 @@ function useInitilizeApp() {
 }
 const App = () => {
   const {hasInitialized} = useInitilizeApp();
+  console.log({hasInitialized, device: Platform.OS});
   return !hasInitialized ? (
     <Splash />
   ) : (

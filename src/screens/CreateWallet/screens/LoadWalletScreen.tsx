@@ -28,7 +28,7 @@ export const LoadWalletScreen = () => {
       setTimeout(goBack, 3000);
     }
     if (!error && isCreated) {
-      setTimeout(goBalance, 2000);
+      goBalance();
     }
   }, [error, isCreated]);
 
