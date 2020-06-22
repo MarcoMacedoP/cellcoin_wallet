@@ -1,18 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import styled from 'styled-components/native';
-import {RefreshControl, Dimensions, StatusBar, BackHandler, View} from 'react-native';
 import {BalanceHeader} from '../components/Header';
 import {Currency} from '../components/Currency';
 import {CurrencyType} from 'shared/types';
 import {useGetBalance} from '../hooks/useGetBalance';
 import {colors} from 'shared/styles/variables';
-import {ScrollView} from 'react-native-gesture-handler';
 import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/core';
-import { FlatList, StyleSheet } from "react-native"
-import { spacings } from 'shared/styles';
-import { LoadingCurrency } from 'shared/components';
+import { FlatList, StyleSheet, View, StatusBar } from "react-native"
+
 const CURRENCYS: Array<CurrencyType> = [
   {
     name: 'Agave coin',
@@ -80,7 +76,6 @@ export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {param
         </View>
         }/>
   </View>
-   
   );
 };
 
