@@ -1,10 +1,11 @@
-import { useGlobalState } from 'globalState';
-import { useState, useEffect } from 'react';
+import {useGlobalState} from 'globalState';
+import {useState, useEffect} from 'react';
 import {
   createKeystore,
   createAddress,
   encodeKeystore,
 } from 'shared/libs/Wallet';
+import * as Notifications from 'shared/libs/Notifications';
 
 export function useCreateWallet() {
   // const addressTest = '0x08bd09310a970f68e01c8848785fd589dbccc77e';
@@ -20,8 +21,10 @@ export function useCreateWallet() {
       try {
         const keystore = await createKeystore();
         const address = await createAddress();
+        const mainAddress = address[0].address;
         await encodeKeystore();
-        setMainAddress(address[0].address);
+        Notifications.setUserAddress(mainAddress);
+        setMainAddress(mainAddress);
         setAddress(address);
         setKeyStore(keystore);
         setIsCreated(true);
@@ -36,5 +39,5 @@ export function useCreateWallet() {
     }
   }, [isCreated]);
 
-  return { error, isCreated };
+  return {error, isCreated};
 }

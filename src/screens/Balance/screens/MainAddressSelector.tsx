@@ -1,5 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {TouchableOpacity, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import Toast from 'react-native-simple-toast';
 import {EmptyState, ScreenContainer} from 'shared/components';
 import {useGlobalState} from 'globalState';
@@ -9,8 +8,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthRootStackParams} from 'Router';
 import {AddressItem} from '../components/AddressItem';
 import {AddAddressModal} from '../components/AddAddressModal';
-import {useNavigation} from '@react-navigation/core';
 import {useModal, useHeaderIcon} from 'shared/hooks';
+import * as Notifications from 'shared/libs/Notifications';
 
 type SendTransferScreenProps = {
   navigation: StackNavigationProp<AuthRootStackParams, 'MainAddressSelector'>;
@@ -89,6 +88,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   };
 
   const setMainAddresAndReload = (selectedAddress: string) => {
+    Notifications.setUserAddress(selectedAddress);
     setMainAddress(selectedAddress);
     navigation.push('Balance');
   };
