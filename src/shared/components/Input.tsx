@@ -11,7 +11,7 @@ import {
   InputProps as StyledInputProps,
   Label,
 } from 'shared/styled-components';
-import {spacings, colors} from 'shared/styles';
+import {spacings, colors, globalStyles} from 'shared/styles';
 
 type InputProps = TextInputProps &
   StyledInputProps & {
@@ -27,7 +27,12 @@ export const Input: React.FC<InputProps> = ({
   ...textInputProps
 }) => {
   return (
-    <View style={[styles.inputContainer, containerStyle]}>
+    <View
+      style={[
+        globalStyles.inputContainer,
+        styles.inputContainer,
+        containerStyle,
+      ]}>
       <Label style={styles.label} color="primary">
         {label}
       </Label>
@@ -41,11 +46,6 @@ export const Input: React.FC<InputProps> = ({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    flex: 1,
-    paddingHorizontal: spacings.right,
-    paddingVertical: 8,
-    backgroundColor: colors.whiteDark,
-    width: '100%',
     marginBottom: 16,
   },
   inputWithIcon: {
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     padding: 0,
     height: 30,
     flex: 1,
+    color: colors.black,
   },
   label: {
     marginBottom: 4,

@@ -6,8 +6,6 @@ import HookedWeb3Provider from 'hooked-web3-provider';
 const txutils = lightwallet.txutils;
 const signing = lightwallet.signing;
 
-console.log(txutils);
-
 function createdStored() {
   return new Promise((resolve, reject) => {
     lightwallet.keystore.createVault(
@@ -48,15 +46,17 @@ export async function createAddress() {
   const address = await Wallet.generateAddress();
   const mainAddress = address[0].address;
   Wallet.address = address;
-  const listAddress = [{
-    alias: 'Main Address',
-    address: mainAddress,
-  }]
+  const listAddress = [
+    {
+      alias: 'Main Address',
+      address: mainAddress,
+    },
+  ];
   await Promise.all([
     AsyncStorage.setItem('addresses', JSON.stringify(address)),
     AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress)),
     AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress)),
-  ])
+  ]);
   return address;
 }
 export async function encodeKeystore() {
@@ -74,15 +74,18 @@ function initEtherScan() {
 }
 Wallet.initEtherScan = initEtherScan;
 
-
-const setWeb3Provider = async function () {
+const setWeb3Provider = async function() {
   let web3Provider = new HookedWeb3Provider({
     host: Wallet.provider,
     transaction_signer: Wallet.keystore,
   });
   Wallet.web3.setProvider(web3Provider);
 };
-export const calculateGasLimitETH = async function (from, to, value) {
+export const calculateGasLimitETH = async function(
+  from,
+  to,
+  value,
+): Promise<{gasLimit: number; gasPrice: number}> {
   return new Promise(async (resolve, reject) => {
     setWeb3Provider();
     value = value * 1.0e18;
@@ -109,7 +112,7 @@ export const calculateGasLimitETH = async function (from, to, value) {
         } else {
           txOptions.nonce = res;
         }
-        let Result = { gasLimit: null, gasPrice: null };
+        let Result = {gasLimit: null, gasPrice: null};
         await Wallet.web3.eth.estimateGas(txOptions, async (err, res) => {
           if (!err) {
             Result.gasLimit = res;
@@ -135,20 +138,17 @@ export const calculateGasLimitETH = async function (from, to, value) {
   });
 };
 
-
-export const calculateGasLimitToken = async function (from, to, value) {
+export const calculateGasLimitToken = async function(from, to, value) {
   return new Promise(async (resolve, reject) => {
     setWeb3Provider();
-    let contract = Wallet.web3.eth
-      .contract(Wallet.minABI)
-      .at(Wallet.tokenAddr);
+    let contract = Wallet.web3.eth.contract(Wallet.minABI).at(Wallet.tokenAddr);
     // value = value * 10 ** this.tokenDecimals * 1;
-    let Result = { gasLimit: null, gasPrice: null };
+    let Result = {gasLimit: null, gasPrice: null};
 
     await contract.transfer.estimateGas(
       to,
       value,
-      { from: from },
+      {from: from},
       async (err, result) => {
         if (!err) {
           Result.gasLimit = result;
@@ -213,16 +213,13 @@ export const sendETHE = (password, from, to, value, gasPrice, gasLimit) => {
                     from,
                   );
 
-                Wallet.web3.eth.sendRawTransaction(
-                  signedTx,
-                  (err, result) => {
-                    if (!err) {
-                      resolve(result);
-                    } else {
-                      reject(err.message);
-                    }
-                  },
-                );
+                Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
+                  if (!err) {
+                    resolve(result);
+                  } else {
+                    reject(err.message);
+                  }
+                });
               } catch (e) {
                 reject(e.message);
               }
@@ -238,7 +235,14 @@ export const sendETHE = (password, from, to, value, gasPrice, gasLimit) => {
   });
 };
 
-export const sendTokens = async (password, from, to, value, gasPrice, gasLimit) => {
+export const sendTokens = async (
+  password,
+  from,
+  to,
+  value,
+  gasPrice,
+  gasLimit,
+) => {
   return new Promise((resolve, reject) => {
     try {
       Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
@@ -281,30 +285,18 @@ export const sendTokens = async (password, from, to, value, gasPrice, gasLimit) 
                     contractData.tx,
                     from,
                   );
-                Wallet.web3.eth.sendRawTransaction(
-                  signedTx,
-                  (err, result) => {
-                    if (!err) {
-                      resolve(result);
-                    } else {
-                      reject(err.message);
-                    }
-                  },
-                );
+                Wallet.web3.eth.sendRawTransaction(signedTx, (err, result) => {
+                  if (!err) {
+                    resolve(result);
+                  } else {
+                    reject(err.message);
+                  }
+                });
               } catch (e) {
                 reject(e.message);
               }
             },
           );
-
-          // let txOptions = {
-          //     to: this.tokenAddr,
-          //     gasLimit: this.web3.toHex(gasLimit),
-          //     gasPrice: this.web3.toHex(gasPrice),
-          //     value: this.web3.toHex(0),
-          //     nonce: this.web3.eth.getTransactionCount(from),
-          //     data: contract.transfer.getData(to, value, { from: from }),
-          // };
         } else {
           reject('There was an error sending tokens');
         }
@@ -314,3 +306,5 @@ export const sendTokens = async (password, from, to, value, gasPrice, gasLimit) 
     }
   });
 };
+
+export * from './hooks/useGasLimit';

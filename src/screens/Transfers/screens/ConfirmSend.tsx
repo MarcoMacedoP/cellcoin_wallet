@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useEffect} from 'react';
+import React, {useState, useLayoutEffect, useEffect, useMemo} from 'react';
 import {Text, SmallText, Subtitle} from 'shared/styled-components/Texts';
 import {
   ScreenContainer,
@@ -7,7 +7,7 @@ import {
 } from 'shared/styled-components';
 import styled from 'styled-components/native';
 import {colors, globalStyles} from 'shared/styles';
-import {TouchableOpacity, ScrollView, StatusBar} from 'react-native';
+import {TouchableOpacity, ScrollView, StatusBar, View} from 'react-native';
 import Slider from '@react-native-community/slider';
 import {Button} from 'shared/components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -35,6 +35,7 @@ import {StyleSheet} from 'react-native';
 import {isAddress} from 'shared/validations';
 import {notificateTransaction} from 'shared/libs/Notifications';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
+import {GasFeeSelector} from '../components/GasFeeSelector';
 
 type SetAddressScreenProps = {
   route: RouteProp<AuthRootStackParams, 'ConfirmSend'>;
@@ -208,29 +209,12 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
   };
 
   const onRecomendationClick = () => setMinerFee(recomendation);
-
   return (
-    <ScreenContainer light>
-      <PasswordModal
-        transactionData={{
-          currency: currency.type,
-          amount: state.amount,
-          usd:
-            (parseFloat(currency.value.usd) /
-              parseFloat(currency.value.original)) *
-            parseFloat(state.amount),
-        }}
-        isShowed={modalIsShowed}
-        onClose={() => setModalIsShowed(false)}
-        onDoned={onPasswordFilled}
-      />
-      <ScrollView
-        contentContainerStyle={{backgroundColor: colors.white}}
-        style={globalStyles.scrollView}>
-        <Label isBold style={styles.amountToSendLabel}>
+    <ScreenContainer light justify="space-between">
+      <View style={styles.form}>
+        <Text isBold style={styles.amountToSend}>
           Amount to send: {state.amount}
-        </Label>
-
+        </Text>
         <InputComponent
           align="left"
           label="To"
@@ -246,93 +230,62 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
             <Icon name="address-book" size={20} color={colors.accent} />
           </IconContainer>
         </InputComponent>
-
-        <InputBox style={{paddingHorizontal: 5}}>
-          <Label>Gas fee</Label>
-          <FeeText color="primaryDark" style={{textTransform: 'uppercase'}}>
-            {minerFee} gwei= $ {minerFee * 1050000000}
-          </FeeText>
-          <FeeSlider
-            minimumValue={21000}
-            maximumValue={81000}
-            value={minerFee}
-            onSlidingComplete={setMinerFee}
-          />
-          <FeeSpeedContainer>
-            <SmallText>Slow</SmallText>
-            <SmallText>Fast</SmallText>
-          </FeeSpeedContainer>
-          <TouchableOpacity onPress={onRecomendationClick}>
-            <RecomendedFeed>Recomended: {recomendation} gwei/b</RecomendedFeed>
-          </TouchableOpacity>
-        </InputBox>
-
-        <Button
-          secondary
-          isActivated={isAddress(state.to)}
-          onClick={handleSubmit}
-          isLoading={isLoading}>
-          Confirm
-        </Button>
-        <AddressScanner
-          onSubmit={handleAddressModalSelection}
-          onClose={addressModal.close}
-          isOpen={addressModal.isOpen}
+        <GasFeeSelector
+          from={mainAddress}
+          to={selectedAddress}
+          amount={state.amount}
         />
-      </ScrollView>
+      </View>
+
+      <Button
+        secondary
+        isActivated={isAddress(state.to)}
+        onClick={handleSubmit}
+        isLoading={isLoading}>
+        Confirm
+      </Button>
+      <AddressScanner
+        onSubmit={handleAddressModalSelection}
+        onClose={addressModal.close}
+        isOpen={addressModal.isOpen}
+      />
+      <PasswordModal
+        transactionData={{
+          currency: currency.type,
+          amount: state.amount,
+          usd:
+            (parseFloat(currency.value.usd) /
+              parseFloat(currency.value.original)) *
+            parseFloat(state.amount),
+        }}
+        isShowed={modalIsShowed}
+        onClose={() => setModalIsShowed(false)}
+        onDoned={onPasswordFilled}
+      />
     </ScreenContainer>
   );
 };
 
 const styles = StyleSheet.create({
+  page: {},
   qrIcon: {
     padding: 8,
   },
-  amountToSendLabel: {
+  amountToSend: {
     marginTop: 8,
     textAlign: 'left',
     marginBottom: 12,
   },
+  form: {
+    flex: 1,
+    marginBottom: 12,
+    maxHeight: '70%',
+    // borderWidth: 1,
+    // borderColor: 'red',
+  },
 });
 
-const Container = styled(ScreenContainer)`
-  flex: 1;
-  padding-top: 8px;
-`;
-const Label = styled(BaseLabel)`
-  top: 4px;
-`;
-const InputBox = styled.View`
-  border-radius: 4px;
-  margin: 8px 0;
-  background-color: ${colors.whiteDark};
-  width: 103%;
-`;
-const InputButton = styled.View`
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-around;
-  align-items: center;
-`;
 const IconContainer = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-`;
-
-const FeeSlider = styled(Slider)``;
-const FeeText = styled(Label)`
-  width: 100%;
-  font-size: 12px;
-  color: ${colors.black};
-  margin: 8px 0 12px;
-`;
-const FeeSpeedContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 8px;
-`;
-const RecomendedFeed = styled(SmallText)`
-  color: ${colors.primary};
-  text-align: right;
-  margin-bottom: 8px;
 `;

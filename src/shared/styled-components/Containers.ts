@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
-import { colors, Color } from 'shared/styles';
-import { spacings } from 'shared/styles';
+import {colors, Color} from 'shared/styles';
+import {spacings} from 'shared/styles';
 
 type ViewProps = {
   light?: boolean;
@@ -16,7 +16,12 @@ export const ScreenContainer = styled.View<ViewProps>`
   flex: 1;
   justify-content: ${props => (props.justify ? props.justify : 'flex-start')};
   align-items: ${props => (props.align ? props.align : 'center')};
-  background-color: ${props => (props.light ? colors.white : props.color ? colors[props.color] : colors.whiteDark)};
+  background-color: ${props =>
+    props.light
+      ? colors.white
+      : props.color
+      ? colors[props.color]
+      : colors.whiteDark};
 `;
 
 export const IconContainer = styled.TouchableOpacity.attrs(props => ({}))`
