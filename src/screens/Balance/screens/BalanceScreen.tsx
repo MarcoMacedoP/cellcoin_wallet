@@ -7,7 +7,7 @@ import {colors} from 'shared/styles/variables';
 import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/core';
-import { FlatList, StyleSheet, View, StatusBar } from "react-native"
+import { FlatList, StyleSheet, View, StatusBar, RefreshControl } from "react-native"
 
 const CURRENCYS: Array<CurrencyType> = [
   {
@@ -61,10 +61,17 @@ export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {param
     <View style={styles.container}>
       <StatusBar barStyle="light-content"/>
       <FlatList
-        refreshing={balance.isLoading}
-        onRefresh={onRefresh}
+        refreshControl={ 
+          <RefreshControl 
+            colors={[colors.accent]}
+            style={styles.refreshControl}
+            progressBackgroundColor={colors.white}
+            refreshing={balance.isLoading}
+            onRefresh={onRefresh}
+          /> 
+        }
         ListHeaderComponent={({})=> <BalanceHeader assets={generalBalance}/>} 
-        data={currencys} 
+        data={currencys}
         keyExtractor={({type})=>type}
         renderItem={({item, index})=>
         <View style={[styles.currencyContainer, {top: index === 0 ? -56 : -100 }]}>
@@ -81,13 +88,15 @@ export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {param
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.whiteDark,
     flex: 1,
+  },
+  refreshControl: {
+    backgroundColor: colors.primary,
   },
   currencyContainer:{
     padding: 22,
     width: '100%',
-    position: 'relative'
+    position: 'relative',
   }
 })
 

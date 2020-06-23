@@ -24,6 +24,9 @@ type NotificateTransactionParams = {
   /**The token-type to be sended */
   token: string;
 };
+/**
+ * Sends a push notification to all the parts involved in the transaction.
+ */
 export async function notificateTransaction({
   amount,
   from,

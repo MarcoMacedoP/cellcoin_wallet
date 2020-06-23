@@ -33,6 +33,8 @@ import {
 import {useModal} from 'shared/hooks';
 import {StyleSheet} from 'react-native';
 import {isAddress} from 'shared/validations';
+import {notificateTransaction} from 'shared/libs/Notifications';
+import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 
 type SetAddressScreenProps = {
   route: RouteProp<AuthRootStackParams, 'ConfirmSend'>;
@@ -150,7 +152,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
       gass.gasPrice,
       gass.gasLimit,
     )
-      .then((hash: string) => handleNavigation(hash))
+      .then(handleSuccessTransaction)
       .catch(error => {
         console.log({error});
         if (error === 'insufficient funds for gas * price + value') {
@@ -187,6 +189,19 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
         setIsLoading(false);
       });
   };
+
+  /** Handles all the success transactions
+   * @param hash the transaction hash
+   */
+  function handleSuccessTransaction(hash: string) {
+    notificateTransaction({
+      amount: tokenQuantityToBeSended,
+      from: mainAddress,
+      to: selectedAddress,
+      token: getCurrencyInfo(currency.type).tokenName,
+    });
+    handleNavigation(hash);
+  }
 
   const setAddressText = text => {
     setState({...state, to: text});
