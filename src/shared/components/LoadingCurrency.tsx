@@ -4,11 +4,9 @@ import {globalStyles, colors} from 'shared/styles';
 import ContentLoader from 'react-content-loader/native';
 import {G, Rect, Path} from 'react-native-svg';
 
-type LoadingCurrencyProps = {
-  speed: number;
-};
+type LoadingCurrencyProps = {};
 
-export const LoadingCurrency: React.FC<LoadingCurrencyProps> = ({speed}) => {
+export const LoadingCurrency: React.FC<LoadingCurrencyProps> = () => {
   return (
     <View style={[styles.container]}>
       <ContentLoader
@@ -16,7 +14,6 @@ export const LoadingCurrency: React.FC<LoadingCurrencyProps> = ({speed}) => {
         backgroundColor={colors.lightGray}
         foregroundColor="#D7D9E0"
         width="100%"
-        speed={speed}
         height={64}>
         <G
           id="Grupo_5105"

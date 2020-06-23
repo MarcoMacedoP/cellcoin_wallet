@@ -106,11 +106,10 @@ export function useOneSignal() {
     console.log('initializing onesignal :)');
     OneSignal.init(ONESIGNAL_APP_ID, {
       kOSSettingsKeyAutoPrompt: true,
-    }); // set kOSSettingsKeyAutoPrompt to false prompting manually on iOS
-    OneSignal.setLogLevel(6, 0);
-    OneSignal.addEventListener('received', onReceived);
-    OneSignal.addEventListener('opened', onOpened);
-    OneSignal.addEventListener('ids', onIds);
+    });
+    // OneSignal.addEventListener('received', onReceived);
+    // OneSignal.addEventListener('opened', onOpened);
+    // OneSignal.addEventListener('ids', onIds);
   };
   const onOpened = openResult => {
     console.log('Message: ', openResult.notification.payload.body);

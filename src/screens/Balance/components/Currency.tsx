@@ -14,6 +14,7 @@ type CurrencyProps = {
   isLoading: boolean;
 };
 export const Currency: React.FC<CurrencyProps> = props => {
+  console.log(props.isLoading);
   const {
     onClick,
     isLoading,
@@ -22,7 +23,7 @@ export const Currency: React.FC<CurrencyProps> = props => {
   const {logo, tokenName} = getCurrencyInfo(type);
 
   return isLoading ? (
-    <LoadingCurrency speed={200} />
+    <LoadingCurrency />
   ) : (
     <TouchableHighlight
       style={styles.container}
