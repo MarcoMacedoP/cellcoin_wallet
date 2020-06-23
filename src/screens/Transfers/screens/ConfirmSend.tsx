@@ -6,16 +6,13 @@ import {
   Input,
 } from 'shared/styled-components';
 import styled from 'styled-components/native';
-import {colors, globalStyles} from 'shared/styles';
-import {TouchableOpacity, ScrollView, StatusBar, View} from 'react-native';
-import Slider from '@react-native-community/slider';
+import {colors} from 'shared/styles';
+import {View} from 'react-native';
 import {Button} from 'shared/components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {RouteProp} from '@react-navigation/native';
 import {useGlobalState} from 'globalState';
-import {ScanScreen} from 'shared/components/QrReader';
 import {
-  Modal,
   AddressScanner,
   QrIcon,
   Input as InputComponent,
@@ -29,6 +26,7 @@ import {
   calculateGasLimitETH,
   sendETHE,
   sendTokens,
+  useGasLimit,
 } from 'shared/libs/Wallet';
 import {useModal} from 'shared/hooks';
 import {StyleSheet} from 'react-native';
@@ -48,18 +46,30 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
 }) => {
   const addressModal = useModal();
   const {currency, tokenQuantityToBeSended, selectedAddress} = params;
-  const recomendation = 1;
   const [modalIsShowed, setModalIsShowed] = useState(false);
   const [mainAddress] = useGlobalState('mainAddress');
-  const [gasLimit, setGasLimit] = useState(21000);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [minerFee, setMinerFee] = useState(21000);
 
   const [state, setState] = useState({
     amount: tokenQuantityToBeSended,
     to: selectedAddress || '',
     balance: parseFloat(currency.value.original),
     password: '',
+  });
+
+  const {
+    gasLimit,
+    isEnabled,
+    intervals,
+    setGasLimit,
+    prices,
+    status,
+  } = useGasLimit({
+    from: mainAddress,
+    amount: state.amount,
+    to: state.to,
+    type: currency.type,
   });
 
   useEffect(() => {
@@ -208,7 +218,6 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
     setState({...state, to: text});
   };
 
-  const onRecomendationClick = () => setMinerFee(recomendation);
   return (
     <ScreenContainer light justify="space-between">
       <View style={styles.form}>
@@ -231,9 +240,15 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
           </IconContainer>
         </InputComponent>
         <GasFeeSelector
-          from={mainAddress}
-          to={selectedAddress}
-          amount={state.amount}
+          isLoading={status.isLoading}
+          error={status.error}
+          gasLimit={gasLimit}
+          gasLimitInEth={prices.gasLimitInEth}
+          maximunValue={intervals.max}
+          mininumValue={intervals.min}
+          recomended={intervals.recomended}
+          onChange={setGasLimit}
+          isEnabled={isEnabled}
         />
       </View>
 
@@ -267,7 +282,6 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
-  page: {},
   qrIcon: {
     padding: 8,
   },
@@ -277,6 +291,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   form: {
+    width: '100%',
     flex: 1,
     marginBottom: 12,
     maxHeight: '70%',

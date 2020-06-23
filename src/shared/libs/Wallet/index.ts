@@ -81,11 +81,15 @@ const setWeb3Provider = async function() {
   });
   Wallet.web3.setProvider(web3Provider);
 };
+type GasLimit = {
+  gasLimit: number;
+  gasPrice: number;
+};
 export const calculateGasLimitETH = async function(
   from,
   to,
   value,
-): Promise<{gasLimit: number; gasPrice: number}> {
+): Promise<GasLimit> {
   return new Promise(async (resolve, reject) => {
     setWeb3Provider();
     value = value * 1.0e18;
@@ -138,7 +142,11 @@ export const calculateGasLimitETH = async function(
   });
 };
 
-export const calculateGasLimitToken = async function(from, to, value) {
+export const calculateGasLimitToken = async function(
+  from,
+  to,
+  value,
+): Promise<GasLimit> {
   return new Promise(async (resolve, reject) => {
     setWeb3Provider();
     let contract = Wallet.web3.eth.contract(Wallet.minABI).at(Wallet.tokenAddr);
