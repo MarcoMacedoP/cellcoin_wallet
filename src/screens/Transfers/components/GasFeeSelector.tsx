@@ -4,30 +4,31 @@ import {StyleSheet, View, StyleProp, ViewStyle} from 'react-native';
 import {colors, globalStyles} from 'shared/styles';
 import Slider from '@react-native-community/slider';
 import {ActivityIndicator} from 'react-native';
+import {
+  MINIMUM_GAS_VALUE_SLIDER,
+  MAXIMUM_GAS_VALUE_SLIDER,
+} from 'shared/libs/Wallet/constants';
 type GasFeeSelectorProps = {
   /** The style for the container*/
   style?: StyleProp<ViewStyle>;
   isEnabled?: boolean;
   gasLimit: number;
-  gasLimitInEth: number;
-  mininumValue: number;
-  maximunValue: number;
-  recomended: number;
+  gasPrice: number;
+  gasPriceInRange: number;
   onChange: (value: number) => void;
   isLoading: boolean;
+  fee: string;
   error: null | string;
 };
 
 export const GasFeeSelector: React.FC<GasFeeSelectorProps> = ({
-  children,
+  fee,
   style,
   isEnabled,
   gasLimit,
-  gasLimitInEth,
-  maximunValue,
-  mininumValue,
+  gasPrice,
   onChange,
-  recomended,
+  gasPriceInRange,
   isLoading,
   error,
 }) => {
@@ -55,14 +56,14 @@ export const GasFeeSelector: React.FC<GasFeeSelectorProps> = ({
         <>
           <Text color="primary">Miner fee</Text>
           <SmallText style={styles.conversionRate} color="blackLigth" isBold>
-            {gasLimit} Gas Limit ={' '}
-            {isNaN(gasLimitInEth) ? '0' : gasLimitInEth.toFixed(5)} ETH
+            {gasLimit} Gas Limit {`\n`}
+            {gasPrice / 10} Gas price
           </SmallText>
           <Slider
             disabled={!isEnabled}
-            minimumValue={mininumValue}
-            maximumValue={maximunValue}
-            value={gasLimit}
+            minimumValue={MINIMUM_GAS_VALUE_SLIDER}
+            maximumValue={MAXIMUM_GAS_VALUE_SLIDER}
+            value={gasPriceInRange}
             thumbTintColor={colors.accent}
             maximumTrackTintColor={colors.blackLigth}
             minimumTrackTintColor={colors.primary}
@@ -74,7 +75,7 @@ export const GasFeeSelector: React.FC<GasFeeSelectorProps> = ({
             <SmallText color="blackLigth">Fast</SmallText>
           </View>
           <SmallText color="accent" style={styles.recomendation}>
-            Recomended: {recomended}
+            Fee {fee} ETH
           </SmallText>
         </>
       )}

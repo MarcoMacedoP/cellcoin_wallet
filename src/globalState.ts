@@ -1,4 +1,4 @@
-import { createGlobalState } from 'react-hooks-global-state';
+import {createGlobalState} from 'react-hooks-global-state';
 
 export type adressType = {
   address: string;
@@ -6,8 +6,8 @@ export type adressType = {
   token: number;
 };
 export type balanceType = {
-  tokenBalance: { original: string; usd: number };
-  ethBalance: { original: string; usd: number };
+  tokenBalance: {original: string; usd: string};
+  ethBalance: {original: string; usd: string};
   generalBalance: string | null;
   fetchBalance: () => Promise<void>;
   isLoading: boolean;
@@ -20,7 +20,7 @@ type globalState = {
   balance: balanceType;
 };
 
-export const { useGlobalState } = createGlobalState<globalState>({
+export const {useGlobalState} = createGlobalState<globalState>({
   keystore: {},
   addresses: [],
   mainAddress: undefined,

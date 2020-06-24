@@ -26,7 +26,7 @@ import {
   calculateGasLimitETH,
   sendETHE,
   sendTokens,
-  useGasLimit,
+  useGasPrice,
 } from 'shared/libs/Wallet';
 import {useModal} from 'shared/hooks';
 import {StyleSheet} from 'react-native';
@@ -59,13 +59,14 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
   });
 
   const {
+    fee,
+    error,
     gasLimit,
-    isEnabled,
-    intervals,
-    setGasLimit,
-    prices,
+    gasPrice,
+    gasPriceInRange,
     status,
-  } = useGasLimit({
+    onGasPriceChange,
+  } = useGasPrice({
     from: mainAddress,
     amount: state.amount,
     to: state.to,
@@ -240,15 +241,14 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
           </IconContainer>
         </InputComponent>
         <GasFeeSelector
-          isLoading={status.isLoading}
-          error={status.error}
+          gasPriceInRange={gasPriceInRange}
+          fee={fee}
+          isLoading={status === 'loading'}
+          error={error}
           gasLimit={gasLimit}
-          gasLimitInEth={prices.gasLimitInEth}
-          maximunValue={intervals.max}
-          mininumValue={intervals.min}
-          recomended={intervals.recomended}
-          onChange={setGasLimit}
-          isEnabled={isEnabled}
+          gasPrice={gasPrice}
+          onChange={onGasPriceChange}
+          isEnabled={isAddress(state.to)}
         />
       </View>
 
@@ -295,8 +295,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 12,
     maxHeight: '70%',
-    // borderWidth: 1,
-    // borderColor: 'red',
   },
 });
 

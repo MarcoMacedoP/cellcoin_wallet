@@ -40,6 +40,7 @@ function useInitilizeApp() {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         });
         const {data} = await response.json();
+        console.log(data);
         return data;
       } catch (error) {
         console.log('Error on getInitialization() line 81 App.tsx', error);
@@ -54,6 +55,7 @@ function useInitilizeApp() {
             initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop);
           if (walletHasProp) Wallet[prop] = initialization[prop];
         }
+
         onesignal.init();
         setHasSetInitialization(true);
       } else {
@@ -84,3 +86,16 @@ const App = () => {
   );
 };
 export default App;
+
+// NOTAS: BORRAR
+// const getGasNow = async () => {
+//   await $.getJSON(
+//     'https://ethgasstation.info/api/ethgasAPI.json',
+//     async data => {
+//      let gas = (parseFloat(data["fastest"]) / 10) * (10 ** 9);
+//      fee_eth = gasLimit * ((parseFloat(data['fastest']) / 10) * 10 ** 9);
+//      user = fastest / 10
+//      console.log(gas);
+//     },
+//   );
+// };
