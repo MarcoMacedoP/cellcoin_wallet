@@ -14,8 +14,8 @@ import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 
 const logoImage = require('assets/icons/logo_mini.png');
 
-type ConfirmSend = (props: {
-  route: RouteProp<AuthRootStackParams, 'ConfirmSend'>;
+type SetFeeDestinationToSend = (props: {
+  route: RouteProp<AuthRootStackParams, 'SetFeeDestinationToSend'>;
 }) => StackNavigationOptions;
 
 interface RootRouterOptions {
@@ -23,10 +23,11 @@ interface RootRouterOptions {
   transfer: (props: {
     route: RouteProp<AuthRootStackParams, 'Transfers'>;
   }) => StackNavigationOptions;
-  send: (props: {
-    route: RouteProp<AuthRootStackParams, 'Send'>;
+  setQuantityToSend: (props: {
+    route: RouteProp<AuthRootStackParams, 'SetQuantityToSend'>;
   }) => StackNavigationOptions;
-  confirmSend: ConfirmSend;
+  setFeeDestinationToSend: SetFeeDestinationToSend;
+  confirmTransactionToSend: StackNavigationOptions;
   contactList: StackNavigationOptions;
   setAddress: StackNavigationOptions;
   address: StackNavigationOptions;
@@ -90,10 +91,16 @@ export const rootRouterOptions: RootRouterOptions = {
     title: 'Select your wallet',
     ...headerContainerStyles,
   },
-  confirmSend: ({route}) => ({
+  setFeeDestinationToSend: ({route}) => ({
     title: `Send ${getCurrencyInfo(route.params.currency.type).tokenName}`,
     ...headerContainerStyles,
   }),
+  setQuantityToSend: ({route}) => ({
+    title: `Send ${getCurrencyInfo(route.params.type).tokenName}`,
+  }),
+  confirmTransactionToSend: {
+    title: 'CONFIRM YOUR ORDER',
+  },
   transfer: ({route}) => ({
     title: `${getCurrencyInfo(route.params.type).tokenName}`,
   }),
@@ -106,9 +113,6 @@ export const rootRouterOptions: RootRouterOptions = {
       headerTransparent: true,
     };
   },
-  send: ({route}) => ({
-    title: `Send ${getCurrencyInfo(route.params.type).tokenName}`,
-  }),
   setAddress: {},
   createWalletRoutes: {
     headerShown: false,

@@ -117,7 +117,7 @@ export const ContactList: React.FC<ContactListProps> = ({
   }
 
   function selectContact(address: string) {
-    navigation.navigate('ConfirmSend', {
+    navigation.navigate('SetFeeDestinationToSend', {
       ...route.params,
       selectedAddress: address,
     });

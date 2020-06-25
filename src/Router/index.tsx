@@ -10,8 +10,8 @@ import {useGlobalState} from 'globalState';
 //utils
 import {commonScreenOptions} from 'Router/options';
 import {TransfersScreen} from 'screens/Transfers/screens/TransfersScreen';
-import {SendScreen} from 'screens/Transfers/screens/Send';
-import {ConfirmSend} from 'screens/Transfers/screens/ConfirmSend';
+import {SetQuantityToSend} from 'screens/Transfers/screens/SetQuantityToSend';
+import {SetFeeDestinationToSend} from 'screens/Transfers/screens/SetFeeDestinationToSend';
 import {ContactList} from 'screens/Transfers/screens/ContactList';
 import {RecieveTransferScreen} from 'screens/Transfers/screens/RecieveScreen';
 import {BalanceScreen} from 'screens/Balance/screens/BalanceScreen';
@@ -19,8 +19,9 @@ import {MainAddressSelector} from 'screens/Balance/screens/MainAddressSelector';
 import {rootRouterOptions as options} from './options';
 import {CurrencyType, TokenType} from 'shared/types';
 import {SuccessTransaction} from 'screens/Transfers/screens/SuccessTransaction';
+import {ConfirmTransactionToSend} from 'screens/Transfers/screens/ConfirmTransactionToSend';
 
-type BaseConfirmSendParams = {
+type SendTransactionParams = {
   currency: CurrencyType;
   tokenQuantityToBeSended: string;
 };
@@ -32,11 +33,17 @@ export type AuthRootStackParams = {
   MainAddressSelector: undefined;
   Transfers: CurrencyType;
   Recieve: CurrencyType;
-  Send: CurrencyType;
-  ConfirmSend: BaseConfirmSendParams & {
+  SetQuantityToSend: CurrencyType;
+  SetFeeDestinationToSend: SendTransactionParams & {
     selectedAddress?: string;
   };
-  ContactsList: BaseConfirmSendParams;
+  ConfirmTransactionToSend: SendTransactionParams & {
+    gasPrice: number;
+    gasLimit: number;
+    from: string;
+    to: string;
+  };
+  ContactsList: SendTransactionParams;
   SuccessTransaction: {
     from: string;
     to: string;
@@ -72,14 +79,19 @@ const Router = () => {
           options={options.transfer}
         />
         <RootStack.Screen
-          name="Send"
-          component={SendScreen}
-          options={options.send}
+          name="SetQuantityToSend"
+          component={SetQuantityToSend}
+          options={options.setQuantityToSend}
         />
         <RootStack.Screen
-          name="ConfirmSend"
-          component={ConfirmSend}
-          options={options.confirmSend}
+          name="SetFeeDestinationToSend"
+          component={SetFeeDestinationToSend}
+          options={options.setFeeDestinationToSend}
+        />
+        <RootStack.Screen
+          name="ConfirmTransactionToSend"
+          component={ConfirmTransactionToSend}
+          options={options.confirmTransactionToSend}
         />
         <RootStack.Screen
           name="ContactsList"

@@ -15,15 +15,15 @@ import {NOT_ENOUGHT_BALANCE_MESSAGE} from 'shared/constants';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 type SendScreenProps = {
-  route: RouteProp<AuthRootStackParams, 'Send'>;
-  navigation: StackNavigationProp<AuthRootStackParams, 'Send'>;
+  route: RouteProp<AuthRootStackParams, 'SetQuantityToSend'>;
+  navigation: StackNavigationProp<AuthRootStackParams, 'SetQuantityToSend'>;
 };
 const initialState: QuantityState = {
   token: '0',
   usd: '0',
 };
 
-export const SendScreen: React.FC<SendScreenProps> = ({
+export const SetQuantityToSend: React.FC<SendScreenProps> = ({
   route: {params: currency},
   navigation,
 }) => {
@@ -54,7 +54,7 @@ export const SendScreen: React.FC<SendScreenProps> = ({
   };
 
   function handleSubmit() {
-    navigation.navigate('ConfirmSend', {
+    navigation.navigate('SetFeeDestinationToSend', {
       currency,
       tokenQuantityToBeSended: token,
     });

@@ -12,25 +12,23 @@ import {
   QrIcon,
   Input as InputComponent,
 } from 'shared/components';
-import Toast from 'react-native-simple-toast';
-import {PasswordModal} from '../components/PasswordModal';
 import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {sendETH, sendTokens, useGasPrice} from 'shared/libs/Wallet';
+import {useGasPrice} from 'shared/libs/Wallet';
 import {useModal} from 'shared/hooks';
 import {isAddress} from 'shared/validations';
-import {notificateTransaction} from 'shared/libs/Notifications';
-import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 import {GasFeeSelector} from '../components/GasFeeSelector';
-import {gasPriceInGweiToWei} from 'shared/libs/Wallet/functions/conversions';
 import {TouchableOpacity, StyleSheet} from 'react-native';
 
 type SetAddressScreenProps = {
-  route: RouteProp<AuthRootStackParams, 'ConfirmSend'>;
-  navigation: StackNavigationProp<AuthRootStackParams, 'ConfirmSend'>;
+  route: RouteProp<AuthRootStackParams, 'SetFeeDestinationToSend'>;
+  navigation: StackNavigationProp<
+    AuthRootStackParams,
+    'SetFeeDestinationToSend'
+  >;
 };
-
-export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
+//SetQuantityForSend SetFeeDestinationSend ConfirmTransactionSend
+export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
   route: {params},
   navigation,
 }) => {
@@ -38,7 +36,6 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
   const passwordModal = useModal();
   const {currency, tokenQuantityToBeSended, selectedAddress} = params;
   const [mainAddress] = useGlobalState('mainAddress');
-  const [isLoading, setIsLoading] = useState(false);
 
   const [state, setState] = useState({
     amount: tokenQuantityToBeSended,
@@ -83,69 +80,77 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
     addressModal.close();
   }
 
-  async function onSubmitTransaction(password: string) {
-    passwordModal.close();
-    const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
-    try {
-      let hash = '';
-      if (currency.type === 'ETH') {
-        hash = await sendETH(
-          password,
-          mainAddress,
-          state.to,
-          state.amount,
-          gasPriceInWei,
-          gasLimit,
-        );
-      } else {
-        hash = await sendTokens(
-          password,
-          mainAddress,
-          state.to,
-          state.amount,
-          gasPriceInWei,
-          gasLimit,
-        );
-      }
-      handleSuccessTransaction(hash);
-    } catch (error) {
-      handleFailureTransaction(error);
-    }
-  }
+  // async function onSubmitTransaction(password: string) {
+  //   passwordModal.close();
+  //   const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
+  //   try {
+  //     let hash = '';
+  //     if (currency.type === 'ETH') {
+  //       hash = await sendETH(
+  //         password,
+  //         mainAddress,
+  //         state.to,
+  //         state.amount,
+  //         gasPriceInWei,
+  //         gasLimit,
+  //       );
+  //     } else {
+  //       hash = await sendTokens(
+  //         password,
+  //         mainAddress,
+  //         state.to,
+  //         state.amount,
+  //         gasPriceInWei,
+  //         gasLimit,
+  //       );
+  //     }
+  //     handleSuccessTransaction(hash);
+  //   } catch (error) {
+  //     handleFailureTransaction(error);
+  //   }
+  // }
 
   /** Handles all the success transactions
    * @param hash the transaction hash
    */
-  function handleSuccessTransaction(hash: string) {
-    setIsLoading(false);
-    notificateTransaction({
-      amount: tokenQuantityToBeSended,
-      from: mainAddress,
-      to: selectedAddress,
-      token: getCurrencyInfo(currency.type).tokenName,
-    });
-    navigation.navigate('SuccessTransaction', {
+  // function handleSuccessTransaction(hash: string) {
+  //   setIsLoading(false);
+  //   notificateTransaction({
+  //     amount: tokenQuantityToBeSended,
+  //     from: mainAddress,
+  //     to: selectedAddress,
+  //     token: getCurrencyInfo(currency.type).tokenName,
+  //   });
+  //   navigation.navigate('SuccessTransaction', {
+  //     from: mainAddress,
+  //     to: state.to,
+  //     hash,
+  //     quantity: tokenQuantityToBeSended,
+  //     type: currency.type,
+  //   });
+  // }
+  function handleNavigation() {
+    navigation.navigate('ConfirmTransactionToSend', {
+      currency,
+      gasLimit,
+      gasPrice,
+      tokenQuantityToBeSended,
       from: mainAddress,
       to: state.to,
-      hash,
-      quantity: tokenQuantityToBeSended,
-      type: currency.type,
     });
   }
-
-  /**
-   *  Handles all failure transactions
-   * @param error
-   */
-  function handleFailureTransaction(error: string) {
-    console.log({error});
-    setIsLoading(false);
-    if (error === 'insufficient funds for gas * price + value') {
-      Toast.show('Insufficient funds for gas', Toast.SHORT);
-    } else {
-      Toast.show('Error: ' + error, Toast.SHORT);
-    }
-  }
+  // /**
+  //  *  Handles all failure transactions
+  //  * @param error
+  //  */
+  // function handleFailureTransaction(error: string) {
+  //   setIsLoading(false);
+  //   if (error === 'insufficient funds for gas * price + value') {
+  //     Toast.show('Insufficient funds for gas', Toast.SHORT);
+  //   } else {
+  //     Toast.show('Error: ' + error, Toast.SHORT);
+  //   }
+  // }
 
   const setAddressText = (text: string) => {
     setState({...state, to: text});
@@ -185,9 +190,8 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
 
       <Button
         secondary
-        // isActivated={isAddress(state.to)}
-        onClick={passwordModal.open}
-        isLoading={isLoading}>
+        isActivated={isAddress(state.to)}
+        onClick={handleNavigation}>
         Confirm
       </Button>
       <AddressScanner
@@ -195,7 +199,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
         onClose={addressModal.close}
         isOpen={addressModal.isOpen}
       />
-      <PasswordModal
+      {/* <PasswordModal
         transactionData={{
           currency: currency.type,
           amount: state.amount,
@@ -207,7 +211,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
         isShowed={passwordModal.isOpen}
         onClose={passwordModal.close}
         onDoned={onSubmitTransaction}
-      />
+      /> */}
     </ScreenContainer>
   );
 };
