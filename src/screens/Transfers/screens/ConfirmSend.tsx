@@ -91,60 +91,36 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
   function handleSubmit() {
     setModalIsShowed(true);
   }
-  /**
-   * Set the password and calls send the crypto
-   */
-  function onPasswordFilled(password: string) {
-    setState({...state, password});
+
+  async function onSubmitTransaction(password: string) {
     setModalIsShowed(false);
-    if (currency.type == 'ETH') {
-      handleSendETH(password);
-    } else {
-      handleSendToken(password);
-    }
-  }
-
-  function handleNavigation(hash: string) {
-    navigation.navigate('SuccessTransaction', {
-      from: mainAddress,
-      to: state.to,
-      hash,
-      quantity: tokenQuantityToBeSended,
-      type: currency.type,
-    });
-  }
-
-  async function handleSendETH(password: string) {
+    const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
     try {
-      const hash = await sendETH(
-        password,
-        mainAddress,
-        state.to,
-        state.amount,
-        gasPriceInGweiToWei(gasPrice),
-        gasLimit,
-      );
+      let hash = '';
+      if (currency.type === 'ETH') {
+        hash = await sendETH(
+          password,
+          mainAddress,
+          state.to,
+          state.amount,
+          gasPriceInWei,
+          gasLimit,
+        );
+      } else {
+        hash = await sendTokens(
+          password,
+          mainAddress,
+          state.to,
+          state.amount,
+          gasPriceInWei,
+          gasLimit,
+        );
+      }
       handleSuccessTransaction(hash);
     } catch (error) {
       handleFailureTransaction(error);
     }
   }
-
-  const handleSendToken = async function(password: string) {
-    try {
-      const hash = await sendTokens(
-        password,
-        mainAddress,
-        state.to,
-        state.amount,
-        gasPriceInGweiToWei(gasPrice),
-        gasLimit,
-      );
-      handleSuccessTransaction(hash);
-    } catch (error) {
-      handleFailureTransaction(error);
-    }
-  };
 
   /** Handles all the success transactions
    * @param hash the transaction hash
@@ -157,7 +133,13 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
       to: selectedAddress,
       token: getCurrencyInfo(currency.type).tokenName,
     });
-    handleNavigation(hash);
+    navigation.navigate('SuccessTransaction', {
+      from: mainAddress,
+      to: state.to,
+      hash,
+      quantity: tokenQuantityToBeSended,
+      type: currency.type,
+    });
   }
 
   /**
@@ -233,7 +215,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
         }}
         isShowed={modalIsShowed}
         onClose={() => setModalIsShowed(false)}
-        onDoned={onPasswordFilled}
+        onDoned={onSubmitTransaction}
       />
     </ScreenContainer>
   );
