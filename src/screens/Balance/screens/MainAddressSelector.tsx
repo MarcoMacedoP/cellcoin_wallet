@@ -127,7 +127,6 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
           data={listAddress}
           contentContainerStyle={globalStyles.listContentContainer}
           rightOpenValue={-75}
-          keyExtractor={({address}) => address}
           renderItem={({item, index}) => (
             <ContactCard
               key={index}
