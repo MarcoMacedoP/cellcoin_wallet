@@ -33,4 +33,12 @@ export const globalStyles = {
     borderRadius: 5,
     backgroundColor: colors.white,
   },
+  listContentContainer: {
+    flex: 1,
+    paddingTop: 16,
+  },
+  baseContainer: {
+    flex: 1,
+    width: '100%',
+  },
 };

@@ -5,7 +5,7 @@ import {View, StyleSheet} from 'react-native';
 import {CurrencyType} from 'shared/types';
 import {Text, SmallText} from 'shared/styled-components';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
-import {LoadingCurrency, FadeInView} from 'shared/components';
+import {LoadingCurrency} from 'shared/components';
 import {TouchableHighlight} from 'react-native-gesture-handler';
 
 type CurrencyProps = {
@@ -14,7 +14,6 @@ type CurrencyProps = {
   isLoading: boolean;
 };
 export const Currency: React.FC<CurrencyProps> = props => {
-  console.log(props.isLoading);
   const {
     onClick,
     isLoading,
