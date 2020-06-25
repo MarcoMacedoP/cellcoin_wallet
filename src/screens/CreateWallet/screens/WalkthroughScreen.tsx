@@ -21,7 +21,7 @@ const WALKTHROUGH_DATA: WalkthroughItemData[] = [
   {
     image: require('assets/tutorial/tutorial_one.png'),
     title: 'Multi-chain Wallet',
-    desc: 'Supporting BTC, AgaveCoin,etc.',
+    desc: 'Supporting ETH and AgaveCoin ',
   },
   {
     image: require('assets/tutorial/tutorial_two.png'),
@@ -71,18 +71,9 @@ export const WalkthroughScreen = ({navigation}) => {
         />
       </View>
       <View style={styles.dotsButtonContainer}>
-        <DotButton
-          isSelected={currentIndex === 0}
-          onPress={() => setCurrentIndex(0)}
-        />
-        <DotButton
-          isSelected={currentIndex === 1}
-          onPress={() => setCurrentIndex(1)}
-        />
-        <DotButton
-          isSelected={currentIndex === 2}
-          onPress={() => setCurrentIndex(2)}
-        />
+        <DotButton isSelected={currentIndex === 0} />
+        <DotButton isSelected={currentIndex === 1} />
+        <DotButton isSelected={currentIndex === 2} />
       </View>
       <View style={styles.buttonsContainer}>
         <Button onClick={onCreateWallet} margin="24px 0 8px">
