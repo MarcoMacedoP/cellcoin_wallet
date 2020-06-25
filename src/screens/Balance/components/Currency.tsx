@@ -39,7 +39,7 @@ export const Currency: React.FC<CurrencyProps> = props => {
         </TitleContainer>
         <View>
           <CurrencyStatus>{value.original}</CurrencyStatus>
-          <CurrencyInLocal>$={String(value.usd)}</CurrencyInLocal>
+          <CurrencyInLocal>${value.usd}</CurrencyInLocal>
         </View>
       </InfoContainer>
     </TouchableHighlight>
