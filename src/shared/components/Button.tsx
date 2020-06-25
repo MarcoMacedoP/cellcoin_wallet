@@ -1,7 +1,16 @@
-import React from 'react';
-import {UIActivityIndicator} from 'react-native-indicators';
-import styled from 'styled-components/native';
-import {colors} from '../styles';
+import React, {useMemo, useState, useEffect} from 'react';
+import {colors, globalStyles} from '../styles';
+import {
+  Animated,
+  Easing,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import {FadeInView} from './FadeInView';
+import {Text} from 'shared/styled-components';
+
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 type ButtonProps = {
   outline?: boolean;
@@ -23,88 +32,103 @@ export const Button: React.FC<ButtonProps> = ({
   onClick,
   secondary,
   accent,
-  width,
+  width = '100%',
   isActivated = true,
   margin,
   style,
   labelStyle,
 }) => {
-  return !isLoading && isActivated ? (
-    <ButtonContainer
-      style={style}
-      outline={outline}
-      onPress={onClick}
-      secondary={secondary}
-      width={width}
-      accent={accent}
-      margin={margin}
-      underlayColor={
-        outline
-          ? colors.white
-          : accent
-          ? colors.primary
-          : secondary
-          ? colors.primary
-          : colors.accent
-      }>
-      <Label outline={outline} style={labelStyle}>
-        {children}
-      </Label>
-    </ButtonContainer>
-  ) : (
-    <ButtonDeactivaded width={width} isActivated={isActivated} margin={margin}>
-      {isActivated ? (
-        <UIActivityIndicator color={colors.black} size={30} />
+  const [shouldRenderIndicator, setShouldRenderIndicator] = useState(false);
+
+  const [widthAnimation] = useState(new Animated.Value(0));
+
+  const interpolatedWidth = widthAnimation.interpolate({
+    inputRange: [0, 100],
+    outputRange: [width, '20%'],
+  });
+
+  const renderStyles = useMemo(
+    () => ({
+      container: {
+        width: interpolatedWidth,
+        backgroundColor: isActivated
+          ? accent
+            ? colors.accent
+            : outline
+            ? colors.lightGray
+            : secondary
+            ? colors.primaryLigth
+            : colors.primary
+          : colors.blackLigth,
+      },
+    }),
+    [width, isActivated, accent, outline, secondary],
+  );
+  const handlePress = () => isActivated && !shouldRenderIndicator && onClick();
+
+  useEffect(() => {
+    if (isLoading) {
+      makeButtonSmall();
+    } else {
+      makeButtonNormal();
+    }
+  }, [isLoading]);
+
+  const makeButtonSmall = () => {
+    Animated.timing(widthAnimation, {
+      toValue: 100,
+      easing: Easing.sin,
+      duration: 300,
+    }).start();
+    setShouldRenderIndicator(true);
+  };
+
+  const makeButtonNormal = () => {
+    Animated.timing(widthAnimation, {
+      toValue: 0,
+      easing: Easing.sin,
+      duration: 300,
+    }).start(() => setShouldRenderIndicator(false));
+  };
+
+  return (
+    <AnimatedTouchable
+      style={[styles.touchableContainer, renderStyles.container, style]}
+      activeOpacity={shouldRenderIndicator || !isActivated ? 1 : 0.7}
+      onPress={handlePress}>
+      {shouldRenderIndicator ? (
+        <FadeInView>
+          <ActivityIndicator color={colors.white} />
+        </FadeInView>
       ) : (
-        <Label>{children}</Label>
+        <FadeInView duration={300}>
+          <Text
+            upperCase
+            isBold
+            color={outline ? 'primary' : 'white'}
+            style={[styles.label, labelStyle]}>
+            {children}
+          </Text>
+        </FadeInView>
       )}
-    </ButtonDeactivaded>
+    </AnimatedTouchable>
   );
 };
 
-type StyleProps = {
-  margin?: string;
-  width?: string;
-  outline: boolean;
-  secondary: boolean;
-  accent: boolean;
-  isActivated: boolean;
-};
-
-const Label = styled.Text<StyleProps>`
-  color: ${props => (!props.outline ? colors.white : colors.primary)};
-  font-weight: bold;
-  align-self: center;
-  padding: 10px;
-  text-transform: uppercase;
-`;
-
-const BaseButtonStyles = `
-  align-items: center;
-  justify-content: center;
-  border-radius: 50px;
-  max-height: 50px;
-  margin-top: 5px;
-  padding: 8px 4px;
-`;
-
-const ButtonContainer = styled.TouchableOpacity<StyleProps>`
-  ${BaseButtonStyles}
-  width: ${props => (props.width ? props.width : '100%')};
-  background-color: ${props =>
-    props.accent
-      ? colors.accent
-      : props.outline
-      ? colors.lightGray
-      : props.secondary
-      ? colors.primaryLigth
-      : colors.primary};
-  ${props => props.margin && `margin: ${props.margin}`};
-`;
-
-const ButtonDeactivaded = styled.View<StyleProps>`
-  ${BaseButtonStyles}
-  background-color: ${colors.blackLigth};
-  width: ${props => (props.width ? props.width : '100%')};
-  ${props => props.isActivated && 'min-height: 50px;'}
-`;
+const styles = StyleSheet.create({
+  touchableContainer: {
+    ...globalStyles.cardShadow,
+    elevation: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+    maxHeight: 50,
+    marginTop: 5,
+    marginVertical: 0,
+    paddingHorizontal: 2,
+    paddingVertical: 16,
+  },
+  label: {
+    fontSize: 14,
+  },
+});

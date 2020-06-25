@@ -1,7 +1,6 @@
 import React, {useState, useLayoutEffect, useEffect, useMemo} from 'react';
 import {Text} from 'shared/styled-components/Texts';
 import {ScreenContainer} from 'shared/styled-components';
-import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
 import {View} from 'react-native';
 import {Button} from 'shared/components/Button';
@@ -19,12 +18,12 @@ import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {sendETH, sendTokens, useGasPrice} from 'shared/libs/Wallet';
 import {useModal} from 'shared/hooks';
-import {StyleSheet} from 'react-native';
 import {isAddress} from 'shared/validations';
 import {notificateTransaction} from 'shared/libs/Notifications';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 import {GasFeeSelector} from '../components/GasFeeSelector';
 import {gasPriceInGweiToWei} from 'shared/libs/Wallet/functions/conversions';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 
 type SetAddressScreenProps = {
   route: RouteProp<AuthRootStackParams, 'ConfirmSend'>;
@@ -36,17 +35,15 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
   navigation,
 }) => {
   const addressModal = useModal();
+  const passwordModal = useModal();
   const {currency, tokenQuantityToBeSended, selectedAddress} = params;
-  const [modalIsShowed, setModalIsShowed] = useState(false);
   const [mainAddress] = useGlobalState('mainAddress');
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [state, setState] = useState({
     amount: tokenQuantityToBeSended,
     to: selectedAddress || '',
     balance: parseFloat(currency.value.original),
-    password: '',
   });
 
   const {
@@ -85,15 +82,9 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
     setState(state => ({...state, to: address}));
     addressModal.close();
   }
-  /**
-   * Open the modal for enter the user password
-   */
-  function handleSubmit() {
-    setModalIsShowed(true);
-  }
 
   async function onSubmitTransaction(password: string) {
-    setModalIsShowed(false);
+    passwordModal.close();
     const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
     try {
       let hash = '';
@@ -171,7 +162,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
           label="To"
           value={state.to}
           onChangeText={setAddressText}>
-          <IconContainer
+          <TouchableOpacity
             onPress={() =>
               navigation.navigate('ContactsList', {
                 currency: params.currency,
@@ -179,7 +170,7 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
               })
             }>
             <Icon name="address-book" size={20} color={colors.accent} />
-          </IconContainer>
+          </TouchableOpacity>
         </InputComponent>
         <GasFeeSelector
           fee={fee}
@@ -194,8 +185,8 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
 
       <Button
         secondary
-        isActivated={isAddress(state.to)}
-        onClick={handleSubmit}
+        // isActivated={isAddress(state.to)}
+        onClick={passwordModal.open}
         isLoading={isLoading}>
         Confirm
       </Button>
@@ -213,8 +204,8 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
               parseFloat(currency.value.original)) *
             parseFloat(state.amount),
         }}
-        isShowed={modalIsShowed}
-        onClose={() => setModalIsShowed(false)}
+        isShowed={passwordModal.isOpen}
+        onClose={passwordModal.close}
         onDoned={onSubmitTransaction}
       />
     </ScreenContainer>
@@ -236,9 +227,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     maxHeight: '70%',
   },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
-
-const IconContainer = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-`;
