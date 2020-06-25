@@ -182,7 +182,14 @@ export const calculateGasLimitToken = async function(
   });
 };
 
-export const sendETHE = (password, from, to, value, gasPrice, gasLimit) => {
+export const sendETH = (
+  password,
+  from,
+  to,
+  value,
+  gasPrice,
+  gasLimit,
+): Promise<string> => {
   return new Promise((resolve, reject) => {
     try {
       Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {
@@ -250,7 +257,7 @@ export const sendTokens = async (
   value,
   gasPrice,
   gasLimit,
-) => {
+): Promise<string> => {
   return new Promise((resolve, reject) => {
     try {
       Wallet.keystore.keyFromPassword(password, async (err, pwDerivedKey) => {

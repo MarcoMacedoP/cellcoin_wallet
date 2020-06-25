@@ -1,10 +1,6 @@
 import React, {useState, useLayoutEffect, useEffect, useMemo} from 'react';
-import {Text, SmallText, Subtitle} from 'shared/styled-components/Texts';
-import {
-  ScreenContainer,
-  Label as BaseLabel,
-  Input,
-} from 'shared/styled-components';
+import {Text} from 'shared/styled-components/Texts';
+import {ScreenContainer} from 'shared/styled-components';
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
 import {View} from 'react-native';
@@ -21,19 +17,14 @@ import Toast from 'react-native-simple-toast';
 import {PasswordModal} from '../components/PasswordModal';
 import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {
-  calculateGasLimitToken,
-  calculateGasLimitETH,
-  sendETHE,
-  sendTokens,
-  useGasPrice,
-} from 'shared/libs/Wallet';
+import {sendETH, sendTokens, useGasPrice} from 'shared/libs/Wallet';
 import {useModal} from 'shared/hooks';
 import {StyleSheet} from 'react-native';
 import {isAddress} from 'shared/validations';
 import {notificateTransaction} from 'shared/libs/Notifications';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 import {GasFeeSelector} from '../components/GasFeeSelector';
+import {gasPriceInGweiToWei} from 'shared/libs/Wallet/functions/conversions';
 
 type SetAddressScreenProps = {
   route: RouteProp<AuthRootStackParams, 'ConfirmSend'>;
@@ -63,7 +54,6 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
     error,
     gasLimit,
     gasPrice,
-    gasPriceInRange,
     status,
     onGasPriceChange,
   } = useGasPrice({
@@ -106,44 +96,13 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
    */
   function onPasswordFilled(password: string) {
     setState({...state, password});
-    currency.type == 'ETH'
-      ? getGasLimitETH(password)
-      : getGasLimitToken(password);
-  }
-
-  const getGasLimitToken = async (password: string) => {
-    setIsLoading(true);
-    await calculateGasLimitToken(mainAddress, state.to, state.amount)
-      .then(response => {
-        sendTokenss(response, password);
-      })
-      .catch(error => {
-        Toast.show('Insufficient funds for gas', Toast.SHORT);
-        setIsLoading(false);
-      });
-  };
-
-  const getGasLimitETH = async pass => {
     setModalIsShowed(false);
-    setIsLoading(true);
-    await calculateGasLimitETH(mainAddress, state.to, state.amount)
-      .then(response => {
-        console.log('getGasLitmitETH', {response});
-        sendETH(response, pass);
-      })
-      .catch(error => {
-        if (
-          (error =
-            'invalid argument 0: hex string has length 0, want 40 for common.Address')
-        ) {
-          Toast.show(
-            'Please insert a valid Ethereum address to continue',
-            Toast.SHORT,
-          );
-        }
-        setIsLoading(false);
-      });
-  };
+    if (currency.type == 'ETH') {
+      handleSendETH(password);
+    } else {
+      handleSendToken(password);
+    }
+  }
 
   function handleNavigation(hash: string) {
     navigation.navigate('SuccessTransaction', {
@@ -155,57 +114,43 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
     });
   }
 
-  const sendETH = async function(gass, pass) {
-    await sendETHE(
-      pass,
-      mainAddress,
-      state.to,
-      state.amount,
-      gass.gasPrice,
-      gass.gasLimit,
-    )
-      .then(handleSuccessTransaction)
-      .catch(error => {
-        console.log({error});
-        if (error === 'insufficient funds for gas * price + value') {
-          Toast.show('Insufficient funds for gas', Toast.SHORT);
-        } else {
-          Toast.show('Error: ' + error, Toast.SHORT);
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  async function handleSendETH(password: string) {
+    try {
+      const hash = await sendETH(
+        password,
+        mainAddress,
+        state.to,
+        state.amount,
+        gasPriceInGweiToWei(gasPrice),
+        gasLimit,
+      );
+      handleSuccessTransaction(hash);
+    } catch (error) {
+      handleFailureTransaction(error);
+    }
+  }
 
-  const sendTokenss = async function(gass, pass) {
-    await sendTokens(
-      pass,
-      mainAddress,
-      state.to,
-      state.amount,
-      gass.gasPrice,
-      gass.gasLimit,
-    )
-      .then((hash: string) => {
-        setModalIsShowed(false);
-        setIsLoading(false);
-        handleNavigation(hash);
-      })
-      .catch(error => {
-        if ((error = 'insufficient funds for gas * price + value')) {
-          Toast.show('Insufficient funds for gas', Toast.SHORT);
-        } else {
-          Toast.show('Error: ' + error, Toast.SHORT);
-        }
-        setIsLoading(false);
-      });
+  const handleSendToken = async function(password: string) {
+    try {
+      const hash = await sendTokens(
+        password,
+        mainAddress,
+        state.to,
+        state.amount,
+        gasPriceInGweiToWei(gasPrice),
+        gasLimit,
+      );
+      handleSuccessTransaction(hash);
+    } catch (error) {
+      handleFailureTransaction(error);
+    }
   };
 
   /** Handles all the success transactions
    * @param hash the transaction hash
    */
   function handleSuccessTransaction(hash: string) {
+    setIsLoading(false);
     notificateTransaction({
       amount: tokenQuantityToBeSended,
       from: mainAddress,
@@ -215,7 +160,21 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
     handleNavigation(hash);
   }
 
-  const setAddressText = text => {
+  /**
+   *  Handles all failure transactions
+   * @param error
+   */
+  function handleFailureTransaction(error: string) {
+    console.log({error});
+    setIsLoading(false);
+    if (error === 'insufficient funds for gas * price + value') {
+      Toast.show('Insufficient funds for gas', Toast.SHORT);
+    } else {
+      Toast.show('Error: ' + error, Toast.SHORT);
+    }
+  }
+
+  const setAddressText = (text: string) => {
     setState({...state, to: text});
   };
 
@@ -241,7 +200,6 @@ export const ConfirmSend: React.FC<SetAddressScreenProps> = ({
           </IconContainer>
         </InputComponent>
         <GasFeeSelector
-          gasPriceInRange={gasPriceInRange}
           fee={fee}
           isLoading={status === 'loading'}
           error={error}

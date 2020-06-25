@@ -42,42 +42,22 @@ type ConverToGasPriceParams = {
   gasLimit?: number;
 };
 
-// /**
-//  * Converts  gasPrice to ETH
-//  * @param gasPriceValue the value in a range of 0 - 100 to be evaluated
-//  * @param gasLimit (optional) the gasLimit used, default to 21000
-//  */
-// export function convertGasPriceToETH({
-//   gasLimit = 21000,
-//   gasPriceValue = invalidGasPriceValue,
-// }: ConverToGasPriceParams) {
-//   const convert = () => gasLimit;
-//   const operation = (gasPrice: number, parsedGasLimit: number = gasLimit) =>
-//     parsedGasLimit * gasPrice;
-//   const gasPrice = convertValueOfRangeToGasPrice(gasPriceValue);
-
-//   if (typeof gasLimit === 'number') {
-//     return operation(gasPrice);
-//   } else {
-//     const parsedGasLimit = parseFloat(gasLimit);
-//     return operation(gasPrice, parsedGasLimit);
-//   }
-// }
-
-//fee_eth = gasLimit * ((parseFloat(data['fastest']) / 10) * 10 ** 9);
-export function convertValueToETH(value: number, gasLimit: number) {
-  const fee_eth = gasLimit * ((value / 10) * 10 ** 9);
-  return fee_eth;
-}
-
 /**
- * let gas = (parseFloat(data["fastest"]) / 10) * (10 ** 9);
+ *  Converts  gasPrice to ETH
+ *  @param gasPrice the gas price in GWEI unit
+ *  @param gasLimit (optional) the gasLimit used, default to 21000
  */
-export function convertValueToGasPrice(value: any) {
-  const gasPrice = (value / 10) * 10 ** 9;
-  return gasPrice;
+export function gasPriceToEth(gasPrice: number, gasLimit: number = 21000) {
+  const fee = (gasPrice / 1e9) * gasLimit;
+  return fee;
 }
-
+/**
+ * Converts gasPrice in GWEI to his value in WEI.
+ * @param gasPrice the value of gasPrice in GWEI
+ */
+export function gasPriceInGweiToWei(gasPrice: number) {
+  return gasPrice * 1e9;
+}
 /**
  *  Displays a gas price friendly to a user
  * @param gasPriceValue

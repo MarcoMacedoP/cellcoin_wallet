@@ -1,10 +1,7 @@
 import {useState, useEffect, useMemo, Reducer, useReducer} from 'react';
 import {calculateGasLimitETH, calculateGasLimitToken} from 'shared/libs/Wallet';
 import {TokenType} from 'shared/types';
-import {
-  convertValueToGasPrice,
-  convertValueToETH,
-} from '../functions/conversions';
+import {gasPriceToEth} from '../functions/conversions';
 
 export type UseGasLimitParams = {
   from: string;
@@ -16,7 +13,6 @@ export type UseGasLimitParams = {
 type GasLimitState = {
   gasLimit: number;
   gasPrice: number;
-  gasPriceInRange: number;
   fee: string;
   status: 'error' | 'loading' | 'doned' | null;
   error?: null | string;
@@ -30,8 +26,7 @@ type GasLimitAction = {
 const initialState: GasLimitState = {
   fee: '0.0000',
   gasLimit: 21000,
-  gasPriceInRange: 50,
-  gasPrice: 0,
+  gasPrice: 30,
   status: null,
   error: null,
 };
@@ -46,23 +41,27 @@ const gasLimitReducer: Reducer<GasLimitState, GasLimitAction> = (
         status: 'loading',
       };
     case 'success-fetch': {
-      const {gasLimit, gasPrice} = action.payload;
+      let {gasLimit, gasPrice} = action.payload;
+      gasPrice = gasPrice / 10; // el gasPrice del JSON
+      console.log('gas price / 10    ', gasPrice);
+      const fee = (gasPrice / 1e9) * gasLimit;
+
       return {
         ...state,
+        fee: fee.toFixed(5),
         status: 'doned',
         gasLimit,
-        gasPrice,
+        gasPrice: gasPrice,
+        gasPriceInRange: gasPrice * 2,
       };
     }
     case 'range-change': {
       console.log(state);
-      const  gasPriceInRange = action.payload?.gasLimitInRange;
-      const gasPrice = convertValueToGasPrice(gasPriceInRange);
-      const fee = convertValueToETH(gasPriceInRange, state.gasLimit);
+      const {gasPrice} = action.payload;
+      const fee = gasPriceToEth(gasPrice, state.gasLimit);
       return {
         ...state,
         gasPrice,
-        gasPriceInRange,
         fee: fee.toFixed(5),
       };
     }
@@ -91,17 +90,35 @@ export function useGasPrice({
   onGasPriceChange: (value: number) => void;
 } {
   const [state, dispatch] = useReducer(gasLimitReducer, initialState);
-  const calculateGas = () =>
-    type === 'ETH'
-      ? calculateGasLimitETH(from, to, amount)
-      : calculateGasLimitToken(from, to, amount);
+  const calculateGas = async () => {
+    const fetchGasPrice = async (): Promise<number> => {
+      const response = await fetch(
+        'https://ethgasstation.info/api/ethgasAPI.json',
+      );
+      const data = await response.json();
+      return Number(data.fast);
+    };
+    if (type === 'ETH') {
+      const [{gasLimit}, gasPrice] = await Promise.all([
+        calculateGasLimitETH(from, to, amount),
+        fetchGasPrice(),
+      ]);
+      return {gasLimit, gasPrice};
+    } else {
+      const [{gasLimit}, gasPrice] = await Promise.all([
+        calculateGasLimitToken(from, to, amount),
+        fetchGasPrice(),
+      ]);
+      return {gasLimit, gasPrice};
+    }
+  };
 
   useEffect(() => {
     async function handleCalculateGas() {
       dispatch({type: 'load-data'});
       try {
         const {gasLimit, gasPrice} = await calculateGas();
-        console.log({gasLimit, gasPrice});
+        console.log('gasPrice del JSON', gasPrice);
         dispatch({type: 'success-fetch', payload: {gasLimit, gasPrice}});
       } catch (e) {
         const error =
@@ -111,7 +128,7 @@ export function useGasPrice({
         dispatch({type: 'error-on-fetch', error});
       }
     }
-    if (amount && to && from && state.status !== 'doned' ) {
+    if (amount && to && from && state.status !== 'doned') {
       handleCalculateGas();
     }
   }, [to, from, amount, state.status]);
@@ -120,7 +137,7 @@ export function useGasPrice({
     dispatch({
       type: 'range-change',
       payload: {
-        gasLimitInRange: value,
+        gasPrice: value,
       },
     });
   };

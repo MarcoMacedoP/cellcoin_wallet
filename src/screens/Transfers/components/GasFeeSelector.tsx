@@ -6,7 +6,7 @@ import Slider from '@react-native-community/slider';
 import {ActivityIndicator} from 'react-native';
 import {
   MINIMUM_GAS_VALUE_SLIDER,
-  MAXIMUM_GAS_VALUE_SLIDER,
+  MAXIMUN_GAS_VALUE_SLIDER,
 } from 'shared/libs/Wallet/constants';
 type GasFeeSelectorProps = {
   /** The style for the container*/
@@ -14,7 +14,6 @@ type GasFeeSelectorProps = {
   isEnabled?: boolean;
   gasLimit: number;
   gasPrice: number;
-  gasPriceInRange: number;
   onChange: (value: number) => void;
   isLoading: boolean;
   fee: string;
@@ -28,7 +27,6 @@ export const GasFeeSelector: React.FC<GasFeeSelectorProps> = ({
   gasLimit,
   gasPrice,
   onChange,
-  gasPriceInRange,
   isLoading,
   error,
 }) => {
@@ -57,13 +55,13 @@ export const GasFeeSelector: React.FC<GasFeeSelectorProps> = ({
           <Text color="primary">Miner fee</Text>
           <SmallText style={styles.conversionRate} color="blackLigth" isBold>
             {gasLimit} Gas Limit {`\n`}
-            {gasPrice / 10} Gas price
+            {gasPrice} Gas price
           </SmallText>
           <Slider
             disabled={!isEnabled}
             minimumValue={MINIMUM_GAS_VALUE_SLIDER}
-            maximumValue={MAXIMUM_GAS_VALUE_SLIDER}
-            value={gasPriceInRange}
+            maximumValue={MAXIMUN_GAS_VALUE_SLIDER}
+            value={gasPrice}
             thumbTintColor={colors.accent}
             maximumTrackTintColor={colors.blackLigth}
             minimumTrackTintColor={colors.primary}
