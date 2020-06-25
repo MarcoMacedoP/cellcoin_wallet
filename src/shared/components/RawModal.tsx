@@ -1,63 +1,84 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {colors} from 'shared/styles';
 import styled from 'styled-components/native';
 import Modal from 'react-native-modal';
-import { StatusBar } from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 /**
  *  A component to manage modals through app.
  *  @param  isShowed indicates if modal is showed
  *  @param onClose a function to be called when the modal closes.
- *  @param icon a function to be called when the modal closes.
- *  @param image (optional) an image showed in the top of modal
  */
 type ModalProps = {
   isShowed: boolean;
   onClose: () => void;
   title?: string;
+  contentContainerStyle?: any;
+  /**
+   * Should render the line in the top of header ? Defaults to true.
+   */
+  renderHeaderLine?: boolean;
 };
 
 export const RawModal: React.FC<ModalProps> = ({
-         isShowed,
-         onClose,
-         title,
-         children,
-       }) => (
-         <>
-           {isShowed && (
-             <StatusBar
-               backgroundColor={colors.blackTransparent}
-               barStyle="light-content"
-             />
-           )}
-           <DraggableModal
-             isVisible={isShowed}
-             onSwipeComplete={onClose}
-             swipeDirection={['down']}>
-             <RawModalContent>
-               <HrRounded />
-               {children}
-             </RawModalContent>
-           </DraggableModal>
-         </>
-       );
-const DraggableModal = styled(Modal)`
-  justify-content: flex-end;
-  margin: 0;
-`;
-const HrRounded = styled.View`
-  position: absolute;
-  top: 10px;
-  height: 5px;
-  width: 200px
-  background-color: ${colors.blackLigth};
-  border-radius: 150px;
-`;
-const RawModalContent = styled.View`
-  background-color: ${colors.white};
-  padding: 20px;
-  padding-top: 40px;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  justify-content: space-around;
-  align-items: center;
-`;
+  isShowed,
+  onClose,
+  contentContainerStyle,
+  renderHeaderLine = true,
+  children,
+}) => {
+  const renderStyles = useMemo(
+    () => ({
+      modalContent: {
+        paddingTop: renderHeaderLine ? 40 : 12,
+      },
+    }),
+    [renderHeaderLine],
+  );
+  return (
+    <>
+      {isShowed && (
+        <StatusBar
+          backgroundColor={colors.blackTransparent}
+          barStyle="light-content"
+        />
+      )}
+      <Modal
+        isVisible={isShowed}
+        style={styles.modal}
+        onSwipeComplete={onClose}
+        swipeDirection={['down']}>
+        <View
+          style={[
+            renderStyles.modalContent,
+            styles.modalContentContainer,
+            contentContainerStyle,
+          ]}>
+          {renderHeaderLine && <View style={styles.headerLine} />}
+          {children}
+        </View>
+      </Modal>
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContentContainer: {
+    backgroundColor: colors.white,
+    padding: 20,
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  headerLine: {
+    position: 'absolute',
+    top: 10,
+    height: 5,
+    backgroundColor: colors.blackLigth,
+    borderRadius: 150,
+  },
+});
