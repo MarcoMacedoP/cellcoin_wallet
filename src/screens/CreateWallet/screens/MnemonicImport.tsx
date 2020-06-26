@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {TextArea, ScreenContainer, Text} from 'shared/styled-components';
 import {Button} from 'shared/components';
 import Wallet from 'erc20-wallet';
@@ -13,7 +13,7 @@ import {validations} from 'shared/validations';
 
 export function MnemonicImport({navigation}) {
   // digital cargo wing output welcome lens burst choice funny seed rain jar
-  const [text, setText] = useState(null);
+  const [text, setText] = useState('');
 
   const [isValidInput] = useValidation({
     validation: validations.walletSeed,
@@ -40,6 +40,11 @@ export function MnemonicImport({navigation}) {
     setText(normalizedText);
   }
 
+  const canSubmit = useMemo(() => {
+    const words = text.split(/ /g);
+    return words.length > 11 && !hasError;
+  }, [text]);
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -49,8 +54,8 @@ export function MnemonicImport({navigation}) {
         <TextContainer>
           <Label hasError={hasError}>
             {hasError
-              ? 'Your menemonic phrases seems to be wrong 🤐'
-              : 'Please enter your mnemonic phrases'}
+              ? 'Your Mnemonic phrase does not match with any wallet.'
+              : 'Please enter your mnemonic phrase.'}
           </Label>
           <TextArea
             hasError={hasError}
@@ -62,13 +67,11 @@ export function MnemonicImport({navigation}) {
             onChangeText={handleChangeText}
             multiline={true}
             value={text}
-            placeholder="Please separate the english words by space"
+            placeholder="Use a space between each word."
           />
         </TextContainer>
 
-        <Button
-          onClick={handleClick}
-          isActivated={text?.length > 0 ? !hasError : false}>
+        <Button onClick={handleClick} isActivated={canSubmit}>
           Import wallet
         </Button>
       </ScreenContainer>
