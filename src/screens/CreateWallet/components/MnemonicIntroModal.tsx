@@ -22,21 +22,22 @@ export const MnemonicIntroModal: React.FC<MnemonicIntroModalProps> = ({
         <View
           style={[sharedStyles.mnemonicTextContainer, styles.textContainer]}>
           <Title style={sharedStyles.mnemonicText}>
-            Having the mnemonic phrases can have full control over assets. Users
-            should be aware of the following matters
+            The Mnemonic Phrase can give full control over your assets. {'\n'}
+            Users should be aware of the following matters:
             {'\n'}
           </Title>
           <Text style={[sharedStyles.mnemonicLabel]}>
-            Never take screenshots. Pay close attention to cameras around.
+            Never take screenshots. Please pay close attention to cameras around
+            and avoids them.
             {'\n\n'}
-            Write down the words on paper and keep it in isolated from the
-            internet, Prohibit the disclosure or publicity of mnemonics in any
+            Write the Mnemonic Phrase on paper and keep it isolated from the
+            internet. Prohibit the disclosure or publicity of mnemonics in any
             form or method.
             {'\n\n'}
-            Please make sure to keep a paper copy of your mnemonic phrases.
-            Agave Coin is not liable for the loss of digital assets resulting
-            from the loss, damage or other loss of control over the paper copy
-            of mnemonic phrases.
+            Please make sure to keep a paper copy of your mnemonic phrase.
+            AgaveCoin is not liable for the loss of digital assets resulting
+            from the loss, damage, or other loss of control over the paper copy
+            of the mnemonic phrase.
           </Text>
         </View>
         <Button onClick={onSubmit}>Continue</Button>

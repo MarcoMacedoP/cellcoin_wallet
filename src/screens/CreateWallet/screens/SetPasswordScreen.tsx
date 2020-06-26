@@ -10,7 +10,6 @@ import {PasswordLabelBox} from '../components/PasswordLabelBox';
 import {ScreenContainer} from 'shared/styled-components';
 import {usePasswordValidations} from '../hooks/usePasswordValidations';
 import {globalStyles} from 'shared/styles';
-import AsyncStorage from '@react-native-community/async-storage';
 
 export const SetPasswordScreen = ({navigation, route}) => {
   const [state, setState] = useState({
@@ -77,7 +76,7 @@ export const SetPasswordScreen = ({navigation, route}) => {
             />
             <PasswordLabelBox
               isValid={validations.textHasUpperCase}
-              text="A uppercase letter"
+              text="An Uppercase letter"
             />
             <PasswordLabelBox
               isValid={validations.textHasANumber}
@@ -89,7 +88,7 @@ export const SetPasswordScreen = ({navigation, route}) => {
             />
             <PasswordLabelBox
               isValid={validations.textHasSpecialCharacter}
-              text="An special character"
+              text="A special character (!#$%&@?¿¡)"
             />
           </PasswordForm>
         ) : (
@@ -103,7 +102,7 @@ export const SetPasswordScreen = ({navigation, route}) => {
               text={
                 state.pass === state.passConfirm
                   ? 'Passwords match'
-                  : "Passwords didn't match "
+                  : 'The Password confirmation does not match.'
               }
             />
           </PasswordForm>

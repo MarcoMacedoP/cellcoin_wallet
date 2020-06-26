@@ -22,4 +22,4 @@ export function isAddress(address: string) {
     // Otherwise check each case
     return true;
   }
-};
+}

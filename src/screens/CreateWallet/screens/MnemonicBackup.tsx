@@ -68,11 +68,11 @@ export const MnemonicBackup = ({navigation}: MnemonicBackupProps) => {
   return (
     <ScreenContainer light justify="space-between">
       <ScrollView style={globalStyles.scrollView}>
-        <Subtitle>Back up mnemonic phrases </Subtitle>
+        <Subtitle>BACKUP MNEMONIC PHRASES</Subtitle>
         <Text>
           {step === 'beforeBackup'
-            ? `\nMake a copy of the following 12 mnemonic phrases in correct order. We Will verify in the next step\n`
-            : `\nPlease enter the 12 words in the correct order\n`}
+            ? `\nBefore continuing, please write and save the following 12 mnemonic phrases in the same order shown.  We're going to verify the mnemonic phrase in the next step\n`
+            : `\Please enter the 12 mnemonic phrases in the correct order.\n`}
         </Text>
 
         {step === 'backup' && (

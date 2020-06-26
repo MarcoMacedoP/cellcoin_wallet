@@ -27,12 +27,12 @@ export const MnemonicIntro = ({navigation}) => {
         <Image source={image} resizeMode="contain" />
       </ImageBox>
       <View style={styles.containerButtons}>
-        <Title center>Backup Mnemonic Phrases</Title>
-        <Text center color="ligth" style={styles.mnemonicLabel}>
+        <Title center>BACKUP MNEMONIC PHRASES</Title>
+        <Text center color="blackLigth" style={styles.mnemonicLabel}>
           {`\n`}
-          We have created Agave Coin wallet for you. The decentralized Agave
-          Coin Wallet can manage multiple crypto wallets under a single set of
-          mnemonic phrases
+          We're about to create an AgaveCoin wallet for you. {`\n`}
+          The decentralized AgaveCoin Wallet can manage multiple crypto wallets
+          by securing it with a single set of mnemonic phrases.
         </Text>
       </View>
       <View style={styles.containerButtons}>

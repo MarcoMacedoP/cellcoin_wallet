@@ -260,7 +260,7 @@ Index
         <RadioButton
           isActivated={hasAccepted}
           onClick={onRadioButtonClick}
-          text="I agree to the above terms"
+          text="I agree with the terms above."
         />
         <ButtonContainer>
           <Button isActivated={hasAccepted} onClick={onSubmit}>

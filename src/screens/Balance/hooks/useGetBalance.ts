@@ -19,9 +19,7 @@ export function useGetBalance() {
   const getBalance = async () => {
     try {
       setState({ ...state, isLoading: true });
-      //console.log(Wallet.provider);
       const { ethBalance, tokenBalance } = await fetchBalance(mainAddress);
-      //const [ethBalance, tokenBalance] = [1, 1];
       const { token, eth } = await getPrices(
         ethBalance,
         tokenBalance,
@@ -58,10 +56,8 @@ type fetchBalance = (address: adressType, ) => Promise<{ tokenBalance: 0; ethBal
 
 async function fetchBalance(address: string) {
   let tokenBalance = 0, ethBalance = 0;
-  try {
     try {
       tokenBalance = await Wallet.getTokenAddress(address);
-      
     } catch (error) {
      console.log('error in tokenBalance', error) 
     }
@@ -72,13 +68,6 @@ async function fetchBalance(address: string) {
       console.log('error in ethBalance', error)  
     }
     return { tokenBalance, ethBalance };
-  } catch (error) {
-    console.log(error);
-    return {
-      tokenBalance,
-      ethBalance
-    }
-  }
 }
 async function getBalanceEth(address: string): Promise<number> {
   const web3 = new Web3();

@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Input, Label} from 'shared/styled-components';
 import styled from 'styled-components/native';
-import {PasswordLabelBox} from './PasswordLabelBox';
 import {colors} from 'shared/styles';
 
 interface PasswordFormProps {
@@ -19,7 +18,7 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
 }) => {
   return (
     <>
-      <Label>{labelText} </Label>
+      <Label>{labelText}</Label>
       <Input
         align="left"
         secureTextEntry={true}

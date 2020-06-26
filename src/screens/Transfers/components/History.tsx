@@ -64,7 +64,7 @@ export const TransfersHistoryComponent: React.FC<
         refreshing={loading}
         ListEmptyComponent={
           <EmptyState
-            message="You have not made transactions yet"
+            message="You don't have any transactions yet."
             hasImage={false}
           />
         }

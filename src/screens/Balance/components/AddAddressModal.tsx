@@ -20,7 +20,7 @@ export const AddAddressModal: React.FC<AddAddressModalProps> = props => {
   return (
     <Modal isShowed={props.isOpen} icon={'x'} onClose={props.onClose}>
       <View style={styles.inputContainer}>
-        <Label>Alias</Label>
+        <Label>Wallet name</Label>
         <Input
           align="left"
           value={props.alias}
@@ -33,7 +33,7 @@ export const AddAddressModal: React.FC<AddAddressModalProps> = props => {
         isActivated={props.alias ? true : false}
         width={'90%'}
         onClick={props.onSubmit}>
-        Add Address
+        Add Wallet
       </Button>
     </Modal>
   );

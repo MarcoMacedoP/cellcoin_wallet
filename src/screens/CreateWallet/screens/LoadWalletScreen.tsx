@@ -49,7 +49,7 @@ export const LoadWalletScreen = () => {
         ) : (
           <Loading
             image={walletImage}
-            text="Wallet is being loaded, please wait a moment"
+            text={`We are loading your Wallet now.\n Please wait a few seconds until we're done.`}
           />
         )}
       </BodyBox>

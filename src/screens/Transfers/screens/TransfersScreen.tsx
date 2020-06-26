@@ -55,16 +55,16 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
           <Button
             accent
             width="50%"
-            margin="0 4px 0 0"
+            style={styles.button}
             onClick={navigateToSendTransfer}>
             <Icon name="send" size={15} color="white" /> Send
           </Button>
           <Button
+            style={styles.button}
             secondary
             width="50%"
-            margin="0 0 0 4px"
             onClick={navigateToRecieveTransfer}>
-            <Icon name="qrcode" size={15} color="white" /> Receive
+            <Icon name="qrcode" size={15} color="white" /> Add Fund
           </Button>
         </View>
       </View>
@@ -97,8 +97,12 @@ const styles = StyleSheet.create({
     flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
     maxWidth: '100%',
+  },
+  button: {
+    marginHorizontal: 4,
   },
   conversionContainer: {
     flexDirection: 'row',

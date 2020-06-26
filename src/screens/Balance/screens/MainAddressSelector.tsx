@@ -6,7 +6,6 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import AsyncStorage from '@react-native-community/async-storage';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthRootStackParams} from 'Router';
-import {AddressItem} from '../components/AddressItem';
 import {AddAddressModal} from '../components/AddAddressModal';
 import {useModal, useHeaderIcon} from 'shared/hooks';
 import * as Notifications from 'shared/libs/Notifications';
@@ -46,7 +45,6 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
         const arrayAddressEdited: string[] = JSON.parse(
           await AsyncStorage.getItem('addressesEdit'),
         );
-        console.log();
         setListAddressBase(arrayAddress);
         if (arrayAddressEdited.length !== 0) {
           setListAddress(arrayAddressEdited);

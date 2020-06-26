@@ -21,19 +21,19 @@ const WALKTHROUGH_DATA: WalkthroughItemData[] = [
   {
     image: require('assets/tutorial/tutorial_one.png'),
     title: 'Multi-chain Wallet',
-    desc: 'Supporting ETH and AgaveCoin ',
+    desc: 'Supports Ethereum and AgaveCoin.',
   },
   {
     image: require('assets/tutorial/tutorial_two.png'),
-    title: 'Designed for Simplicity',
+    title: 'Simple Designed',
     desc:
-      ' Add and manage cryptocurrencies with one click Manage multiple addresses easily',
+      "Add and manage cryptocurrencies with one tap. \n Add multiple Wallet's addresses easily",
   },
   {
     image: require('assets/tutorial/tutorial_three.png'),
-    title: 'Agave Coin Secure',
+    title: 'Secure and encrypted',
     desc:
-      'Full control over assets by managing private keys independently. \n Produced by Agave Coin security team',
+      "You will have full control over your assets by managing the private keys independently. \n Developed by AgaveCoin's Security Team",
   },
 ];
 

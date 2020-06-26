@@ -11,7 +11,7 @@ import { FlatList, StyleSheet, View, StatusBar, RefreshControl } from "react-nat
 
 const CURRENCYS: Array<CurrencyType> = [
   {
-    name: 'Agave coin',
+    name: 'AgaveCoin',
     type: 'TOKEN',
     value: {original: '---', usd: '---'},
     image: 'assets/icons/agave_coin_icon.png',
@@ -34,7 +34,6 @@ export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {param
   const [currencys, setCurrencys] = useState<Array<CurrencyType>>([ ...CURRENCYS, ]); 
   const balance = useGetBalance();
   const {ethBalance, generalBalance, tokenBalance, fetchBalance} = balance;
-
   useEffect(() => {
     if (ethBalance && tokenBalance) {
       const [token, ethereum] = currencys;
