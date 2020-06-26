@@ -5,11 +5,11 @@ import {StatusBar} from 'react-native';
 
 const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
 
-export function NotificationsScreen() {
+export function News() {
   const {fetchNotifications, notifications, isLoading} = useNotifications();
 
   return (
-    <ScreenContainer>
+    <ScreenContainer light>
       <StatusBar barStyle="dark-content" />
       <TransferMessages
         notifications={notifications}

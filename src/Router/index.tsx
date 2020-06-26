@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React, {Suspense} from 'react';
 //screens
 import {CreateWalletRoutes} from '../screens/CreateWallet/Router';
-import {NotificationsScreen} from 'screens/Notifications/Notifications';
+import {News} from 'screens/News/News';
 //components
 import {StatusBar} from 'react-native';
 import {useGlobalState} from 'globalState';
@@ -53,6 +53,7 @@ export type AuthRootStackParams = {
   };
   /** Only avaivavle when user is not logged */
   CreateWalletRoutes: undefined;
+  News: undefined;
 };
 
 export const RootStack = createStackNavigator<AuthRootStackParams>();
@@ -103,11 +104,7 @@ const Router = () => {
           component={RecieveTransferScreen}
           options={options.recieve}
         />
-        <RootStack.Screen
-          name="Notifications"
-          component={NotificationsScreen}
-          options={{headerShown: true}}
-        />
+        <RootStack.Screen name="News" component={News} options={options.news} />
         <RootStack.Screen
           name="SuccessTransaction"
           component={SuccessTransaction}

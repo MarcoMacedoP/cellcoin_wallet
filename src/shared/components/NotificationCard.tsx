@@ -1,98 +1,79 @@
-import {Linking, StyleSheet} from 'react-native';
+import {
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityBase,
+  View,
+  ImageBackground,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import {colors} from 'shared/styles/variables';
+import {globalStyles} from 'shared/styles';
+import {Text} from 'shared/styled-components';
 
 export const NotificationCard = ({data: {img, title_es, msg_es, link}}) => {
-  const uri = img
-    ? img
-    : 'https://ctt.trains.com/sitefiles/images/no-preview-available.png';
+  const handlePress = async () => {
+    const canOpen = await Linking.canOpenURL(link);
+    if (link && canOpen) {
+      await Linking.openURL(link);
+    }
+  };
+
   return (
-    
-      <Card
-        onPress={() => {
-          if (link) {
-            Linking.canOpenURL(link).then(supported => {
-              if (supported) {
-                Linking.openURL(link);
-              } else {
-                console.log("Don't know how to open URI: " + link);
-              }
-            });
-          }
-        }}>
-        <CardHeader>
-          <Image
-            imageStyle={{
-              borderTopLeftRadius: 25,
-              borderTopRightRadius: 25,
-            }}
-            source={{
-              uri,
-            }}>
-            <Title>{title_es}</Title>
-          </Image>
-        </CardHeader>
-        <CardBody>
-          <Text>{msg_es}</Text>
-        </CardBody>
-      </Card>
-    
+    <TouchableOpacity style={styles.cardContainer} onPress={handlePress}>
+      <ImageBackground
+        style={styles.cardHeader}
+        source={{uri: img}}
+        imageStyle={styles.image}>
+        <Text color="white" isBold style={styles.title}>
+          {title_es}
+        </Text>
+      </ImageBackground>
+      <View style={styles.content}>
+        <Text style={styles.text} color="blackLigth">
+          {msg_es}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
-const Card = styled.TouchableOpacity`
-  width: 100%;
-  max-width: 300px;
-  max-height: 300px;
-  flex: 1;
-  margin-top: 25px;
-  background-color: ${colors.white};
-  border-radius: 25px;
-`;
-const CardHeader = styled.View`
-  width: 100%;
-  flex: 2;
-  justify-content: center;
-  align-items: center;
-  background-color: ${colors.white};
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-`;
-
-const CardBody = styled.View`
-  width: 100%;
-  flex: 1;
-  background-color: ${colors.white};
-  border-radius: 25px;
-  max-height: 100px;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 15px;
-`;
-
-const Image = styled.ImageBackground`
-  width: 100%;
-  height: 100%;
-  justify-content: flex-end;
-  align-items: flex-start;
-  background-color: ${colors.white};
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-`;
-
-const Title = styled.Text`
-  font-size: 24px;
-  color: ${colors.white};
-  background-color: ${colors.blackTransparentLight};
-  width: 100%;
-  padding-left: 5px;
-`;
-
-const Text = styled.Text`
-  font-size: 15px;
-  color: ${colors.black};
-  text-align: justify;
-  width: 100%;
-  height: 100%;
-`;
+const styles = StyleSheet.create({
+  cardContainer: {
+    ...globalStyles.cardShadow,
+    width: '100%',
+    minHeight: 220,
+    backgroundColor: colors.white,
+    borderRadius: 25,
+  },
+  cardHeader: {
+    position: 'relative',
+    width: '100%',
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    overflow: 'hidden',
+  },
+  image: {
+    resizeMode: 'cover',
+  },
+  title: {
+    fontSize: 18,
+    width: '90%',
+  },
+  content: {
+    width: '100%',
+    flex: 1,
+    borderRadius: 25,
+    maxHeight: 100,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    padding: 15,
+  },
+  text: {
+    height: 58,
+  },
+});

@@ -37,6 +37,7 @@ interface RootRouterOptions {
   mainAdressSelector: StackNavigationOptions;
   createWalletRoutes: StackNavigationOptions;
   successTransaction: StackNavigationOptions;
+  news: StackNavigationOptions;
 }
 export const headerContainerStyles = {
   headerLeftContainerStyle: {
@@ -53,7 +54,7 @@ export const rootRouterOptions: RootRouterOptions = {
     headerTransparent: true,
     ...headerContainerStyles,
     headerLeft: () => (
-      <IconContainer onPress={() => navigation.navigate('Notifications')}>
+      <IconContainer onPress={() => navigation.navigate('News')}>
         <MIcon
           name="ios-notifications-outline"
           size={24}
@@ -129,6 +130,9 @@ export const rootRouterOptions: RootRouterOptions = {
         height: 0,
       },
     },
+  },
+  news: {
+    title: 'News',
   },
 };
 export const commonScreenOptions: StackNavigationOptions = {
