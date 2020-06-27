@@ -8,6 +8,8 @@ import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/core';
 import { FlatList, StyleSheet, View, StatusBar, RefreshControl } from "react-native"
+import { Text } from "shared/styled-components";
+import { useGlobalState } from 'globalState';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
@@ -31,7 +33,8 @@ interface BalanceScreenProps {
 type BalanceScreenComponent = React.FC<BalanceScreenProps>;
 
 export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {params}}) => { 
-  const [currencys, setCurrencys] = useState<Array<CurrencyType>>([ ...CURRENCYS, ]); 
+  const [currencys, setCurrencys] = useState<Array<CurrencyType>>([ ...CURRENCYS, ]);
+  const [currentWalletName]  = useGlobalState('mainAddressAlias');
   const balance = useGetBalance();
   const {ethBalance, generalBalance, tokenBalance, fetchBalance} = balance;
   useEffect(() => {
@@ -81,6 +84,9 @@ export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {param
              onClick={()=> handleCurrencyClick(item)}/>
         </View>
         }/>
+        <Text center color="blackLigth" style={styles.usedWalletLabel}>
+          Currently using {currentWalletName} wallet
+        </Text>
   </View>
   );
 };
@@ -96,6 +102,10 @@ const styles = StyleSheet.create({
     padding: 22,
     width: '100%',
     position: 'relative',
+  },
+  usedWalletLabel: {
+    marginBottom: 16,
+    fontSize: 14,
   }
 })
 

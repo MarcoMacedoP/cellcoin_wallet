@@ -25,6 +25,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   const editWalletModal = useModal();
 
   const [, setMainAddress] = useGlobalState('mainAddress');
+  const [, setMainAddressAlias] = useGlobalState('mainAddressAlias');
 
   const [state, setState] = useState({
     alias: '',
@@ -116,7 +117,8 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     });
   };
 
-  const setMainAddresAndReload = (selectedAddress: string) => {
+  const setMainAddresAndReload = (selectedAddress: string, alias: string) => {
+    setMainAddressAlias(alias);
     Notifications.setUserAddress(selectedAddress);
     setMainAddress(selectedAddress);
     navigation.push('Balance');

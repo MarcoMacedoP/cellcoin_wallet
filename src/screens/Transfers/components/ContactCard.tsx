@@ -6,7 +6,7 @@ import {colors, globalStyles} from 'shared/styles';
 import {showAddressPreview} from 'shared/libs/Address';
 
 type ContactCardProps = {
-  onPress: (address: string) => void;
+  onPress: (address: string, alias: string) => void;
   onLongPress: () => void;
   alias: string;
   address: string;
@@ -20,7 +20,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
 }) => {
   return (
     <TouchableHighlight
-      onPress={() => onPress(address)}
+      onPress={() => onPress(address, alias)}
       onLongPress={() => onLongPress()}
       underlayColor={colors.lightGray}
       style={styles.container}>

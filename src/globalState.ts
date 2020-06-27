@@ -16,6 +16,7 @@ type globalState = {
   keystore: any;
   addresses: Array<adressType>;
   mainAddress: string;
+  mainAddressAlias: string;
   uuid: string;
   balance: balanceType;
 };
@@ -24,6 +25,7 @@ export const {useGlobalState} = createGlobalState<globalState>({
   keystore: {},
   addresses: [],
   mainAddress: undefined,
+  mainAddressAlias: 'main address',
   uuid: undefined,
   balance: null,
 });
