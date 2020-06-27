@@ -16,7 +16,7 @@ import {spacings, colors, globalStyles} from 'shared/styles';
 type InputProps = TextInputProps &
   StyledInputProps & {
     label: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     containerStyle?: StyleProp<ViewStyle>;
   };
 

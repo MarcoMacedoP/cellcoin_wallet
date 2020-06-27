@@ -53,7 +53,7 @@ export const RawModal: React.FC<ModalProps> = ({
             styles.modalContentContainer,
             contentContainerStyle,
           ]}>
-          {renderHeaderLine && <View style={styles.headerLine} />}
+          <View style={styles.headerLine} />
           {children}
         </View>
       </Modal>
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     height: 5,
+    width: 80,
     backgroundColor: colors.blackLigth,
     borderRadius: 150,
   },

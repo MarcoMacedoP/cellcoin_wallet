@@ -12,28 +12,32 @@ import * as Notifications from 'shared/libs/Notifications';
 import {ContactCard} from 'screens/Transfers/components/ContactCard';
 import {globalStyles} from 'shared/styles';
 import {View} from 'react-native';
+import {WalletListItem} from 'shared/types/interfaces';
+import {EditWalletModal} from '../components/EditWalletModal';
 
 type SendTransferScreenProps = {
   navigation: StackNavigationProp<AuthRootStackParams, 'MainAddressSelector'>;
 };
-
 export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   navigation,
 }) => {
-  const modal = useModal();
+  const addWalletModal = useModal();
+  const editWalletModal = useModal();
+
   const [, setMainAddress] = useGlobalState('mainAddress');
 
   const [state, setState] = useState({
     alias: '',
     address: '',
-    isReady: false,
   });
 
-  const [listAddress, setListAddress] = useState([]);
+  const [selectedWallet, setSelectedWallet] = useState<WalletListItem>();
+
+  const [listAddress, setListAddress] = useState<WalletListItem[]>([]);
   const [listAddressBase, setListAddressBase] = useState([]);
   const [listAddressQuantity, setListAddressQuantity] = useState(0);
   useHeaderIcon({
-    onPress: modal.open,
+    onPress: addWalletModal.open,
   });
 
   useEffect(() => {
@@ -42,7 +46,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
         const arrayAddress: string[] = JSON.parse(
           await AsyncStorage.getItem('addresses'),
         );
-        const arrayAddressEdited: string[] = JSON.parse(
+        const arrayAddressEdited: WalletListItem[] = JSON.parse(
           await AsyncStorage.getItem('addressesEdit'),
         );
         setListAddressBase(arrayAddress);
@@ -94,9 +98,17 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     }
   };
 
+  const editAddress = async (listItem: WalletListItem) => {
+    const updatedAddress = listAddress.map(item =>
+      item.address === listItem.address ? {...item, ...listItem} : item,
+    );
+    setListAddress(updatedAddress);
+    await AsyncStorage.setItem('addressesEdit', JSON.stringify(updatedAddress));
+  };
+
   const setOnAsync = async () => {
     await AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress));
-    modal.close();
+    addWalletModal.close();
     setState({
       ...state,
       alias: '',
@@ -113,7 +125,18 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   const onTextAliasChange = text => {
     setState({...state, alias: text});
   };
-
+  const handleWalletLongPress = (wallet: WalletListItem) => {
+    setSelectedWallet(wallet);
+    editWalletModal.open();
+  };
+  const handleDeleteWalletFromDetailsModal = async (wallet: WalletListItem) => {
+    editWalletModal.close();
+    await removeAddress(wallet, wallet.index);
+  };
+  const handleEditWallet = async (wallet: WalletListItem) => {
+    editWalletModal.close();
+    await editAddress(wallet);
+  };
   return (
     <ScreenContainer statusBarProps={{barStyle: 'dark-content'}} light>
       <View style={globalStyles.baseContainer}>
@@ -122,17 +145,20 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
             <EmptyState message="There is not an address to select" />
           )}
           keyExtractor={({address}) => address}
-          data={listAddress}
           contentContainerStyle={globalStyles.listContentContainer}
+          data={listAddress}
           rightOpenValue={-75}
-          renderItem={({item, index}) => (
-            <ContactCard
-              key={index}
-              onPress={setMainAddresAndReload}
-              address={item.address}
-              alias={item.alias}
-            />
-          )}
+          renderItem={({item, index}) =>
+            item.alias && (
+              <ContactCard
+                onLongPress={() => handleWalletLongPress(item)}
+                key={index}
+                onPress={setMainAddresAndReload}
+                address={item.address}
+                alias={item.alias}
+              />
+            )
+          }
           renderHiddenItem={({item, index}) => (
             <DeleteItemCard onDelete={() => removeAddress(item, index)} />
           )}
@@ -140,11 +166,18 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
       </View>
 
       <AddAddressModal
-        isOpen={modal.isOpen}
-        onClose={modal.close}
+        isOpen={addWalletModal.isOpen}
+        onClose={addWalletModal.close}
         alias={state.alias}
         onAliasChange={onTextAliasChange}
         onSubmit={addNewAddress}
+      />
+      <EditWalletModal
+        onDelete={handleDeleteWalletFromDetailsModal}
+        isOpen={editWalletModal.isOpen}
+        onSubmit={handleEditWallet}
+        wallet={selectedWallet}
+        onClose={editWalletModal.close}
       />
     </ScreenContainer>
   );

@@ -21,6 +21,7 @@ export function MnemonicImport({navigation}) {
   });
 
   const [hasError, setError] = useState(null);
+
   useEffect(() => {
     if (text && text.length > 0) {
       try {
