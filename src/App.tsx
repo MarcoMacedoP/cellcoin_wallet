@@ -24,6 +24,7 @@ function useInitilizeApp() {
   const [hasInitialized, setHasInitilization] = useState(false);
   const [hasSetInitialization, setHasSetInitialization] = useState(false);
   const [hasKeystore] = useGlobalState('keystore');
+  const [, setOnesignalKey] = useGlobalState('onesignalKey');
   const onesignal = useOneSignal();
   const wallet = useFindWalletInStorage();
   useEffect(() => {
@@ -50,13 +51,15 @@ function useInitilizeApp() {
     async function setInitialization() {
       const initialization = await getInitialization();
       if (initialization) {
+        console.log('inicializacion', initialization);
         for (const prop in initialization) {
           const walletHasProp =
             initialization.hasOwnProperty(prop) && Wallet.hasOwnProperty(prop);
           if (walletHasProp) Wallet[prop] = initialization[prop];
         }
 
-        onesignal.init();
+        onesignal.init(initialization.oneSignal_appID);
+        setOnesignalKey(initialization.oneSignal_secret);
         setHasSetInitialization(true);
       } else {
         Alert.alert(
@@ -86,16 +89,3 @@ const App = () => {
   );
 };
 export default App;
-
-// NOTAS: BORRAR
-// const getGasNow = async () => {
-//   await $.getJSON(
-//     'https://ethgasstation.info/api/ethgasAPI.json',
-//     async data => {
-//      let gas = (parseFloat(data["fastest"]) / 10) * (10 ** 9);
-//      fee_eth = gasLimit * ((parseFloat(data['fastest']) / 10) * 10 ** 9);
-//      user = fastest / 10
-//      console.log(gas);
-//     },
-//   );
-// };

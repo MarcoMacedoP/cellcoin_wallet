@@ -20,6 +20,7 @@ import {StyleSheet, View, Image} from 'react-native';
 import {Button} from 'shared/components';
 import {colors, globalStyles} from 'shared/styles';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useGlobalState} from 'globalState';
 
 type ConfirmTransactionToSendProps = {
   route: RouteProp<AuthRootStackParams, 'ConfirmTransactionToSend'>;
@@ -42,6 +43,7 @@ export const ConfirmTransactionToSend: React.FC<
   } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState('');
+  const [onesignalKey] = useGlobalState('onesignalKey');
   const currencyData = getCurrencyInfo(currency.type);
 
   async function onSubmitTransaction() {
@@ -90,6 +92,7 @@ export const ConfirmTransactionToSend: React.FC<
       from,
       to,
       token: getCurrencyInfo(currency.type).tokenName,
+      key: onesignalKey,
     });
     navigation.navigate('SuccessTransaction', {
       from,

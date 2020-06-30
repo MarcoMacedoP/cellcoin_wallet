@@ -18,10 +18,12 @@ type globalState = {
   mainAddress: string;
   mainAddressAlias: string;
   balance: balanceType;
+  onesignalKey: string;
 };
 
 export const {useGlobalState} = createGlobalState<globalState>({
   keystore: {},
+  onesignalKey: '',
   addresses: [],
   mainAddress: undefined,
   mainAddressAlias: 'main address',

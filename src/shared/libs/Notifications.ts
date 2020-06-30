@@ -22,6 +22,8 @@ type NotificateTransactionParams = {
   amount: string;
   /**The token-type to be sended */
   token: string;
+  /** The one signal key */
+  key: string;
 };
 /**
  * Sends a push notification to all the parts involved in the transaction.
@@ -31,6 +33,7 @@ export async function notificateTransaction({
   from,
   to,
   token,
+  key = ONESIGNAL_API_KEY,
 }: NotificateTransactionParams) {
   const baseMessage = `A transaction of ${amount} ${token} is being`;
   const receiverMessage = `${baseMessage} recieved`;
@@ -40,7 +43,7 @@ export async function notificateTransaction({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      Authorization: `Basic ${ONESIGNAL_API_KEY}`,
+      Authorization: `Basic ${key}`,
     },
   };
 
@@ -99,8 +102,8 @@ function makeBody(params: object) {
 }
 
 export function useOneSignal() {
-  const initializeOneSignal = () => {
-    OneSignal.init(ONESIGNAL_APP_ID, {
+  const initializeOneSignal = (appID: string) => {
+    OneSignal.init(appID, {
       kOSSettingsKeyAutoPrompt: true,
     });
     OneSignal.addEventListener('ids', onIds);
