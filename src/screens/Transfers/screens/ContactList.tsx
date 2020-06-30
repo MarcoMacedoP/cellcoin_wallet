@@ -13,90 +13,19 @@ import {useModal, useHeaderIcon} from 'shared/hooks';
 import {Contact} from 'shared/types/interfaces';
 import {ContactCard} from '../components/ContactCard';
 import Toast from 'react-native-simple-toast';
+import {useAsyncStorageList} from 'shared/hooks/useAsyncStorageList';
 
 type ContactListProps = {
   route: RouteProp<AuthRootStackParams, 'ContactsList'>;
   navigation: StackNavigationProp<AuthRootStackParams, 'ContactsList'>;
 };
 
-async function asyncStorageErrorHandler<T>(
-  caller: () => Promise<T>,
-  onError?: () => void,
-) {
-  try {
-    await caller();
-    console.log('loaded');
-  } catch {
-    Alert.alert('Error', 'Error reading data', [
-      {onPress: caller, text: 'Try again'},
-    ]);
-    if (onError) {
-      onError();
-    }
-  }
-}
-function useContacts() {
-  const [listAddress, setListAddress] = useState<Contact[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  async function getContacts() {
-    setIsLoading(true);
-    asyncStorageErrorHandler(
-      async () => {
-        const contacts: Contact[] = JSON.parse(
-          await AsyncStorage.getItem('contacts'),
-        );
-        setIsLoading(false);
-        setListAddress(contacts || []);
-      },
-      () => setIsLoading(false),
-    );
-  }
-  async function addItem(contact: Contact) {
-    console.log({listAddress});
-    const updatedList =  listAddress?.length > 0 ? [contact, ...listAddress] : [contact];
-    console.log({updatedList});
-    setListAddress(updatedList);
-    setIsLoading(true);
-    asyncStorageErrorHandler(
-      async () => {
-        await AsyncStorage.setItem('contacts', JSON.stringify(updatedList));
-        setIsLoading(false);
-      },
-      () => setIsLoading(false),
-    );
-  }
-
-  async function removeItem(contact: Contact) {
-    setIsLoading(true);
-    asyncStorageErrorHandler(
-      async () => {
-        const filteredList = listAddress.filter(
-          item => item.address !== contact.address,
-        );
-        console.log({filteredList});
-        setListAddress(filteredList);
-        await AsyncStorage.setItem('contacts', JSON.stringify(filteredList));
-        setIsLoading(false);
-      },
-      () => setIsLoading(false),
-    );
-  }
-
-  return {
-    list: listAddress,
-    isLoading,
-    get: getContacts,
-    add: addItem,
-    delete: removeItem,
-  };
-}
-
 export const ContactList: React.FC<ContactListProps> = ({
   navigation,
   route,
 }) => {
   const addContactModal = useModal();
-  const contacts = useContacts();
+  const contacts = useAsyncStorageList<Contact>('contacts');
 
   useHeaderIcon({
     onPress: addContactModal.open,
@@ -107,13 +36,8 @@ export const ContactList: React.FC<ContactListProps> = ({
   }, []);
 
   async function handleAddModalSubmit(contact: Contact) {
-    try {
-      console.log({contact});
-      await contacts.add(contact);
-      addContactModal.close();
-    } catch (e) {
-      console.log(e);
-    }
+    await contacts.add(contact);
+    addContactModal.close();
   }
 
   function selectContact(address: string) {
@@ -150,7 +74,7 @@ export const ContactList: React.FC<ContactListProps> = ({
             )
           }
           renderHiddenItem={({item}) => (
-            <DeleteItemCard onDelete={() => contacts.delete(item)} />
+            <DeleteItemCard onDelete={() => contacts.delete(item, 'address')} />
           )}
         />
       </View>

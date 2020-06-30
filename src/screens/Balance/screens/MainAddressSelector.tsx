@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import Toast from 'react-native-simple-toast';
 import {EmptyState, ScreenContainer, DeleteItemCard} from 'shared/components';
 import {useGlobalState} from 'globalState';
@@ -14,6 +14,7 @@ import {globalStyles} from 'shared/styles';
 import {View} from 'react-native';
 import {WalletListItem} from 'shared/types/interfaces';
 import {EditWalletModal} from '../components/EditWalletModal';
+import {useAsyncStorageList} from 'shared/hooks/useAsyncStorageList';
 
 type SendTransferScreenProps = {
   navigation: StackNavigationProp<AuthRootStackParams, 'MainAddressSelector'>;
@@ -21,6 +22,7 @@ type SendTransferScreenProps = {
 export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   navigation,
 }) => {
+  const wallets = useWalletsList();
   const addWalletModal = useModal();
   const editWalletModal = useModal();
 
@@ -31,91 +33,10 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     alias: '',
     address: '',
   });
-
   const [selectedWallet, setSelectedWallet] = useState<WalletListItem>();
-
-  const [listAddress, setListAddress] = useState<WalletListItem[]>([]);
-  const [listAddressBase, setListAddressBase] = useState([]);
-  const [listAddressQuantity, setListAddressQuantity] = useState(0);
-  useHeaderIcon({
+ useHeaderIcon({
     onPress: addWalletModal.open,
   });
-
-  useEffect(() => {
-    async function getAddress() {
-      try {
-        const arrayAddress: string[] = JSON.parse(
-          await AsyncStorage.getItem('addresses'),
-        );
-        const arrayAddressEdited: WalletListItem[] = JSON.parse(
-          await AsyncStorage.getItem('addressesEdit'),
-        );
-        setListAddressBase(arrayAddress);
-        if (arrayAddressEdited.length !== 0) {
-          setListAddress(arrayAddressEdited);
-          setListAddressQuantity(arrayAddressEdited.length - 1);
-        } else {
-          cleanList();
-        }
-      } catch (error) {}
-    }
-    async function cleanList() {
-      const tempArray = listAddress.filter(data => data.index !== -1 && data);
-      setListAddress(tempArray);
-      await AsyncStorage.setItem('addressesEdit', JSON.stringify(tempArray));
-    }
-    getAddress();
-  }, []);
-
-  const addNewAddress = async () => {
-    if (listAddressQuantity != 9) {
-      let counter = 1 + listAddressQuantity;
-      setListAddressQuantity(counter);
-      var data = {
-        alias: state.alias,
-        address: listAddressBase[counter].address,
-        index: listAddressQuantity,
-      };
-      listAddress.push(data);
-      setListAddress(listAddress);
-      setOnAsync();
-    } else {
-      Toast.show('Limit address');
-    }
-  };
-
-  const removeAddress = async (listItem: any, index: number) => {
-    if (index === 0) {
-      Toast.show("You can't delete your main address");
-    } else {
-      const updatedAddress = listAddress.filter(
-        item => item.address !== listItem.address,
-      );
-      setListAddress(updatedAddress);
-      await AsyncStorage.setItem(
-        'addressesEdit',
-        JSON.stringify(updatedAddress),
-      );
-    }
-  };
-
-  const editAddress = async (listItem: WalletListItem) => {
-    const updatedAddress = listAddress.map(item =>
-      item.address === listItem.address ? {...item, ...listItem} : item,
-    );
-    setListAddress(updatedAddress);
-    await AsyncStorage.setItem('addressesEdit', JSON.stringify(updatedAddress));
-  };
-
-  const setOnAsync = async () => {
-    await AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress));
-    addWalletModal.close();
-    setState({
-      ...state,
-      alias: '',
-      address: listAddressBase[listAddressQuantity].address,
-    });
-  };
 
   const setMainAddresAndReload = (selectedAddress: string, alias: string) => {
     setMainAddressAlias(alias);
@@ -127,28 +48,36 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
   const onTextAliasChange = text => {
     setState({...state, alias: text});
   };
+  const handleAddWallet = async () => {
+    addWalletModal.close();
+    await wallets.add(state.alias);
+    setState((state)=>({...state, alias: ''}))
+  }
   const handleWalletLongPress = (wallet: WalletListItem) => {
     setSelectedWallet(wallet);
     editWalletModal.open();
   };
   const handleDeleteWalletFromDetailsModal = async (wallet: WalletListItem) => {
     editWalletModal.close();
-    await removeAddress(wallet, wallet.index);
+    await wallets.delete(wallet, 'address');
+  
   };
   const handleEditWallet = async (wallet: WalletListItem) => {
     editWalletModal.close();
-    await editAddress(wallet);
+    await wallets.editItem(wallet, 'address');
   };
   return (
     <ScreenContainer statusBarProps={{barStyle: 'dark-content'}} light>
       <View style={globalStyles.baseContainer}>
         <SwipeListView
+        refreshing={wallets.isLoading}
+        onRefresh={wallets.get}
           ListEmptyComponent={() => (
             <EmptyState message="There is not an address to select" />
           )}
           keyExtractor={({address}) => address}
           contentContainerStyle={globalStyles.listContentContainer}
-          data={listAddress}
+          data={wallets.list}
           rightOpenValue={-75}
           renderItem={({item, index}) =>
             item.alias && (
@@ -161,8 +90,8 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
               />
             )
           }
-          renderHiddenItem={({item, index}) => (
-            <DeleteItemCard onDelete={() => removeAddress(item, index)} />
+          renderHiddenItem={({item}) => (
+            <DeleteItemCard onDelete={() => wallets.delete(item, 'address')} />
           )}
         />
       </View>
@@ -172,7 +101,7 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
         onClose={addWalletModal.close}
         alias={state.alias}
         onAliasChange={onTextAliasChange}
-        onSubmit={addNewAddress}
+        onSubmit={handleAddWallet}
       />
       <EditWalletModal
         onDelete={handleDeleteWalletFromDetailsModal}
@@ -184,3 +113,36 @@ export const MainAddressSelector: React.FC<SendTransferScreenProps> = ({
     </ScreenContainer>
   );
 };
+
+function useWalletsList() {
+  const maximumWallets  = 9;
+  const [addressList, setAddressList] = useState([]);
+  const wallet = useAsyncStorageList<WalletListItem>('addressesEdit');
+  const walletCount = useMemo(() => wallet.list.length - 1, [wallet.list]);
+  
+  async function getList(){
+      const [rawAddressList] = await Promise.all([
+          AsyncStorage.getItem('addresses'),
+          wallet.get(),
+      ]);
+      const parsedList = JSON.parse(rawAddressList);
+      setAddressList(parsedList);
+  }
+  useEffect(() => {
+    getList();
+  }, []);
+
+  async function addItem(alias:string) {
+    const item: WalletListItem = {
+      alias,
+      address: addressList[walletCount + 1 ]?.address,
+      index: walletCount
+    }
+    if(walletCount > maximumWallets){
+          Toast.show('Limit address');      
+    }else{
+      await wallet.add(item);
+    }
+  }
+  return {...wallet, add : addItem, get: getList }
+}

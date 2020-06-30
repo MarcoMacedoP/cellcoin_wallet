@@ -7,7 +7,7 @@ import {showAddressPreview} from 'shared/libs/Address';
 
 type ContactCardProps = {
   onPress: (address: string, alias: string) => void;
-  onLongPress: () => void;
+  onLongPress?: () => void;
   alias: string;
   address: string;
 };
@@ -16,7 +16,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
   address,
   alias,
   onPress,
-  onLongPress,
+  onLongPress = () => {},
 }) => {
   return (
     <TouchableHighlight
@@ -30,7 +30,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
           <Text style={styles.alias} isBold>
             {alias}
           </Text>
-          <Text>{showAddressPreview(address)}</Text>
+          {address && <Text>{showAddressPreview(address)}</Text>}
         </View>
       </>
     </TouchableHighlight>

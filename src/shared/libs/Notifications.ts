@@ -1,6 +1,5 @@
 import {ONESIGNAL_APP_ID, ONESIGNAL_API_KEY} from 'react-native-dotenv';
 import OneSignal from 'react-native-onesignal';
-import {useGlobalState} from 'globalState';
 
 const ONESIGNAL_API_URL = 'https://onesignal.com/api/v1';
 
@@ -100,34 +99,16 @@ function makeBody(params: object) {
 }
 
 export function useOneSignal() {
-  const [uuid, setUuid] = useGlobalState('uuid');
-
   const initializeOneSignal = () => {
-    console.log('initializing onesignal :)');
     OneSignal.init(ONESIGNAL_APP_ID, {
       kOSSettingsKeyAutoPrompt: true,
     });
-    // OneSignal.addEventListener('received', onReceived);
-    // OneSignal.addEventListener('opened', onOpened);
-    // OneSignal.addEventListener('ids', onIds);
-  };
-  const onOpened = openResult => {
-    console.log('Message: ', openResult.notification.payload.body);
-    console.log('Data: ', openResult.notification.payload.additionalData);
-    console.log('isActive: ', openResult.notification.isAppInFocus);
-    console.log('openResult: ', openResult);
+    OneSignal.addEventListener('ids', onIds);
   };
   const onIds = device => {
-    // console.log('Device info: ', device);
-    if (!uuid || uuid !== device.userId) {
-      setUuid(device.userId);
-      OneSignal.sendTag('slug', device.userId);
-    }
+    OneSignal.sendTag('slug', device.userId);
   };
 
-  const onReceived = notification => {
-    console.log('Notification received: ', notification);
-  };
   return {
     init: initializeOneSignal,
   };
