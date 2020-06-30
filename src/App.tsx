@@ -11,6 +11,7 @@ import OneSignal from 'react-native-onesignal';
 import SimpleToast from 'react-native-simple-toast';
 import {Alert, Platform} from 'react-native';
 import {useOneSignal} from 'shared/libs/Notifications';
+import {getInitialization} from 'shared/libs/api';
 
 //declarations
 const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
@@ -34,20 +35,6 @@ function useInitilizeApp() {
   }, [hasSetInitialization, wallet.isLoading]);
 
   useEffect(() => {
-    async function getInitialization() {
-      try {
-        const response = await fetch(`${API_URL}/data-general`, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        });
-        const {data} = await response.json();
-        console.log(data);
-        return data;
-      } catch (error) {
-        console.log('Error on getInitialization() line 81 App.tsx', error);
-        return null;
-      }
-    }
     async function setInitialization() {
       const initialization = await getInitialization();
       if (initialization) {

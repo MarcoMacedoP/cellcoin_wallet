@@ -1,5 +1,7 @@
 import {ONESIGNAL_APP_ID, ONESIGNAL_API_KEY} from 'react-native-dotenv';
 import OneSignal from 'react-native-onesignal';
+import AsyncStorage from '@react-native-community/async-storage';
+import * as api from 'shared/libs/api';
 
 const ONESIGNAL_API_URL = 'https://onesignal.com/api/v1';
 
@@ -8,9 +10,13 @@ const ONESIGNAL_API_URL = 'https://onesignal.com/api/v1';
  *
  * @param address the wallet address to be used
  */
-export function setUserAddress(address: string) {
+export async function setUserAddress(address: string) {
   console.log('****** setting user-id with address: ', address);
-  OneSignal.sendTag('wallet_address', address);
+  const userId = await AsyncStorage.getItem('uuid');
+  const hasSended = await api.saveAddress(address, userId);
+  if (hasSended) {
+    OneSignal.sendTag('wallet_address', address);
+  }
 }
 
 type NotificateTransactionParams = {
@@ -108,8 +114,9 @@ export function useOneSignal() {
     });
     OneSignal.addEventListener('ids', onIds);
   };
-  const onIds = device => {
+  const onIds = async device => {
     OneSignal.sendTag('slug', device.userId);
+    await AsyncStorage.setItem('uuid', device.userId);
   };
 
   return {
