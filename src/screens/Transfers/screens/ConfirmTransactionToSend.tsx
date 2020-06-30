@@ -47,10 +47,8 @@ export const ConfirmTransactionToSend: React.FC<
   const currencyData = getCurrencyInfo(currency.type);
 
   async function onSubmitTransaction() {
-    console.log('triggered onSubmit');
     setIsLoading(true);
     const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
-    console.log('gasPriceInWEI doned');
     try {
       let hash = '';
       if (currency.type === 'ETH') {
