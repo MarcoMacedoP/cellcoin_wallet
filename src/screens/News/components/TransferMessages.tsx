@@ -2,6 +2,7 @@ import React from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {EmptyState} from 'shared/components/EmptyState';
 import {NotificationCard} from 'shared/components';
+import {globalStyles} from 'shared/styles';
 interface TransferMessagesProps {
   updateNotifications: () => void;
   isLoading: boolean;
@@ -26,6 +27,9 @@ export const TransferMessages = ({
       keyExtractor={item => item.uuid}
       onRefresh={updateNotifications}
       refreshing={isLoading}
+      scrollEnabled
+      nestedScrollEnabled
+      style={[globalStyles.scrollView]}
       contentContainerStyle={styles.contentContainer}
     />
   );
@@ -33,7 +37,6 @@ export const TransferMessages = ({
 
 const styles = StyleSheet.create({
   contentContainer: {
-    flex: 1,
     width: '100%',
     paddingTop: 16,
     paddingHorizontal: 4,

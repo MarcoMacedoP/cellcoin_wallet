@@ -7,7 +7,7 @@ const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
 
 export function News() {
   const {fetchNotifications, notifications, isLoading} = useNotifications();
-
+  console.log(notifications);
   return (
     <ScreenContainer light>
       <StatusBar barStyle="dark-content" />
