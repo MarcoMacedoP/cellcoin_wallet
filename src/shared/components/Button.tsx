@@ -75,6 +75,7 @@ export const Button: React.FC<ButtonProps> = ({
   }, [isLoading]);
 
   const makeButtonSmall = () => {
+    console.log('making button small');
     Animated.timing(widthAnimation, {
       toValue: 100,
       easing: Easing.sin,

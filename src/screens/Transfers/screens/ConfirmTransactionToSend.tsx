@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   ScreenContainer,
@@ -16,7 +16,7 @@ import {sendTokens, sendETH} from 'shared/libs/Wallet';
 import {notificateTransaction} from 'shared/libs/Notifications';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 import Toast from 'react-native-simple-toast';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, Alert, ActivityIndicator} from 'react-native';
 import {Button} from 'shared/components';
 import {colors, globalStyles} from 'shared/styles';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -45,8 +45,9 @@ export const ConfirmTransactionToSend: React.FC<
   const [password, setPassword] = useState('');
   const [onesignalKey] = useGlobalState('onesignalKey');
   const currencyData = getCurrencyInfo(currency.type);
-
+  console.log(gasLimit);
   async function onSubmitTransaction() {
+    console.log('lol');
     setIsLoading(true);
     const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
     try {
@@ -107,10 +108,9 @@ export const ConfirmTransactionToSend: React.FC<
   function handleFailureTransaction(error: string) {
     setIsLoading(false);
     if (error === 'insufficient funds for gas * price + value') {
-      Toast.show('Insufficient funds for gas', Toast.SHORT);
-    } else {
-      Toast.show('Error: ' + error, Toast.SHORT);
+      error = 'Insufficient funds for gas';
     }
+    Alert.alert('Error', error);
   }
   return (
     <ScreenContainer light>
@@ -132,16 +132,16 @@ export const ConfirmTransactionToSend: React.FC<
         />
       </View>
       <View style={[styles.row, styles.buttonsContainer]}>
-        <Button onClick={onSubmitTransaction} isLoading={isLoading}>
-          Send
-        </Button>
-        <Button
-          outline
-          onClick={handleCancel}
-          style={styles.cancelButton}
-          isActivated={!isLoading}>
-          Cancel
-        </Button>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <>
+            <Button onClick={onSubmitTransaction}>Send</Button>
+            <Button outline onClick={handleCancel} style={styles.cancelButton}>
+              Cancel
+            </Button>
+          </>
+        )}
         <SmallText style={styles.informationText} color="blackLigth">
           This transaction is operated by {`\n`}
           Ethereum network.

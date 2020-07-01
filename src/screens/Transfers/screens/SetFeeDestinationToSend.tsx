@@ -82,7 +82,7 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
   function handleNavigation() {
     navigation.navigate('ConfirmTransactionToSend', {
       currency,
-      gasLimit,
+      gasLimit: parseFloat(gasLimit.toFixed(3)),
       gasPrice,
       tokenQuantityToBeSended,
       from: mainAddress,
@@ -127,6 +127,8 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
           isEnabled={isAddress(state.to)}
         />
         <GasLimitSelector
+          isLoading={status === 'loading'}
+          isEnabled={isAddress(state.to)}
           value={gasLimit}
           onChange={onGasLimitChange}
           initialValue={initialGasLimit}
