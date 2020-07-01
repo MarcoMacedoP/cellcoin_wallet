@@ -1,8 +1,8 @@
 import React, {useState, useLayoutEffect, useEffect, useMemo} from 'react';
 import {Text} from 'shared/styled-components/Texts';
 import {ScreenContainer} from 'shared/styled-components';
-import {colors} from 'shared/styles';
-import {View} from 'react-native';
+import {colors, globalStyles} from 'shared/styles';
+import {View, ScrollView} from 'react-native';
 import {Button} from 'shared/components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {RouteProp} from '@react-navigation/native';
@@ -17,8 +17,9 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useGasPrice} from 'shared/libs/Wallet';
 import {useModal} from 'shared/hooks';
 import {isAddress} from 'shared/validations';
-import {GasFeeSelector} from '../components/GasFeeSelector';
+import {GasPriceSelector} from '../components/GasPriceSelector';
 import {TouchableOpacity, StyleSheet} from 'react-native';
+import {GasLimitSelector} from '../components/GasLimitSelector';
 
 type SetAddressScreenProps = {
   route: RouteProp<AuthRootStackParams, 'SetFeeDestinationToSend'>;
@@ -80,55 +81,6 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
     addressModal.close();
   }
 
-  // async function onSubmitTransaction(password: string) {
-  //   passwordModal.close();
-  //   const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
-  //   try {
-  //     let hash = '';
-  //     if (currency.type === 'ETH') {
-  //       hash = await sendETH(
-  //         password,
-  //         mainAddress,
-  //         state.to,
-  //         state.amount,
-  //         gasPriceInWei,
-  //         gasLimit,
-  //       );
-  //     } else {
-  //       hash = await sendTokens(
-  //         password,
-  //         mainAddress,
-  //         state.to,
-  //         state.amount,
-  //         gasPriceInWei,
-  //         gasLimit,
-  //       );
-  //     }
-  //     handleSuccessTransaction(hash);
-  //   } catch (error) {
-  //     handleFailureTransaction(error);
-  //   }
-  // }
-
-  /** Handles all the success transactions
-   * @param hash the transaction hash
-   */
-  // function handleSuccessTransaction(hash: string) {
-  //   setIsLoading(false);
-  //   notificateTransaction({
-  //     amount: tokenQuantityToBeSended,
-  //     from: mainAddress,
-  //     to: selectedAddress,
-  //     token: getCurrencyInfo(currency.type).tokenName,
-  //   });
-  //   navigation.navigate('SuccessTransaction', {
-  //     from: mainAddress,
-  //     to: state.to,
-  //     hash,
-  //     quantity: tokenQuantityToBeSended,
-  //     type: currency.type,
-  //   });
-  // }
   function handleNavigation() {
     navigation.navigate('ConfirmTransactionToSend', {
       currency,
@@ -139,18 +91,6 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
       to: state.to,
     });
   }
-  // /**
-  //  *  Handles all failure transactions
-  //  * @param error
-  //  */
-  // function handleFailureTransaction(error: string) {
-  //   setIsLoading(false);
-  //   if (error === 'insufficient funds for gas * price + value') {
-  //     Toast.show('Insufficient funds for gas', Toast.SHORT);
-  //   } else {
-  //     Toast.show('Error: ' + error, Toast.SHORT);
-  //   }
-  // }
 
   const setAddressText = (text: string) => {
     setState({...state, to: text});
@@ -158,7 +98,9 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
 
   return (
     <ScreenContainer light justify="space-between">
-      <View style={styles.form}>
+      <ScrollView
+        style={globalStyles.scrollView}
+        contentContainerStyle={globalStyles.scrollContentContainer}>
         <Text isBold style={styles.amountToSend}>
           Amount to send: {state.amount}
         </Text>
@@ -177,7 +119,7 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
             <Icon name="address-book" size={20} color={colors.accent} />
           </TouchableOpacity>
         </InputComponent>
-        <GasFeeSelector
+        <GasPriceSelector
           fee={fee}
           isLoading={status === 'loading'}
           error={error}
@@ -186,7 +128,8 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
           onChange={onGasPriceChange}
           isEnabled={isAddress(state.to)}
         />
-      </View>
+        <GasLimitSelector value={gasLimit} />
+      </ScrollView>
 
       <Button
         secondary
@@ -199,19 +142,6 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
         onClose={addressModal.close}
         isOpen={addressModal.isOpen}
       />
-      {/* <PasswordModal
-        transactionData={{
-          currency: currency.type,
-          amount: state.amount,
-          usd:
-            (parseFloat(currency.value.usd) /
-              parseFloat(currency.value.original)) *
-            parseFloat(state.amount),
-        }}
-        isShowed={passwordModal.isOpen}
-        onClose={passwordModal.close}
-        onDoned={onSubmitTransaction}
-      /> */}
     </ScreenContainer>
   );
 };
@@ -224,12 +154,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'left',
     marginBottom: 12,
-  },
-  form: {
-    width: '100%',
-    flex: 1,
-    marginBottom: 12,
-    maxHeight: '70%',
   },
   iconContainer: {
     justifyContent: 'center',

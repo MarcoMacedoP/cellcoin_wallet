@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     padding: 0,
     height: 30,
     flex: 1,
-    color: colors.black,
+    color: colors.blackLigth,
   },
   label: {
     marginBottom: 4,

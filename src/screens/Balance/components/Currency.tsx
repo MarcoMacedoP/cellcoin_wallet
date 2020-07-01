@@ -32,7 +32,7 @@ export const Currency: React.FC<CurrencyProps> = props => {
         <TitleContainer>
           <Image source={logo} />
           <View style={styles.textContainer}>
-            <Text upperCase> {tokenName}</Text>
+            <Text uppercase> {tokenName}</Text>
             <SmallText style={{marginLeft: 4}}>{name}</SmallText>
           </View>
         </TitleContainer>

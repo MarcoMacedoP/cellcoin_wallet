@@ -103,7 +103,7 @@ export const Button: React.FC<ButtonProps> = ({
       ) : (
         <FadeInView duration={300}>
           <Text
-            upperCase
+            uppercase
             isBold
             color={outline ? 'primary' : 'white'}
             style={[styles.label, labelStyle]}>

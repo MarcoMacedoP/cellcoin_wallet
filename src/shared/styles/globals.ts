@@ -1,8 +1,12 @@
 import {colors} from './variables';
-
-export const globalStyles = {
+import {StyleSheet} from 'react-native';
+export const globalStyles = StyleSheet.create({
   scrollView: {
     width: '100%',
+  },
+  scrollContentContainer: {
+    paddingLeft: 4,
+    paddingRight: 8,
   },
   inputContainer: {
     backgroundColor: colors.whiteDark,
@@ -41,4 +45,4 @@ export const globalStyles = {
     flex: 1,
     width: '100%',
   },
-};
+});

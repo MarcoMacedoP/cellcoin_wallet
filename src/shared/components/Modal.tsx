@@ -50,7 +50,7 @@ export const Modal: React.FC<ModalProps> = ({
         {icon && (
           <HeaderModal>
             {title && (
-              <Subtitle color="primaryDark" upperCase>
+              <Subtitle color="primaryDark" uppercase>
                 {title}
               </Subtitle>
             )}
