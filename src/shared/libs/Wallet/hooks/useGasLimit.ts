@@ -11,6 +11,7 @@ export type UseGasLimitParams = {
 };
 
 type GasLimitState = {
+  initialGasLimit: number;
   gasLimit: number;
   gasPrice: number;
   fee: string;
@@ -19,12 +20,18 @@ type GasLimitState = {
 };
 
 type GasLimitAction = {
-  type: 'load-data' | 'error-on-fetch' | 'success-fetch' | 'range-change';
+  type:
+    | 'load-data'
+    | 'error-on-fetch'
+    | 'success-fetch'
+    | 'gas-price-change'
+    | 'gas-limit-change';
   payload?: {gasLimit?: number; gasPrice?: number; gasLimitInRange?: number};
   error?: string | null;
 };
 const initialState: GasLimitState = {
   fee: '0.0000',
+  initialGasLimit: 21000,
   gasLimit: 21000,
   gasPrice: 30,
   status: null,
@@ -43,25 +50,32 @@ const gasLimitReducer: Reducer<GasLimitState, GasLimitAction> = (
     case 'success-fetch': {
       let {gasLimit, gasPrice} = action.payload;
       gasPrice = gasPrice / 10; // el gasPrice del JSON
-      console.log('gas price / 10    ', gasPrice);
       const fee = (gasPrice / 1e9) * gasLimit;
-
       return {
         ...state,
         fee: fee.toFixed(5),
         status: 'doned',
         gasLimit,
         gasPrice: gasPrice,
+        initialGasLimit: gasLimit,
         gasPriceInRange: gasPrice * 2,
       };
     }
-    case 'range-change': {
-      console.log(state);
+    case 'gas-price-change': {
       const {gasPrice} = action.payload;
       const fee = gasPriceToEth(gasPrice, state.gasLimit);
       return {
         ...state,
         gasPrice,
+        fee: fee.toFixed(5),
+      };
+    }
+    case 'gas-limit-change': {
+      const {gasLimit} = action.payload;
+      const fee = gasPriceToEth(state.gasPrice, gasLimit);
+      return {
+        ...state,
+        gasLimit,
         fee: fee.toFixed(5),
       };
     }
@@ -88,6 +102,7 @@ export function useGasPrice({
   type,
 }: UseGasLimitParams): GasLimitState & {
   onGasPriceChange: (value: number) => void;
+  onGasLimitChange: (value: number) => void;
 } {
   const [state, dispatch] = useReducer(gasLimitReducer, initialState);
   const calculateGas = async () => {
@@ -135,12 +150,21 @@ export function useGasPrice({
 
   const onGasPriceChange = (value: number) => {
     dispatch({
-      type: 'range-change',
+      type: 'gas-price-change',
       payload: {
         gasPrice: value,
       },
     });
   };
 
-  return {...state, onGasPriceChange};
+  const onGasLimitChange = (value: number) => {
+    dispatch({
+      type: 'gas-limit-change',
+      payload: {
+        gasLimit: value,
+      },
+    });
+  };
+
+  return {...state, onGasPriceChange, onGasLimitChange};
 }

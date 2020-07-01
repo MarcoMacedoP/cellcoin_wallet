@@ -50,7 +50,9 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
     gasLimit,
     gasPrice,
     status,
+    initialGasLimit,
     onGasPriceChange,
+    onGasLimitChange,
   } = useGasPrice({
     from: mainAddress,
     amount: state.amount,
@@ -128,7 +130,11 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
           onChange={onGasPriceChange}
           isEnabled={isAddress(state.to)}
         />
-        <GasLimitSelector value={gasLimit} />
+        <GasLimitSelector
+          value={gasLimit}
+          onChange={onGasLimitChange}
+          initialValue={initialGasLimit}
+        />
       </ScrollView>
 
       <Button
