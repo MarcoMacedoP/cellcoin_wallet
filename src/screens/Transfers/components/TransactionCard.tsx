@@ -5,15 +5,17 @@ import moment from 'moment';
 import {Text, Label} from 'shared/styled-components';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
 import {TokenType} from 'shared/types';
+
 type TransactionCardProps = {
   type: TokenType;
   timestamp: number;
   action: 'send' | 'Received';
   value: number;
+  hasError: boolean;
   onPress: any;
 };
 export const TransactionCard: React.FC<TransactionCardProps> = props => {
-  const {timestamp, type, action, value, onPress} = props;
+  const {timestamp, type, action, value, onPress, hasError} = props;
   const date = new Date(timestamp * 1000);
   const {logo, tokenName} = getCurrencyInfo(type);
   return (
@@ -32,7 +34,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = props => {
         </InfoContainer>
       </Row>
       <InfoContainer align="flex-end">
-        <Action>{action}</Action>
+        <Action hasError={hasError}>{hasError ? 'Error' : action}</Action>
       </InfoContainer>
     </Container>
   );
@@ -57,10 +59,10 @@ const InfoContainer = styled.View<{align?: 'flex-start' | 'flex-end'}>`
   justify-content: space-around;
   align-items: ${props => (props.align ? props.align : 'flex-start')};
 `;
-const Action = styled(Label)`
+const Action = styled(Label)<{hasError: boolean}>`
   color: ${colors.white};
   font-size: 12px;
-  background-color: ${colors.accent};
+  background-color: ${props => (props.hasError ? colors.error : colors.accent)};
   border-radius: 8px;
   padding: 2px 12px;
 `;

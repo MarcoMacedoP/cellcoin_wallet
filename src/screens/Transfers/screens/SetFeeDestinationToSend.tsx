@@ -2,7 +2,7 @@ import React, {useState, useLayoutEffect, useEffect, useMemo} from 'react';
 import {Text} from 'shared/styled-components/Texts';
 import {ScreenContainer} from 'shared/styled-components';
 import {colors, globalStyles} from 'shared/styles';
-import {View, ScrollView} from 'react-native';
+import {ScrollView} from 'react-native';
 import {Button} from 'shared/components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {RouteProp} from '@react-navigation/native';
@@ -28,22 +28,18 @@ type SetAddressScreenProps = {
     'SetFeeDestinationToSend'
   >;
 };
-//SetQuantityForSend SetFeeDestinationSend ConfirmTransactionSend
 export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
   route: {params},
   navigation,
 }) => {
   const addressModal = useModal();
-  const passwordModal = useModal();
   const {currency, tokenQuantityToBeSended, selectedAddress} = params;
   const [mainAddress] = useGlobalState('mainAddress');
-
   const [state, setState] = useState({
     amount: tokenQuantityToBeSended,
     to: selectedAddress || '',
     balance: parseFloat(currency.value.original),
   });
-
   const {
     fee,
     error,

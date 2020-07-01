@@ -1,7 +1,6 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useState, useMemo} from 'react';
 
 import styled from 'styled-components/native';
-import {colors} from 'shared/styles';
 import {Text} from 'shared/styled-components/Texts';
 import {FlatList} from 'react-native';
 
@@ -23,9 +22,7 @@ export const TransfersHistoryComponent: React.FC<
   TransfersHistoryComponentProps
 > = ({type, address}) => {
   const {history, fetchHistory, loading} = useFetchHistory(type, address);
-
   const isEmpty = useMemo(() => history.length === 0, [history]);
-
   const onRefresh = React.useCallback(() => {
     fetchHistory();
   }, []);
@@ -72,6 +69,7 @@ export const TransfersHistoryComponent: React.FC<
         keyExtractor={item => item.blockNumber}
         renderItem={({item, index}) => (
           <TransactionCard
+            hasError={item.isError}
             key={index}
             action={item.type}
             timestamp={item.timeStamp}

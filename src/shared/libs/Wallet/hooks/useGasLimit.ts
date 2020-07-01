@@ -1,4 +1,4 @@
-import {useState, useEffect, useMemo, Reducer, useReducer} from 'react';
+import {useEffect, Reducer, useReducer} from 'react';
 import {calculateGasLimitETH, calculateGasLimitToken} from 'shared/libs/Wallet';
 import {TokenType} from 'shared/types';
 import {gasPriceToEth} from '../functions/conversions';
@@ -26,7 +26,11 @@ type GasLimitAction = {
     | 'success-fetch'
     | 'gas-price-change'
     | 'gas-limit-change';
-  payload?: {gasLimit?: number; gasPrice?: number; gasLimitInRange?: number};
+  payload?: {
+    gasLimit?: number;
+    gasPrice?: number;
+    gasLimitInRange?: number;
+  };
   error?: string | null;
 };
 const initialState: GasLimitState = {
@@ -133,8 +137,11 @@ export function useGasPrice({
       dispatch({type: 'load-data'});
       try {
         const {gasLimit, gasPrice} = await calculateGas();
-        console.log('gasPrice del JSON', gasPrice);
-        dispatch({type: 'success-fetch', payload: {gasLimit, gasPrice}});
+        const actualGasLimit = type === 'ETH' ? gasLimit : gasLimit * 2;
+        dispatch({
+          type: 'success-fetch',
+          payload: {gasLimit: actualGasLimit, gasPrice},
+        });
       } catch (e) {
         const error =
           typeof e === 'string'
