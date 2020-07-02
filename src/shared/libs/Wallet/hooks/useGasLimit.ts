@@ -75,7 +75,7 @@ const gasLimitReducer: Reducer<GasLimitState, GasLimitAction> = (
       };
     }
     case 'gas-limit-change': {
-      const {gasLimit} = action.payload;
+      const gasLimit = Math.floor(action.payload.gasLimit);
       const fee = gasPriceToEth(state.gasPrice, gasLimit);
       return {
         ...state,

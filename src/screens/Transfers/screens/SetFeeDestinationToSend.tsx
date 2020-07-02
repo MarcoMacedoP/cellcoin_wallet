@@ -82,7 +82,7 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
   function handleNavigation() {
     navigation.navigate('ConfirmTransactionToSend', {
       currency,
-      gasLimit: parseFloat(gasLimit.toFixed(3)),
+      gasLimit: parseFloat(gasLimit.toFixed(2)),
       gasPrice,
       tokenQuantityToBeSended,
       from: mainAddress,

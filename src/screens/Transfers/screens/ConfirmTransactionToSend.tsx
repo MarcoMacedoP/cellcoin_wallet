@@ -47,7 +47,6 @@ export const ConfirmTransactionToSend: React.FC<
   const [password, setPassword] = useState('');
   const [onesignalKey] = useGlobalState('onesignalKey');
   const currencyData = getCurrencyInfo(currency.type);
-
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => isLoading;
@@ -59,6 +58,7 @@ export const ConfirmTransactionToSend: React.FC<
   );
 
   async function onSubmitTransaction() {
+    console.log(gasLimit);
     setIsLoading(true);
     navigation.setOptions({
       headerLeft: null,
@@ -90,7 +90,7 @@ export const ConfirmTransactionToSend: React.FC<
       } catch (error) {
         handleFailureTransaction(error);
       }
-    }, 0);
+    }, 1000);
   }
   function handleCancel() {
     if (!isLoading) {
@@ -151,11 +151,7 @@ export const ConfirmTransactionToSend: React.FC<
         <Button onClick={onSubmitTransaction} isLoading={isLoading}>
           Send
         </Button>
-        <Button
-          outline
-          onClick={handleCancel}
-          style={styles.cancelButton}
-          isActivated={!isLoading}>
+        <Button outline onClick={handleCancel} style={styles.cancelButton}>
           Cancel
         </Button>
         <SmallText style={styles.informationText} color="blackLigth">

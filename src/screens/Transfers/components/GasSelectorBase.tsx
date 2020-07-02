@@ -21,14 +21,10 @@ type GasSelectorBaseProps = {
   isEnabled: boolean;
   subtitle: string;
   conversionLabel?: string;
+  steps?: number;
 };
 
 export const GasSelectorBase: React.FC<GasSelectorBaseProps> = props => {
-  console.log(
-    props.mininumValue,
-    `> ${props.selectorValue} >`,
-    props.maximunValue,
-  );
   return (
     <View style={[globalStyles.inputContainer, styles.container, props.style]}>
       {props.isLoading ? (
