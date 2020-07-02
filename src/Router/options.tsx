@@ -121,6 +121,7 @@ export const rootRouterOptions: RootRouterOptions = {
   successTransaction: {
     headerTintColor: colors.white,
     title: '',
+    headerLeft: null,
     headerStyle: {
       backgroundColor: colors.success,
       elevation: 0,

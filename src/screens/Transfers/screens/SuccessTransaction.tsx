@@ -1,8 +1,8 @@
 import React from 'react';
-import {RouteProp} from '@react-navigation/core';
+import {RouteProp, useFocusEffect} from '@react-navigation/core';
 import {AuthRootStackParams} from 'Router';
 import {Title, Text} from 'shared/styled-components';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, BackHandler} from 'react-native';
 import {Button, ScreenContainer, FadeInView} from 'shared/components';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
@@ -19,6 +19,15 @@ export const SuccessTransaction: React.FC<SuccessTransactionProps> = ({
 }) => {
   const tokenInfo = getCurrencyInfo(route.params.type);
   const quantity = parseFloat(route.params.quantity).toFixed(5);
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => true;
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
   function handleSubmit() {
     navigation.replace('Balance', {
       action: 'update',

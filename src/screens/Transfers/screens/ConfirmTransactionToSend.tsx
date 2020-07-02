@@ -2,26 +2,28 @@ import React, {useState, useEffect} from 'react';
 import {
   Text,
   ScreenContainer,
-  Title,
   Label,
-  Subtitle,
   SmallText,
   Input,
 } from 'shared/styled-components';
-import {RouteProp} from '@react-navigation/core';
+import {RouteProp, useFocusEffect} from '@react-navigation/core';
 import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {gasPriceInGweiToWei} from 'shared/libs/Wallet/functions/conversions';
 import {sendTokens, sendETH} from 'shared/libs/Wallet';
 import {notificateTransaction} from 'shared/libs/Notifications';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
-import Toast from 'react-native-simple-toast';
-import {StyleSheet, View, Image, Alert, ActivityIndicator} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Alert,
+  ActivityIndicator,
+  BackHandler,
+} from 'react-native';
 import {Button} from 'shared/components';
-import {colors, globalStyles} from 'shared/styles';
-import {ScrollView} from 'react-native-gesture-handler';
+import {colors} from 'shared/styles';
 import {useGlobalState} from 'globalState';
-
 type ConfirmTransactionToSendProps = {
   route: RouteProp<AuthRootStackParams, 'ConfirmTransactionToSend'>;
   navigation: StackNavigationProp<
@@ -45,36 +47,50 @@ export const ConfirmTransactionToSend: React.FC<
   const [password, setPassword] = useState('');
   const [onesignalKey] = useGlobalState('onesignalKey');
   const currencyData = getCurrencyInfo(currency.type);
-  console.log(gasLimit);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => isLoading;
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [isLoading]),
+  );
+
   async function onSubmitTransaction() {
-    console.log('lol');
     setIsLoading(true);
-    const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
-    try {
-      let hash = '';
-      if (currency.type === 'ETH') {
-        hash = await sendETH(
-          password,
-          from,
-          to,
-          tokenQuantityToBeSended,
-          gasPriceInWei,
-          gasLimit,
-        );
-      } else {
-        hash = await sendTokens(
-          password,
-          from,
-          to,
-          tokenQuantityToBeSended,
-          gasPriceInWei,
-          gasLimit,
-        );
+    navigation.setOptions({
+      headerLeft: null,
+    });
+    setTimeout(async () => {
+      const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
+      try {
+        let hash = '';
+        if (currency.type === 'ETH') {
+          hash = await sendETH(
+            password,
+            from,
+            to,
+            tokenQuantityToBeSended,
+            gasPriceInWei,
+            gasLimit,
+          );
+        } else {
+          hash = await sendTokens(
+            password,
+            from,
+            to,
+            tokenQuantityToBeSended,
+            gasPriceInWei,
+            gasLimit,
+          );
+        }
+        handleSuccessTransaction(hash);
+      } catch (error) {
+        handleFailureTransaction(error);
       }
-      handleSuccessTransaction(hash);
-    } catch (error) {
-      handleFailureTransaction(error);
-    }
+    }, 0);
   }
   function handleCancel() {
     if (!isLoading) {
@@ -132,16 +148,16 @@ export const ConfirmTransactionToSend: React.FC<
         />
       </View>
       <View style={[styles.row, styles.buttonsContainer]}>
-        {isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <>
-            <Button onClick={onSubmitTransaction}>Send</Button>
-            <Button outline onClick={handleCancel} style={styles.cancelButton}>
-              Cancel
-            </Button>
-          </>
-        )}
+        <Button onClick={onSubmitTransaction} isLoading={isLoading}>
+          Send
+        </Button>
+        <Button
+          outline
+          onClick={handleCancel}
+          style={styles.cancelButton}
+          isActivated={!isLoading}>
+          Cancel
+        </Button>
         <SmallText style={styles.informationText} color="blackLigth">
           This transaction is operated by {`\n`}
           Ethereum network.
