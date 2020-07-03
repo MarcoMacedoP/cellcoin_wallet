@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "config": "npm install && node configScript.js",
+    "config": "node configScript.js",
     "android": "react-native run-android",
     "android-shake": "adb shell input keyevent 82",
     "ios": "react-native run-ios",

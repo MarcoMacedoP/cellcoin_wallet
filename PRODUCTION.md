@@ -1,5 +1,20 @@
 # Guía para subir proyecto a producción.
 
+### Pre-requisitos generales
+
+1. Instalar los las librerías usando el comando
+
+```
+npm install
+```
+
+2. Configurar el proyecto con el comando. <strong> IMPORTANTE. Si no se ejecuta este comando la aplicación fallará
+   </strong>
+
+```
+npm run config
+```
+
 ## Android
 
 ### Pre-requisitos
@@ -40,4 +55,10 @@ $ ./gradlew bundleRelease
 
 ```
 android/app/build/outputs/bundle/release/app.aab
+```
+
+7. Antes de subir a produccion, probar el bundle para produccion en local con el comando
+
+```
+npx react-native run-android --variant=release
 ```
