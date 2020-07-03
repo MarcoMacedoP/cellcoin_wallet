@@ -69,7 +69,7 @@ export const SetQuantityToSend: React.FC<SendScreenProps> = ({
           onPress={changeCurrentCurrency}
           style={styles.currencyContainer}>
           <LabelCurrency active={activeCurrency === 'USD'}>
-            {usd || '0.00'} USD
+            {parseFloat(usd).toFixed(2) || '0.00'} USD
           </LabelCurrency>
         </TouchableOpacity>
         <View style={styles.line} />
@@ -84,8 +84,8 @@ export const SetQuantityToSend: React.FC<SendScreenProps> = ({
           <Label>
             Use maximun available:{' '}
             {activeCurrency === currency.type
-              ? currency.value.original
-              : currency.value.usd}
+              ? parseFloat(currency.value.original).toFixed(2)
+              : parseFloat(currency.value.usd).toFixed(2)}
           </Label>
         </Button>
         <NumericKeyboard
@@ -120,6 +120,7 @@ const quantityReducer: Reducer<QuantityState, QuantityAction> = (
   {type, payload},
 ) => {
   const {currency} = payload;
+  console.log(currency);
   const tokenValueInUSD =
     parseFloat(currency.value.usd) / parseFloat(currency.value.original);
   switch (type) {
@@ -129,9 +130,9 @@ const quantityReducer: Reducer<QuantityState, QuantityAction> = (
       }
       //convert usd value to token value
       const usd = parseFloat(payload.value);
-      const tokenValueFromUSD = usd / tokenValueInUSD;
+      const tokenValueFromUSD = (usd / tokenValueInUSD).toFixed(2);
       return {
-        token: String(tokenValueFromUSD),
+        token: tokenValueFromUSD,
         usd: String(usd),
       };
     }
@@ -141,10 +142,10 @@ const quantityReducer: Reducer<QuantityState, QuantityAction> = (
         return initialState;
       }
       const token = parseFloat(payload.value);
-      const usdValueFromToken = token * tokenValueInUSD;
+      const usdValueFromToken = (token * tokenValueInUSD).toFixed(2);
       return {
         token: String(token),
-        usd: String(usdValueFromToken),
+        usd: usdValueFromToken,
       };
     }
     default:

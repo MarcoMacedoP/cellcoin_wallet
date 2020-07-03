@@ -13,9 +13,7 @@ type GasPriceSelectorProps = {
   gasLimit: number;
   gasPrice: number;
   onChange: (value: number) => void;
-  isLoading: boolean;
   fee: string;
-  error: null | string;
 };
 
 export const GasPriceSelector: React.FC<GasPriceSelectorProps> = ({
@@ -25,8 +23,6 @@ export const GasPriceSelector: React.FC<GasPriceSelectorProps> = ({
   gasLimit,
   gasPrice,
   onChange,
-  isLoading,
-  error,
 }) => {
   return (
     <GasSelectorBase
@@ -39,7 +35,6 @@ export const GasPriceSelector: React.FC<GasPriceSelectorProps> = ({
       title="Gas price"
       subtitle={`${gasLimit} gas limit \n${gasPrice} gas price`}
       conversionLabel={`Fee ${fee}`}
-      isLoading={isLoading}
     />
   );
 };

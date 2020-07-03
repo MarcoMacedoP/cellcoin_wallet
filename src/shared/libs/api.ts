@@ -34,13 +34,42 @@ export async function saveAddress(address: string, uuid: string):Promise<boolean
       }),
     });
     const data = response.ok ? await response.json() : {};
-    console.log(data);
     return data?.status;
   } catch (error) {
       console.log({ error })
   }
 }
 
+/**
+ * Returns the prices of the currencys
+ * @param eth 
+ * @param token 
+ */
+export async function getPrices(eth:number | string, token:number | string): Promise<{ eth:any; token:any }> {
+  const requestOptions = {
+    method: 'post',
+    body: `eth=${eth}&token=${token}`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  };
+
+  const response = await fetch(
+    'https://erc20.lomeli.xyz/agavecoin/prices',
+    requestOptions,
+  );
+  const { data } = await response.json();
+  return data;
+}
+/**
+ * Fetch the gas price
+ * @return {Number} the fast gas price 
+ */
+export const fetchGasPrice = async (): Promise<number> => {
+      const response = await fetch(
+        'https://ethgasstation.info/api/ethgasAPI.json',
+      );
+      const data = await response.json();
+      return Number(data.fast);
+};
 function objectToUrlEncoded(json: object) {
   const urlencoded = new URLSearchParams();
   Object.keys(json).forEach(key => urlencoded.append(key, json[key]));

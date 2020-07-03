@@ -12,6 +12,18 @@ export type balanceType = {
   fetchBalance: () => Promise<void>;
   isLoading: boolean;
 };
+export type GasState = {
+  initialGasLimit: number;
+  gasLimit: {
+    eth: number;
+    token: number;
+  };
+  gasPrice: number;
+  fee: string;
+  status: 'error' | 'loading' | 'doned' | null;
+  error?: null | string;
+};
+
 type globalState = {
   keystore: any;
   addresses: Array<adressType>;
@@ -19,6 +31,7 @@ type globalState = {
   mainAddressAlias: string;
   balance: balanceType;
   onesignalKey: string;
+  gasValues: GasState;
 };
 
 export const {useGlobalState} = createGlobalState<globalState>({
@@ -28,4 +41,15 @@ export const {useGlobalState} = createGlobalState<globalState>({
   mainAddress: undefined,
   mainAddressAlias: 'main address',
   balance: null,
+  gasValues: {
+    fee: '0.000',
+    initialGasLimit: 2100,
+    gasLimit: {
+      eth: 21000,
+      token: 61000,
+    },
+    gasPrice: 30,
+    status: null,
+    error: null,
+  },
 });

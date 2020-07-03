@@ -58,11 +58,8 @@ export const ConfirmTransactionToSend: React.FC<
   );
 
   async function onSubmitTransaction() {
-    console.log(gasLimit);
     setIsLoading(true);
-    navigation.setOptions({
-      headerLeft: null,
-    });
+
     setTimeout(async () => {
       const gasPriceInWei = gasPriceInGweiToWei(gasPrice);
       try {
@@ -90,7 +87,7 @@ export const ConfirmTransactionToSend: React.FC<
       } catch (error) {
         handleFailureTransaction(error);
       }
-    }, 1000);
+    }, 500);
   }
   function handleCancel() {
     if (!isLoading) {

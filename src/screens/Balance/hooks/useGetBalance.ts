@@ -2,8 +2,9 @@ import { useGlobalState, adressType } from 'globalState';
 import { useEffect, useState } from 'react';
 import Wallet from 'erc20-wallet';
 import { Alert } from "react-native";
-import Web3 from 'web3';
-import HookedWeb3Provider from 'hooked-web3-provider';
+import { getPrices, fetchGasPrice } from 'shared/libs/api';
+import { getBalanceEth, calculateGasLimitToken, calculateGasLimitETH } from 'shared/libs/Wallet';
+const defaultAddress = '0x0000000000000000000000000000000000000000';
 
 export function useGetBalance() {
   const initialState = {
@@ -15,17 +16,31 @@ export function useGetBalance() {
   const [state, setState] = useState(initialState);
   const [mainAddress] = useGlobalState('mainAddress');
   const [, setBalance] = useGlobalState('balance');
+  const [, setGasValues] = useGlobalState('gasValues');
+  
 
   const getBalance = async () => {
     try {
       setState({ ...state, isLoading: true });
       const { ethBalance, tokenBalance } = await fetchBalance(mainAddress);
-      const { token, eth } = await getPrices(
-        ethBalance,
-        tokenBalance,
-      );
+      const [{ token, eth }, gasPrice, {gasLimit: gasLimitEth}, {gasLimit: gasLimitToken}] = await Promise.all([
+        getPrices(ethBalance, tokenBalance),
+        fetchGasPrice(),
+        calculateGasLimitETH(mainAddress, defaultAddress, 0.2),
+        calculateGasLimitToken(mainAddress, defaultAddress, 0.2)
+      ])
       const totalUsd = eth + token;
-
+      setGasValues({
+        fee: '0.000',
+        gasLimit: {
+          eth: gasLimitEth,
+          token: gasLimitToken * 2
+        },
+        gasPrice,
+        status : 'doned',
+        initialGasLimit: 0,
+        error: null,
+      })
       setState({
         ...state,
         isLoading: false,
@@ -41,6 +56,7 @@ export function useGetBalance() {
       });
       setBalance({ ...state , fetchBalance: getBalance});
     } catch (error) {
+      console.log(error);
       console.log(error.message)
       Alert.alert('Error getting balances', error?.message ? error.message : error)
       setState({ ...state, isLoading: false });
@@ -69,37 +85,6 @@ async function fetchBalance(address: string) {
     }
     return { tokenBalance, ethBalance };
 }
-async function getBalanceEth(address: string): Promise<number> {
-  const web3 = new Web3();
-  const web3Provider = new HookedWeb3Provider({
-    host: Wallet.provider,
-  });
-  web3.setProvider(web3Provider);
 
-  return new Promise((resolve, reject) =>
-    web3.eth.getBalance(address, (error, result) => {
-      if (error) reject(error);
-      try {
-        let toWei = Wallet.web3.fromWei(result)
-        resolve(toWei.toNumber());
-      } catch (error) {
-        reject(error);
-      }
-    }
-    ),
-  );
-}
-async function getPrices(eth, token): Promise<{ eth; token }> {
-  const requestOptions = {
-    method: 'post',
-    body: `eth=${eth}&token=${token}`,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  };
 
-  const response = await fetch(
-    'https://erc20.lomeli.xyz/agavecoin/prices',
-    requestOptions,
-  );
-  const { data } = await response.json();
-  return data;
-}
+

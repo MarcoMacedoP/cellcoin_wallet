@@ -39,6 +39,7 @@ interface RootRouterOptions {
   successTransaction: StackNavigationOptions;
   news: StackNavigationOptions;
 }
+
 export const headerContainerStyles = {
   headerLeftContainerStyle: {
     paddingHorizontal: spacings.right,
@@ -47,6 +48,7 @@ export const headerContainerStyles = {
     paddingHorizontal: spacings.right,
   },
 };
+
 export const rootRouterOptions: RootRouterOptions = {
   balance: ({navigation}) => ({
     title: 'AgaveCoin',
@@ -101,6 +103,7 @@ export const rootRouterOptions: RootRouterOptions = {
   }),
   confirmTransactionToSend: {
     title: 'CONFIRM YOUR ORDER',
+    headerLeft: null,
   },
   transfer: ({route}) => ({
     title: `${getCurrencyInfo(route.params.type).tokenName}`,
@@ -136,6 +139,7 @@ export const rootRouterOptions: RootRouterOptions = {
     title: 'News',
   },
 };
+
 export const commonScreenOptions: StackNavigationOptions = {
   headerTitleAlign: 'center',
   headerTintColor: colors.black,

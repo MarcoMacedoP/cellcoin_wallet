@@ -21,7 +21,10 @@ export const SuccessTransaction: React.FC<SuccessTransactionProps> = ({
   const quantity = parseFloat(route.params.quantity).toFixed(5);
   useFocusEffect(
     React.useCallback(() => {
-      const onBackPress = () => true;
+      const onBackPress = () => {
+        navigation.push('Balance', {action: 'update'});
+        return true;
+      };
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
       return () =>

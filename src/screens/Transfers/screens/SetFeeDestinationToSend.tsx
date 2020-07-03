@@ -40,19 +40,7 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
     to: selectedAddress || '',
     balance: parseFloat(currency.value.original),
   });
-  const {
-    fee,
-    error,
-    gasLimit,
-    gasPrice,
-    status,
-    initialGasLimit,
-    onGasPriceChange,
-    onGasLimitChange,
-  } = useGasPrice({
-    from: mainAddress,
-    amount: state.amount,
-    to: state.to,
+  const {values, onGasPriceChange, onGasLimitChange} = useGasPrice({
     type: currency.type,
   });
 
@@ -74,6 +62,9 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
     });
   }, []);
 
+  const gasLimit =
+    currency.type === 'ETH' ? values.gasLimit.eth : values.gasLimit.token;
+
   function handleAddressModalSelection(address: string) {
     setState(state => ({...state, to: address}));
     addressModal.close();
@@ -83,7 +74,7 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
     navigation.navigate('ConfirmTransactionToSend', {
       currency,
       gasLimit: parseFloat(gasLimit.toFixed(2)),
-      gasPrice,
+      gasPrice: values.gasPrice,
       tokenQuantityToBeSended,
       from: mainAddress,
       to: state.to,
@@ -118,20 +109,17 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
           </TouchableOpacity>
         </InputComponent>
         <GasPriceSelector
-          fee={fee}
-          isLoading={status === 'loading'}
-          error={error}
+          fee={values.fee}
           gasLimit={gasLimit}
-          gasPrice={gasPrice}
+          gasPrice={values.gasPrice}
           onChange={onGasPriceChange}
           isEnabled={isAddress(state.to)}
         />
         <GasLimitSelector
-          isLoading={status === 'loading'}
           isEnabled={isAddress(state.to)}
           value={gasLimit}
           onChange={onGasLimitChange}
-          initialValue={initialGasLimit}
+          initialValue={values.initialGasLimit}
         />
       </ScrollView>
 

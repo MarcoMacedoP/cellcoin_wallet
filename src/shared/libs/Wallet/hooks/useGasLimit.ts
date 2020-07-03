@@ -2,72 +2,65 @@ import {useEffect, Reducer, useReducer} from 'react';
 import {calculateGasLimitETH, calculateGasLimitToken} from 'shared/libs/Wallet';
 import {TokenType} from 'shared/types';
 import {gasPriceToEth} from '../functions/conversions';
+import {GasState, useGlobalState} from 'globalState';
+import {fetchGasPrice} from 'shared/libs/api';
 
 export type UseGasLimitParams = {
-  from: string;
-  to: string;
-  amount: string;
   type: TokenType;
 };
 
-type GasLimitState = {
-  initialGasLimit: number;
-  gasLimit: number;
-  gasPrice: number;
-  fee: string;
-  status: 'error' | 'loading' | 'doned' | null;
-  error?: null | string;
-};
-
 type GasLimitAction = {
-  type:
-    | 'load-data'
-    | 'error-on-fetch'
-    | 'success-fetch'
-    | 'gas-price-change'
-    | 'gas-limit-change';
+  type: 'set-fee' | 'gas-price-change' | 'gas-limit-change';
   payload?: {
     gasLimit?: number;
     gasPrice?: number;
     gasLimitInRange?: number;
+    token: TokenType;
   };
   error?: string | null;
 };
-const initialState: GasLimitState = {
+const initialState: GasState = {
   fee: '0.0000',
   initialGasLimit: 21000,
-  gasLimit: 21000,
+  gasLimit: {
+    eth: 21000,
+    token: 31161 * 2,
+  },
   gasPrice: 30,
   status: null,
   error: null,
 };
-const gasLimitReducer: Reducer<GasLimitState, GasLimitAction> = (
+const gasLimitReducer: Reducer<GasState, GasLimitAction> = (
   state = initialState,
   action,
 ) => {
   switch (action.type) {
-    case 'load-data':
-      return {
-        ...state,
-        status: 'loading',
-      };
-    case 'success-fetch': {
-      let {gasLimit, gasPrice} = action.payload;
+    case 'set-fee': {
+      let {gasLimit, gasPrice, token} = action.payload;
       gasPrice = gasPrice / 10; // el gasPrice del JSON
       const fee = (gasPrice / 1e9) * gasLimit;
+
       return {
         ...state,
         fee: fee.toFixed(5),
-        status: 'doned',
-        gasLimit,
+        gasLimit:
+          token === 'ETH'
+            ? {
+                ...state.gasLimit,
+                eth: gasLimit,
+              }
+            : {
+                ...state.gasLimit,
+                token: gasLimit,
+              },
         gasPrice: gasPrice,
         initialGasLimit: gasLimit,
         gasPriceInRange: gasPrice * 2,
       };
     }
     case 'gas-price-change': {
-      const {gasPrice} = action.payload;
-      const fee = gasPriceToEth(gasPrice, state.gasLimit);
+      const {gasPrice, gasLimit} = action.payload;
+      const fee = gasPriceToEth(gasPrice, gasLimit);
       return {
         ...state,
         gasPrice,
@@ -75,21 +68,25 @@ const gasLimitReducer: Reducer<GasLimitState, GasLimitAction> = (
       };
     }
     case 'gas-limit-change': {
+      const {token} = action.payload;
       const gasLimit = Math.floor(action.payload.gasLimit);
       const fee = gasPriceToEth(state.gasPrice, gasLimit);
       return {
         ...state,
-        gasLimit,
+        gasLimit:
+          token === 'ETH'
+            ? {
+                ...state.gasLimit,
+                eth: gasLimit,
+              }
+            : {
+                ...state.gasLimit,
+                token: gasLimit,
+              },
         fee: fee.toFixed(5),
       };
     }
-    case 'error-on-fetch': {
-      return {
-        ...state,
-        error: action.error,
-        status: 'error',
-      };
-    }
+
     default:
       return state;
   }
@@ -100,66 +97,36 @@ const gasLimitReducer: Reducer<GasLimitState, GasLimitAction> = (
  *
  */
 export function useGasPrice({
-  to,
-  from,
-  amount,
   type,
-}: UseGasLimitParams): GasLimitState & {
+}: UseGasLimitParams): {
+  values: GasState;
   onGasPriceChange: (value: number) => void;
   onGasLimitChange: (value: number) => void;
 } {
   const [state, dispatch] = useReducer(gasLimitReducer, initialState);
-  const calculateGas = async () => {
-    const fetchGasPrice = async (): Promise<number> => {
-      const response = await fetch(
-        'https://ethgasstation.info/api/ethgasAPI.json',
-      );
-      const data = await response.json();
-      return Number(data.fast);
-    };
-    if (type === 'ETH') {
-      const [{gasLimit}, gasPrice] = await Promise.all([
-        calculateGasLimitETH(from, to, amount),
-        fetchGasPrice(),
-      ]);
-      return {gasLimit, gasPrice};
-    } else {
-      const [{gasLimit}, gasPrice] = await Promise.all([
-        calculateGasLimitToken(from, to, amount),
-        fetchGasPrice(),
-      ]);
-      return {gasLimit, gasPrice};
-    }
-  };
+  const [gasValues] = useGlobalState('gasValues');
 
   useEffect(() => {
-    async function handleCalculateGas() {
-      dispatch({type: 'load-data'});
-      try {
-        const {gasLimit, gasPrice} = await calculateGas();
-        const actualGasLimit = type === 'ETH' ? gasLimit : gasLimit * 2;
-        dispatch({
-          type: 'success-fetch',
-          payload: {gasLimit: actualGasLimit, gasPrice},
-        });
-      } catch (e) {
-        const error =
-          typeof e === 'string'
-            ? e
-            : 'An error ocurred while getting gas prices, try again later.';
-        dispatch({type: 'error-on-fetch', error});
-      }
-    }
-    if (amount && to && from && state.status !== 'doned') {
-      handleCalculateGas();
-    }
-  }, [to, from, amount, state.status]);
+    dispatch({
+      type: 'set-fee',
+      payload: {
+        token: type,
+        gasLimit:
+          type === 'ETH' ? gasValues.gasLimit.eth : gasValues.gasLimit.token,
+        gasPrice: gasValues.gasPrice,
+      },
+    });
+  }, []);
 
   const onGasPriceChange = (value: number) => {
+    const gasLimit =
+      type === 'ETH' ? gasValues.gasLimit.eth : gasValues.gasLimit.token;
     dispatch({
       type: 'gas-price-change',
       payload: {
+        token: type,
         gasPrice: value,
+        gasLimit,
       },
     });
   };
@@ -168,10 +135,11 @@ export function useGasPrice({
     dispatch({
       type: 'gas-limit-change',
       payload: {
+        token: type,
         gasLimit: value,
       },
     });
   };
 
-  return {...state, onGasPriceChange, onGasLimitChange};
+  return {values: state, onGasPriceChange, onGasLimitChange};
 }

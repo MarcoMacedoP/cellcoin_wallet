@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import lightwallet from 'eth-lightwallet';
 import api from 'etherscan-api';
 import HookedWeb3Provider from 'hooked-web3-provider';
+import Web3 from 'web3';
+
 const txutils = lightwallet.txutils;
 const signing = lightwallet.signing;
 
@@ -128,11 +130,12 @@ export const calculateGasLimitETH = async function(
                 Result.gasPrice = Math.round(Result.gasPrice);
                 resolve(Result);
               } else {
-                reject('An error occurred while calculating the gas');
+                console.log(error);
+                reject('An error occurred while calculating the gas :c');
               }
             });
           } else {
-            reject(err);
+            reject('lol');
           }
         });
       } else {
@@ -171,11 +174,12 @@ export const calculateGasLimitToken = async function(
               Result.gasLimit = Math.round(Result.gasLimit);
               resolve(Result);
             } else {
-              reject('An error occurred while calculating the gas');
+              reject('An error occurred while calculating the gas 1');
             }
           });
         } else {
-          reject('An error occurred while calculating the gas');
+          console.log(err);
+          reject('An error occurred while calculating the gas 2');
         }
       },
     );
@@ -321,5 +325,25 @@ export const sendTokens = async (
     }
   });
 };
+
+export async function getBalanceEth(address: string): Promise<number> {
+  const web3 = new Web3();
+  const web3Provider = new HookedWeb3Provider({
+    host: Wallet.provider,
+  });
+  web3.setProvider(web3Provider);
+
+  return new Promise((resolve, reject) =>
+    web3.eth.getBalance(address, (error, result) => {
+      if (error) reject(error);
+      try {
+        let toWei = Wallet.web3.fromWei(result);
+        resolve(toWei.toNumber());
+      } catch (error) {
+        reject(error);
+      }
+    }),
+  );
+}
 
 export * from './hooks/useGasLimit';
