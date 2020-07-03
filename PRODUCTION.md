@@ -1,0 +1,43 @@
+# Guía para subir proyecto a producción.
+
+## Android
+
+### Pre-requisitos
+
+    - Tener instalado el JDK de Java.
+    - Tener instalado el SDK de Android.
+
+### Firma de app.
+
+1. Primero hay que general la llave para poder subir a la playstore. Para poder generar la llave hay que movernos a la carpeta de instalacion del SDK y usar el comando:
+
+```
+$ keytool -genkeypair -v -keystore my-upload-key.keystore -alias [Insertar alías aquí y quitar corchetes] -keyalg RSA -keysize 2048 -validity 10000
+```
+
+- En windows hay que correr el comando desde C:\Program Files\Java\jdkx.x.x_x\bin.
+- En Mac pueden usar el comando `/usr/libexec/java_home` para encontrar la ubicacion del JDK y desde ahí ejecutar el comando.
+
+2. El comando generá una llave valida por 10000 días. El alias usado servirá para firmar el apk despues.
+3. Ahora hay que poner el archivo my-upload-key.keystore generado en la carpeta android/app del proyecto.
+4. Editamos el archivo en android/grade.properties con las siguientes variables (remplazando los \*\*\*\* por las claves):
+
+```
+MYAPP_UPLOAD_STORE_FILE=my-upload-key.keystore
+MYAPP_UPLOAD_KEY_ALIAS=my-key-alias
+MYAPP_UPLOAD_STORE_PASSWORD=*****
+MYAPP_UPLOAD_KEY_PASSWORD=*****
+```
+
+5. Ejecutamos los siguientes comandos
+
+```
+$ cd android
+$ ./gradlew bundleRelease
+```
+
+6. El archivo AAB listo para subirse a la playstore se encontrará en:
+
+```
+android/app/build/outputs/bundle/release/app.aab
+```
