@@ -105,7 +105,7 @@ export const SetFeeDestinationToSend: React.FC<SetAddressScreenProps> = ({
                 tokenQuantityToBeSended: params.tokenQuantityToBeSended,
               })
             }>
-            <Icon name="address-book" size={20} color={colors.accent} />
+            <Icon name="address-book" size={20} color={colors.primary} />
           </TouchableOpacity>
         </InputComponent>
         <GasPriceSelector

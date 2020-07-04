@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import {colors} from 'shared/styles';
 import {FadeInView} from 'shared/components';
 
-const headerImage = require('assets/images/agave_background.png');
+const headerImage = require('assets/images/balance_background.png');
 
 type BalanceHeaderComponentProps = {
   assets: string;
@@ -37,6 +37,7 @@ const Container = styled.ImageBackground`
   margin-bottom: 16px;
   background-color: ${colors.primary};
   margin: -16px 0;
+  overflow: hidden;
 `;
 
 const AssetsContainer = styled.View`

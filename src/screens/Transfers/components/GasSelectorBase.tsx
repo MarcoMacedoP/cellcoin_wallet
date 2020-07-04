@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-  ActivityIndicator,
-} from 'react-native';
+import {View, StyleSheet, StyleProp, ViewStyle} from 'react-native';
 import {globalStyles, colors} from 'shared/styles';
 import {Text, SmallText} from 'shared/styled-components';
 import Slider from '@react-native-community/slider';
@@ -27,38 +21,29 @@ type GasSelectorBaseProps = {
 export const GasSelectorBase: React.FC<GasSelectorBaseProps> = props => {
   return (
     <View style={[globalStyles.inputContainer, styles.container, props.style]}>
-      {props.isLoading ? (
-        <>
-          <Text color="primary">Loading...</Text>
-          <ActivityIndicator color={colors.accent} />
-        </>
-      ) : (
-        <>
-          <Text color="primary">{props.title}</Text>
-          <SmallText style={styles.subtitle} color="blackLigth" isBold>
-            {props.subtitle}
-          </SmallText>
-          <Slider
-            disabled={!props.isEnabled}
-            minimumValue={props.mininumValue}
-            maximumValue={props.maximunValue}
-            value={props.selectorValue}
-            thumbTintColor={colors.accent}
-            maximumTrackTintColor={colors.blackLigth}
-            minimumTrackTintColor={colors.primary}
-            style={styles.slider}
-            onSlidingComplete={props.onChange}
-          />
-          <View style={styles.intervals}>
-            <SmallText color="blackLigth">Slow</SmallText>
-            <SmallText color="blackLigth">Fast</SmallText>
-          </View>
-          {props.conversionLabel && (
-            <SmallText color="accent" style={styles.conversionLabel}>
-              {props.conversionLabel}
-            </SmallText>
-          )}
-        </>
+      <Text color="primary">{props.title}</Text>
+      <SmallText style={styles.subtitle} color="blackLigth" isBold>
+        {props.subtitle}
+      </SmallText>
+      <Slider
+        disabled={!props.isEnabled}
+        minimumValue={props.mininumValue}
+        maximumValue={props.maximunValue}
+        value={props.selectorValue}
+        thumbTintColor={colors.primary}
+        maximumTrackTintColor={colors.blackLigth}
+        minimumTrackTintColor={colors.primary}
+        style={styles.slider}
+        onSlidingComplete={props.onChange}
+      />
+      <View style={styles.intervals}>
+        <SmallText color="blackLigth">Slow</SmallText>
+        <SmallText color="blackLigth">Fast</SmallText>
+      </View>
+      {props.conversionLabel && (
+        <SmallText color="primary" style={styles.conversionLabel}>
+          {props.conversionLabel}
+        </SmallText>
       )}
     </View>
   );

@@ -12,7 +12,7 @@ import {Image} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useCreateWallet} from '../hooks/useCreateWallet';
 const check = require('assets/icons/check_icon.png');
-const walletImage = require('assets/images/agave_wallet_create.png');
+const walletImage = require('assets/images/create_wallet.png');
 
 export const LoadWalletScreen = () => {
   console.log('LoadWalletScreen');

@@ -13,10 +13,10 @@ import { useGlobalState } from 'globalState';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
-    name: 'AgaveCoin',
+    name: 'XoyCoin',
     type: 'TOKEN',
     value: {original: '---', usd: '---'},
-    image: 'assets/icons/agave_coin_icon.png',
+    image: 'assets/icons/token_icon.png',
   },
   {
     type: 'ETH',

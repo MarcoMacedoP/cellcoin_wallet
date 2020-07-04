@@ -45,7 +45,7 @@ export const PasswordModal: PasswordModalType = ({
           <Image
             source={
               transactionData.currency === 'AGVC'
-                ? require('assets/icons/agave_coin_icon.png')
+                ? require('assets/icons/token_icon.png')
                 : require('assets/icons/ethereum_icon.png')
             }
           />

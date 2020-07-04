@@ -18,10 +18,10 @@ export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({
 }) => {
   const {params: currency} = route;
   const [mainAddress] = useGlobalState('mainAddress');
-  const {logo} = getCurrencyInfo(currency.type);
+  const {logo, tokenName} = getCurrencyInfo(currency.type);
   return (
     <LinearGradient
-      colors={['#26777D', '#26777D', '#50CDD5', '#50CDD5']}
+      colors={['#3A81F8', '#16CDFC', '#16CDFC', '#16CDFC']}
       style={styles.gradient}>
       <StatusBar barStyle="light-content" />
       <View style={styles.addressContainer}>
@@ -38,7 +38,7 @@ export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({
       <View style={styles.informationContainer}>
         <SmallText color="white" center>
           Attention: please do not deposit any digital assets other than{' '}
-          {currency.type} to the above address
+          {tokenName} to the above address
         </SmallText>
         <Image
           style={styles.brandLogo}

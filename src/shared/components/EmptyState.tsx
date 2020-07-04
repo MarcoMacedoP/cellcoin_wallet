@@ -11,7 +11,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   hasImage = true,
 }) => (
   <Container>
-    {hasImage && <Image source={require('/assets/icons/cart_icon.png')} />}
+    {hasImage && <Image source={require('/assets/icons/empty_icon.png')} />}
     <Message>{message}</Message>
   </Container>
 );

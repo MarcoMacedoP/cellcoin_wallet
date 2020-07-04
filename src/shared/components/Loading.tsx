@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import {Label} from 'shared/styled-components';
 import {UIActivityIndicator} from 'react-native-indicators';
 import {ImageSource} from 'react-native-vector-icons/Icon';
+import {colors} from 'shared/styles';
 
 type LoadingProps = {
   image?: ImageSource;
@@ -19,7 +20,7 @@ export const Loading: React.FC<LoadingProps> = ({image, text}) => (
       </ImageContainer>
     )}
     <LoaderContainer>
-      <UIActivityIndicator size={50} color="#65DDB9" />
+      <UIActivityIndicator size={50} color={colors.accentLight} />
     </LoaderContainer>
 
     {text && (

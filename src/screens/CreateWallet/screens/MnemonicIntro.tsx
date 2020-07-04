@@ -7,7 +7,7 @@ import {styles} from '../styles';
 import {View} from 'react-native';
 import {Title, Text, ScreenContainer} from 'shared/styled-components';
 
-const image = require('assets/images/agave_cellphone.png');
+const image = require('assets/images/mnemonic_backup.png');
 
 export const MnemonicIntro = ({navigation}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -48,15 +48,15 @@ export const MnemonicIntro = ({navigation}) => {
 };
 
 const Image = styled.Image`
-  width: 75%;
-  height: 75%;
+  width: 120px;
+  height: 133px;
 `;
 
 const ImageBox = styled.View`
   width: 100%;
   height: 40%;
   margin-bottom: 16px;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   background-color: white;
 `;

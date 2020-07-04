@@ -53,7 +53,6 @@ export const TransfersScreen: React.FC<TransfersScreenProps> = props => {
         <ClipboardComponent style={styles.clipboard} text={mainAddress} />
         <View style={styles.buttonsContainer}>
           <Button
-            accent
             width="50%"
             style={styles.button}
             onClick={navigateToSendTransfer}>
