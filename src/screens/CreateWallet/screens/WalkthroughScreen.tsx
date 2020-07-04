@@ -20,20 +20,26 @@ type WalkthroughItemData = {
 const WALKTHROUGH_DATA: WalkthroughItemData[] = [
   {
     image: require('assets/tutorial/tutorial_one.png'),
-    title: 'Multi-chain Wallet',
-    desc: 'Supports Ethereum and AgaveCoin.',
+    title: 'You are member of',
+    desc:
+      'Remember that Xoy wallet is part of this prestigious group of brands that support you',
   },
   {
     image: require('assets/tutorial/tutorial_two.png'),
-    title: 'Simple Designed',
-    desc:
-      "Add and manage cryptocurrencies with one tap. \n Add multiple Wallet's addresses easily",
+    title: 'Multi-chain Wallet',
+    desc: 'Generate profits with XoyCoin',
   },
   {
     image: require('assets/tutorial/tutorial_three.png'),
-    title: 'Secure and encrypted',
+    title: 'XoyWallet Services',
     desc:
-      "You will have full control over your assets by managing the private keys independently. \n Developed by AgaveCoin's Security Team",
+      'With XoyCoin, you can do multiple transactions. Besides, it is pretty easy to buy or send cryptocurrency instantly.',
+  },
+  {
+    image: require('assets/tutorial/tutorial_four.png'),
+    title: 'XoyCoin Secure',
+    desc:
+      'Full control over assets by managing private keys independently. Produced by Xoy Coin security team',
   },
 ];
 
@@ -71,9 +77,9 @@ export const WalkthroughScreen = ({navigation}) => {
         />
       </View>
       <View style={styles.dotsButtonContainer}>
-        <DotButton isSelected={currentIndex === 0} />
-        <DotButton isSelected={currentIndex === 1} />
-        <DotButton isSelected={currentIndex === 2} />
+        {WALKTHROUGH_DATA.map((item, index) => (
+          <DotButton isSelected={currentIndex === index} key={index} />
+        ))}
       </View>
       <View style={styles.buttonsContainer}>
         <Button onClick={onCreateWallet} margin="24px 0 8px">
