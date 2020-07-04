@@ -139,7 +139,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.wallet_agavecoin"
+        applicationId "com.wallet_xoycoin"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

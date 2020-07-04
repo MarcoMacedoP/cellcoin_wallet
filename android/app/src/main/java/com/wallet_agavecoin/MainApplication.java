@@ -1,4 +1,4 @@
-package com.wallet_agavecoin;
+package com.wallet_xoycoin;
 
 import android.app.Application;
 import android.content.Context;
