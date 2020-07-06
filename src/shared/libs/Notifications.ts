@@ -1,4 +1,3 @@
-import {ONESIGNAL_APP_ID, ONESIGNAL_API_KEY} from 'react-native-dotenv';
 import OneSignal from 'react-native-onesignal';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as api from 'shared/libs/api';
@@ -30,6 +29,8 @@ type NotificateTransactionParams = {
   token: string;
   /** The one signal key */
   key: string;
+  /** The one signal appID */
+  appId: string;
 };
 /**
  * Sends a push notification to all the parts involved in the transaction.
@@ -39,7 +40,8 @@ export async function notificateTransaction({
   from,
   to,
   token,
-  key = ONESIGNAL_API_KEY,
+  key,
+  appId,
 }: NotificateTransactionParams) {
   const baseMessage = `A transaction of ${amount} ${token} is being`;
   const receiverMessage = `${baseMessage} recieved`;
@@ -55,28 +57,34 @@ export async function notificateTransaction({
 
   const receiverRequest = fetch(notificationsUrl, {
     ...requestParams,
-    body: makeBody({
-      headings: {
-        en: 'Transaction received',
+    body: makeBody(
+      {
+        headings: {
+          en: 'Transaction received',
+        },
+        contents: {
+          en: receiverMessage,
+        },
+        filters: [filterByWalletAddress(to)],
       },
-      contents: {
-        en: receiverMessage,
-      },
-      filters: [filterByWalletAddress(to)],
-    }),
+      appId,
+    ),
   }).then(response => response.json());
 
   const emmiterRequest = fetch(notificationsUrl, {
     ...requestParams,
-    body: makeBody({
-      headings: {
-        en: 'Transaction sended',
+    body: makeBody(
+      {
+        headings: {
+          en: 'Transaction sended',
+        },
+        contents: {
+          en: emitterMessage,
+        },
+        filters: [filterByWalletAddress(from)],
       },
-      contents: {
-        en: emitterMessage,
-      },
-      filters: [filterByWalletAddress(from)],
-    }),
+      appId,
+    ),
   }).then(response => response.json());
 
   try {
@@ -100,10 +108,10 @@ const filterByWalletAddress = (address: string) => ({
  * Makes a valid body to make a request to OneSignal API.
  * @param params an object to be serialized as string.
  */
-function makeBody(params: object) {
+function makeBody(params: object, appId: string) {
   return JSON.stringify({
     ...params,
-    app_id: ONESIGNAL_APP_ID,
+    app_id: appId,
   });
 }
 
