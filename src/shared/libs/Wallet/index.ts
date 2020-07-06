@@ -39,31 +39,43 @@ function createdStored() {
 
 export function createKeystore() {
   Wallet.numAddr = 10;
-  return createdStored().then(keystore => {
-    Wallet.keystore = keystore;
-    return keystore;
-  });
+  return createdStored()
+    .then(keystore => {
+      Wallet.keystore = keystore;
+      return keystore;
+    })
+    .catch(e => {
+      console.log(e);
+    });
 }
 export async function createAddress() {
-  const address = await Wallet.generateAddress();
-  const mainAddress = address[0].address;
-  Wallet.address = address;
-  const listAddress = [
-    {
-      alias: 'Main Address',
-      address: mainAddress,
-    },
-  ];
-  await Promise.all([
-    AsyncStorage.setItem('addresses', JSON.stringify(address)),
-    AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress)),
-    AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress)),
-  ]);
-  return address;
+  try {
+    const address = await Wallet.generateAddress();
+    const mainAddress = address[0].address;
+    Wallet.address = address;
+    const listAddress = [
+      {
+        alias: 'Main Address',
+        address: mainAddress,
+      },
+    ];
+    await Promise.all([
+      AsyncStorage.setItem('addresses', JSON.stringify(address)),
+      AsyncStorage.setItem('mainAddress', JSON.stringify(mainAddress)),
+      AsyncStorage.setItem('addressesEdit', JSON.stringify(listAddress)),
+    ]);
+    return address;
+  } catch (error) {
+    console.log(error);
+  }
 }
 export async function encodeKeystore() {
-  const json = await Wallet.encodeJson();
-  await AsyncStorage.setItem('keystore', json);
+  try {
+    const json = await Wallet.encodeJson();
+    await AsyncStorage.setItem('keystore', json);
+  } catch (error) {
+    console.log(error);
+  }
 }
 function initEtherScan() {
   const etherscan = api.init(
