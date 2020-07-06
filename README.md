@@ -5,14 +5,11 @@
 1.  `npm install && node configScript.js`
 2.  `npm start`
 
-
 ## :star: Features
 
 - Elegant usage directly within the [React Native CLI](https://github.com/react-native-community/cli)
 - Consistent with the default React Native template
 - Minimal additional dependencies
-
-
 
 ### Note on the legacy CLI
 
