@@ -7,14 +7,10 @@ import {Splash} from 'shared/components/Splash';
 import {useFindWalletInStorage} from 'shared/hooks/useFindWalletInStorage';
 import {FadeInView} from 'shared/components';
 import {useGlobalState} from 'globalState';
-import OneSignal from 'react-native-onesignal';
-import SimpleToast from 'react-native-simple-toast';
-import {Alert, Platform} from 'react-native';
+import {Alert} from 'react-native';
 import {useOneSignal} from 'shared/libs/Notifications';
 import {getInitialization} from 'shared/libs/api';
 
-//declarations
-const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
 //Wallet initializations
 Wallet.mySeed = 'mipalabraalfanumerica8989';
 
@@ -26,6 +22,7 @@ function useInitilizeApp() {
   const [hasSetInitialization, setHasSetInitialization] = useState(false);
   const [hasKeystore] = useGlobalState('keystore');
   const [, setOnesignalKey] = useGlobalState('onesignalKey');
+  const [, setOnsesignalAppId] = useGlobalState('onesignalAppID');
   const onesignal = useOneSignal();
   const wallet = useFindWalletInStorage();
   useEffect(() => {
@@ -46,6 +43,7 @@ function useInitilizeApp() {
         }
 
         onesignal.init(initialization.oneSignal_appID);
+        setOnsesignalAppId(initialization.oneSignal_appID);
         setOnesignalKey(initialization.oneSignal_secret);
         setHasSetInitialization(true);
       } else {

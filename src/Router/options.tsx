@@ -2,12 +2,9 @@ import React from 'react';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {colors, spacings} from 'shared/styles';
 import FIcon from 'react-native-vector-icons/Feather';
-import MIcon from 'react-native-vector-icons/Ionicons';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
-
 import {IconContainer} from 'shared/styled-components';
 import {Image} from 'react-native';
-import {CurrencyType} from 'shared/types';
 import {AuthRootStackParams} from 'Router';
 import {RouteProp} from '@react-navigation/core';
 import {getCurrencyInfo} from 'shared/libs/getCurrencyInfo';
@@ -57,11 +54,7 @@ export const rootRouterOptions: RootRouterOptions = {
     ...headerContainerStyles,
     headerLeft: () => (
       <IconContainer onPress={() => navigation.navigate('News')}>
-        <MIcon
-          name="ios-notifications-outline"
-          size={24}
-          color={colors.white}
-        />
+        <FIcon name="bell" size={20} color={colors.white} />
       </IconContainer>
     ),
     headerRight: () => (

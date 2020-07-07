@@ -29,6 +29,8 @@ type NotificateTransactionParams = {
   token: string;
   /** The one signal key */
   key: string;
+  /** The one signal appID */
+  appId: string;
 };
 /**
  * Sends a push notification to all the parts involved in the transaction.
@@ -39,6 +41,7 @@ export async function notificateTransaction({
   to,
   token,
   key,
+  appId,
 }: NotificateTransactionParams) {
   const baseMessage = `A transaction of ${amount} ${token} is being`;
   const receiverMessage = `${baseMessage} recieved`;
@@ -64,7 +67,7 @@ export async function notificateTransaction({
         },
         filters: [filterByWalletAddress(to)],
       },
-      'appId',
+      appId,
     ),
   }).then(response => response.json());
 
@@ -80,7 +83,7 @@ export async function notificateTransaction({
         },
         filters: [filterByWalletAddress(from)],
       },
-      'appId',
+      appId,
     ),
   }).then(response => response.json());
 
@@ -105,10 +108,10 @@ const filterByWalletAddress = (address: string) => ({
  * Makes a valid body to make a request to OneSignal API.
  * @param params an object to be serialized as string.
  */
-function makeBody(params: object, appID: string) {
+function makeBody(params: object, appId: string) {
   return JSON.stringify({
     ...params,
-    app_id: appID,
+    app_id: appId,
   });
 }
 

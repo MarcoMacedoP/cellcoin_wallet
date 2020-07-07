@@ -31,12 +31,14 @@ type globalState = {
   mainAddressAlias: string;
   balance: balanceType;
   onesignalKey: string;
+  onesignalAppID: string;
   gasValues: GasState;
 };
 
 export const {useGlobalState} = createGlobalState<globalState>({
   keystore: {},
   onesignalKey: '',
+  onesignalAppID: '',
   addresses: [],
   mainAddress: undefined,
   mainAddressAlias: 'main address',

@@ -46,6 +46,7 @@ export const ConfirmTransactionToSend: React.FC<
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState('');
   const [onesignalKey] = useGlobalState('onesignalKey');
+  const [onesignalAppID] = useGlobalState('onesignalAppID');
   const currencyData = getCurrencyInfo(currency.type);
   useFocusEffect(
     React.useCallback(() => {
@@ -105,6 +106,7 @@ export const ConfirmTransactionToSend: React.FC<
       to,
       token: getCurrencyInfo(currency.type).tokenName,
       key: onesignalKey,
+      appId: onesignalAppID,
     });
     navigation.navigate('SuccessTransaction', {
       from,
