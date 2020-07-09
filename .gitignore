@@ -60,3 +60,5 @@ buck-out/
 
 # Keys
 .env
+# Unused stuff
+android/app/src/main/res/raw/
