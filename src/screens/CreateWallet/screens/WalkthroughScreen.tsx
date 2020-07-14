@@ -20,26 +20,20 @@ type WalkthroughItemData = {
 const WALKTHROUGH_DATA: WalkthroughItemData[] = [
   {
     image: require('assets/tutorial/tutorial_one.png'),
-    title: 'You are member of',
-    desc:
-      'Remember that Xoy wallet is part of this prestigious group of brands that support you',
+    title: 'Supporting by 404 ',
+    desc: 'Generate profits with 404 Coin',
   },
   {
     image: require('assets/tutorial/tutorial_two.png'),
-    title: 'Multi-chain Wallet',
-    desc: 'Generate profits with 404',
+    title: '404 Coin Services',
+    desc:
+      'With 404 Coin,you can do multiple transactions. Buy or send cryptocurrency instantly.',
   },
   {
     image: require('assets/tutorial/tutorial_three.png'),
-    title: 'XoyWallet Services',
+    title: '404 Coin Secure ',
     desc:
-      'With 404, you can do multiple transactions. Besides, it is pretty easy to buy or send cryptocurrency instantly.',
-  },
-  {
-    image: require('assets/tutorial/tutorial_four.png'),
-    title: '404 Secure',
-    desc:
-      'Full control over assets by managing private keys independently. Produced by Xoy Coin security team',
+      'Full control over assets by managing private keys independently. Produced by 404 Coin security team',
   },
 ];
 
@@ -85,7 +79,7 @@ export const WalkthroughScreen = ({navigation}) => {
         <Button onClick={onCreateWallet} margin="24px 0 8px">
           Create Wallet
         </Button>
-        <Button onClick={onImportWallet} secondary>
+        <Button onClick={onImportWallet} outline>
           Import Wallet
         </Button>
       </View>

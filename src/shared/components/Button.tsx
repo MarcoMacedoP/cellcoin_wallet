@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50,
+    borderRadius: 8,
     maxHeight: 50,
     marginTop: 5,
     marginVertical: 0,

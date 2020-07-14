@@ -12,14 +12,14 @@ export type Color =
   | 'accent';
 
 export const colors = {
-  primary: '#3E79F8',
+  primary: '#388E3C',
   primaryLigth: '#DA7220',
   primaryDark: '#2330d7',
-  accent: '#DA7220',
-  accentLight: '#EEF6FF',
+  accent: '#00FF00',
+  accentLight: '#E1E5E9',
   white: '#ffffff',
   whiteDark: '#eceff1',
-  black: '#575555',
+  black: '#272727',
   blackLigth: '#c9c5c5',
   blackTransparent: 'rgba(0,0,0,0.8)',
   blackTransparentLight: 'rgba(0,0,0,0.3)',

@@ -65,6 +65,7 @@ function useInitilizeApp() {
 }
 const App = () => {
   const {hasInitialized} = useInitilizeApp();
+  console.log(hasInitialized);
   return !hasInitialized ? (
     <Splash />
   ) : (

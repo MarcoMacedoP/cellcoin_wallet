@@ -21,7 +21,7 @@ export const MnemonicIntroModal: React.FC<MnemonicIntroModalProps> = ({
       <View style={[styles.modalContainer]}>
         <View
           style={[sharedStyles.mnemonicTextContainer, styles.textContainer]}>
-          <Title style={sharedStyles.mnemonicText}>
+          <Title style={sharedStyles.mnemonicText} color="black">
             The Mnemonic Phrase can give full control over your assets. {'\n'}
             Users should be aware of the following matters:
             {'\n'}

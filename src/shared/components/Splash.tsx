@@ -1,55 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Animated, Text, View, Easing } from 'react-native';
-import styled from 'styled-components/native';
+import React from 'react';
+import {ImageBackground, StatusBar} from 'react-native';
+import {FadeInView} from './FadeInView';
 
-const FadeInView = (props) => {
-  const [fadeAnim] = useState(new Animated.Value(0))  // Initial value for opacity: 0
+const background = require('assets/images/background_splash.png');
 
-  React.useEffect(() => {
-    Animated.timing(
-      fadeAnim,
-      {
-        toValue: 2,
-        duration: 1000,
-      }
-    ).start();
-  }, [])
-
-  return (
-    <Animated.View                 // Special animatable View
-      style={{
-        ...props.style,
-        opacity: fadeAnim,
-        transform: [{
-          translateY: fadeAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [50, 0]  // 0 : 150, 0.5 : 75, 1 : 0
-          }),
-        }],         // Bind opacity to animated value
-      }}
-    >
-      {props.children}
-    </Animated.View>
-  );
-}
-
-// You can then use your `FadeInView` in place of a `View` in your components:
 export const Splash = () => {
-  const logo = require('assets/images/logo_splash.png');
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <FadeInView style={{width: 150, height: 250,}}>
-        <Image source={logo} />
-      </FadeInView>
-    </View>
-  )
-}
-const Image = styled.Image`
-  width: 100%;
-  height: 100%;
-  resize-mode: contain;
-`;
-const ImageBox = styled(FadeInView)`
-  width: 100%;
-  height: 100%;
-`;
+    <FadeInView style={{width: '100%', flex: 1}}>
+      <StatusBar translucent backgroundColor="transparent" />
+      <ImageBackground
+        source={background}
+        resizeMode="cover"
+        style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+      />
+    </FadeInView>
+  );
+};

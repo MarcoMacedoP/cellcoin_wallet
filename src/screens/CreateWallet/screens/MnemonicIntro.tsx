@@ -58,5 +58,4 @@ const ImageBox = styled.View`
   margin-bottom: 16px;
   justify-content: flex-end;
   align-items: center;
-  background-color: white;
 `;

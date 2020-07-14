@@ -73,7 +73,7 @@ const Label = styled(Text)<StyledProps>`
 const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.black,
     marginVertical: 21,
     flexDirection: 'row',
     flexWrap: 'wrap',

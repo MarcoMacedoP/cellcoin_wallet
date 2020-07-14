@@ -23,7 +23,7 @@ export const Text = styled.Text<TextProps>`
       ? colors.hasOwnProperty(props.color)
         ? colors[props.color]
         : colors.black
-      : colors.black};
+      : colors.white};
   text-align: ${props => (props.center ? 'center' : 'left')};
 `;
 export const SmallText = styled(Text)`
