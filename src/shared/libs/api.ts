@@ -1,4 +1,4 @@
-const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
+const API_URL = 'https://erc20.lomeli.xyz/xoycoin/';
 
 const baseHeaders = {
   'Content-Type': 'application/x-www-form-urlencoded',
@@ -70,7 +70,17 @@ export const fetchGasPrice = async (): Promise<number> => {
       const data = await response.json();
       return Number(data.fast);
 };
-function objectToUrlEncoded(json: object) {
+
+export async function getNotifications() {
+    const response = await fetch(`${API_URL}/get-news`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    });
+    const {data} = await response.json();
+    return data;
+  }
+
+  function objectToUrlEncoded(json: object) {
   const urlencoded = new URLSearchParams();
   Object.keys(json).forEach(key => urlencoded.append(key, json[key]));
   //required param from the server.

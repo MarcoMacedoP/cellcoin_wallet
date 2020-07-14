@@ -39,10 +39,7 @@ export function MnemonicImport({navigation}) {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flex: 1,
-      }}>
+    <ScrollView contentContainerStyle={{flex: 1}}>
       <ScreenContainer light justify="space-between" align="center">
         <TextContainer>
           <Label hasError={hasError}>

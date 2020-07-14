@@ -2,8 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {TransferMessages} from './components/TransferMessages';
 import {ScreenContainer} from 'shared/styled-components';
 import {StatusBar} from 'react-native';
-
-const API_URL = 'https://erc20.lomeli.xyz/agavecoin';
+import {getNotifications} from 'shared/libs/api';
 
 export function News() {
   const {fetchNotifications, notifications, isLoading} = useNotifications();
@@ -23,15 +22,6 @@ export function News() {
 function useNotifications() {
   const [isLoading, setIsLoading] = useState(false);
   const [notifications, setNotifications] = useState();
-
-  async function getNotifications() {
-    const response = await fetch(`${API_URL}/get-news`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    });
-    const {data} = await response.json();
-    return data;
-  }
 
   const fetchNotifications = async () => {
     setIsLoading(true);
