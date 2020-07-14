@@ -22,29 +22,21 @@ export function MnemonicImport({navigation}) {
 
   const [hasError, setError] = useState(null);
 
-  useEffect(() => {
-    if (text && text.length > 0) {
-      try {
-        const isValidSeed = isValid(text);
-        const hasError = isValidInput ? !isValidSeed : true;
-        setError(hasError);
-      } catch {}
-    } else setError(null);
-  }, [text]);
+  const canSubmit = text.split(/ /g).length >= 12;
 
   function handleClick() {
     Wallet.seed = text;
-    navigation.navigate('LoadWalletScreen');
+    const isValidSeed = isValid(text);
+    const hasError = isValidInput ? !isValidSeed : true;
+    setError(hasError);
+    if (!hasError) {
+      navigation.navigate('LoadWalletScreen');
+    }
   }
   function handleChangeText(txt: string) {
     const normalizedText = txt.toLowerCase();
     setText(normalizedText);
   }
-
-  const canSubmit = useMemo(() => {
-    const words = text.split(/ /g);
-    return words.length > 11 && !hasError;
-  }, [text]);
 
   return (
     <ScrollView
