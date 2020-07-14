@@ -139,7 +139,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.wallet_xoycoin"
+        applicationId "com.wallet_404"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

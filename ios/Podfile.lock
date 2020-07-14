@@ -21,7 +21,7 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - OneSignal (2.13.1)
+  - OneSignal (2.14.3)
   - Permission-Camera (2.1.5):
     - RNPermissions
   - Permission-LocationWhenInUse (2.1.5):
@@ -193,16 +193,16 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-camera (3.30.0):
+  - react-native-camera (3.31.1):
     - React
-    - react-native-camera/RCT (= 3.30.0)
-    - react-native-camera/RN (= 3.30.0)
-  - react-native-camera/RCT (3.30.0):
+    - react-native-camera/RCT (= 3.31.1)
+    - react-native-camera/RN (= 3.31.1)
+  - react-native-camera/RCT (3.31.1):
     - React
-  - react-native-camera/RN (3.30.0):
+  - react-native-camera/RN (3.31.1):
     - React
-  - react-native-onesignal (3.7.3):
-    - OneSignal (= 2.13.1)
+  - react-native-onesignal (3.9.0):
+    - OneSignal (= 2.14.3)
     - React (< 1.0.0, >= 0.13.0)
   - react-native-randombytes (3.5.3):
     - React
@@ -264,11 +264,11 @@ PODS:
     - React
   - RNReanimated (1.9.0):
     - React
-  - RNScreens (2.8.0):
+  - RNScreens (2.9.0):
     - React
   - RNSVG (12.1.0):
     - React
-  - RNVectorIcons (6.6.0):
+  - RNVectorIcons (7.0.0):
     - React
   - TcpSockets (3.3.2):
     - React
@@ -441,7 +441,7 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
-  OneSignal: fa98eaa90372bb367b6a4a1c1622ffb9832c7600
+  OneSignal: 7dfe466265c05f02b95a274b9c997a0619ad2117
   Permission-Camera: afad27bf90337684d4a86f3825112d648c8c4d3b
   Permission-LocationWhenInUse: 3624cf08c12c6019926aba3054efee7f4f8ee91e
   Permission-Microphone: 0ffabc3fe1c75cfb260525ee3f529383c9f4368c
@@ -455,8 +455,8 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-camera: eeb5b5f4ba4c1365fed3563af8a72007cbad7aab
-  react-native-onesignal: 417b2ae5c3148a47a6ef70b6af443186048b2022
+  react-native-camera: 9df6761b69d165c570ca1ab7e1245ebf349dbb88
+  react-native-onesignal: 3cd5b9b5a2d151698cab987a364f4cbd51552508
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   react-native-simple-toast: 58b71ef003f01d2c0bf5dcd2fdccc75861dabade
@@ -479,9 +479,9 @@ SPEC CHECKSUMS:
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNPermissions: ad71dd4f767ec254f2cd57592fbee02afee75467
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
-  RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
+  RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
-  RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
+  RNVectorIcons: da6fe858f5a65d7bbc3379540a889b0b12aa5976
   TcpSockets: 14306fb79f9750ea7d2ddd02d8bed182abb01797
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b

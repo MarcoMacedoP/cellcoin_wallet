@@ -1,4 +1,4 @@
-package com.wallet_xoycoin;
+package com.wallet_404;
 
 import android.app.Application;
 import android.content.Context;

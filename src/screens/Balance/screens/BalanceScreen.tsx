@@ -6,14 +6,20 @@ import {useGetBalance} from '../hooks/useGetBalance';
 import {colors} from 'shared/styles/variables';
 import {AuthRootStackParams} from 'Router';
 import {StackNavigationProp} from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/core';
-import { FlatList, StyleSheet, View, StatusBar, RefreshControl } from "react-native"
-import { Text } from "shared/styled-components";
-import { useGlobalState } from 'globalState';
+import {RouteProp} from '@react-navigation/core';
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  StatusBar,
+  RefreshControl,
+} from 'react-native';
+import {Text} from 'shared/styled-components';
+import {useGlobalState} from 'globalState';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
-    name: 'XoyCoin',
+    name: '404',
     type: 'TOKEN',
     value: {original: '---', usd: '---'},
     image: 'assets/icons/token_icon.png',
@@ -32,9 +38,14 @@ interface BalanceScreenProps {
 
 type BalanceScreenComponent = React.FC<BalanceScreenProps>;
 
-export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {params}}) => { 
-  const [currencys, setCurrencys] = useState<Array<CurrencyType>>([ ...CURRENCYS, ]);
-  const [currentWalletName]  = useGlobalState('mainAddressAlias');
+export const BalanceScreen: BalanceScreenComponent = ({
+  navigation,
+  route: {params},
+}) => {
+  const [currencys, setCurrencys] = useState<Array<CurrencyType>>([
+    ...CURRENCYS,
+  ]);
+  const [currentWalletName] = useGlobalState('mainAddressAlias');
   const balance = useGetBalance();
   const {ethBalance, generalBalance, tokenBalance, fetchBalance} = balance;
   useEffect(() => {
@@ -49,45 +60,48 @@ export const BalanceScreen: BalanceScreenComponent = ({navigation, route: {param
   const onRefresh = React.useCallback(() => {
     fetchBalance();
   }, []);
-  
-  useEffect(()=> {
-    if(params?.action === 'update'){
+
+  useEffect(() => {
+    if (params?.action === 'update') {
       onRefresh();
     }
-  }, [params])
-  
-  const handleCurrencyClick = currency =>
+  }, [params]);
+
+  const handleCurrencyClick = (currency) =>
     navigation.navigate('Transfers', currency);
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content"/>
+      <StatusBar barStyle="light-content" />
       <FlatList
-        refreshControl={ 
-          <RefreshControl 
+        refreshControl={
+          <RefreshControl
             colors={[colors.accent]}
             style={styles.refreshControl}
             progressBackgroundColor={colors.white}
             refreshing={balance.isLoading}
             onRefresh={onRefresh}
-          /> 
+          />
         }
-        ListHeaderComponent={({})=> <BalanceHeader assets={generalBalance}/>} 
+        ListHeaderComponent={({}) => <BalanceHeader assets={generalBalance} />}
         data={currencys}
-        keyExtractor={({type})=>type}
-        renderItem={({item, index})=>
-        <View style={[styles.currencyContainer, {top: index === 0 ? -56 : -100 }]}>
-          <Currency 
-             isLoading={balance.isLoading} 
-             currency={item} 
-             key={index} 
-             onClick={()=> handleCurrencyClick(item)}/>
-        </View>
-        }/>
-        <Text center color="blackLigth" style={styles.usedWalletLabel}>
-          Currently using {currentWalletName} wallet
-        </Text>
-  </View>
+        keyExtractor={({type}) => type}
+        renderItem={({item, index}) => (
+          <View
+            style={[styles.currencyContainer, {top: index === 0 ? -56 : -100}]}>
+            <Currency
+              isLoading={balance.isLoading}
+              currency={item}
+              key={index}
+              onClick={() => handleCurrencyClick(item)}
+            />
+          </View>
+        )}
+      />
+      <Text center color="blackLigth" style={styles.usedWalletLabel}>
+        Currently using {currentWalletName} wallet
+      </Text>
+    </View>
   );
 };
 
@@ -98,7 +112,7 @@ const styles = StyleSheet.create({
   refreshControl: {
     backgroundColor: colors.primary,
   },
-  currencyContainer:{
+  currencyContainer: {
     padding: 22,
     width: '100%',
     position: 'relative',
@@ -106,6 +120,5 @@ const styles = StyleSheet.create({
   usedWalletLabel: {
     marginBottom: 16,
     fontSize: 14,
-  }
-})
-
+  },
+});

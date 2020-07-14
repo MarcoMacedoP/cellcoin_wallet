@@ -27,17 +27,17 @@ const WALKTHROUGH_DATA: WalkthroughItemData[] = [
   {
     image: require('assets/tutorial/tutorial_two.png'),
     title: 'Multi-chain Wallet',
-    desc: 'Generate profits with XoyCoin',
+    desc: 'Generate profits with 404',
   },
   {
     image: require('assets/tutorial/tutorial_three.png'),
     title: 'XoyWallet Services',
     desc:
-      'With XoyCoin, you can do multiple transactions. Besides, it is pretty easy to buy or send cryptocurrency instantly.',
+      'With 404, you can do multiple transactions. Besides, it is pretty easy to buy or send cryptocurrency instantly.',
   },
   {
     image: require('assets/tutorial/tutorial_four.png'),
-    title: 'XoyCoin Secure',
+    title: '404 Secure',
     desc:
       'Full control over assets by managing private keys independently. Produced by Xoy Coin security team',
   },
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
 });
 
 const DotButton = styled.TouchableOpacity<{isSelected: boolean}>`
-  background-color: ${props =>
+  background-color: ${(props) =>
     props.isSelected ? colors.accent : colors.gray};
   border-radius: 50px;
   margin: 4px;
