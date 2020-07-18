@@ -20,18 +20,18 @@ type WalkthroughItemData = {
 const WALKTHROUGH_DATA: WalkthroughItemData[] = [
   {
     image: require('assets/tutorial/tutorial_one.png'),
-    title: 'Supporting by CellCoin ',
-    desc: 'Generate profits with CellCoin Coin',
+    title: 'Multi-chain Wallet',
+    desc: 'Supporting CEL wallet.',
   },
   {
     image: require('assets/tutorial/tutorial_two.png'),
     title: 'CellCoin Coin Services',
     desc:
-      'With CellCoin Coin,you can do multiple transactions. Buy or send cryptocurrency instantly.',
+      'Add and manage cryptocurrencies one click. \n Manage multiple addresses easily',
   },
   {
     image: require('assets/tutorial/tutorial_three.png'),
-    title: 'CellCoin Coin Secure ',
+    title: 'CellCoin Secure ',
     desc:
       'Full control over assets by managing private keys independently. Produced by CellCoin Coin security team',
   },

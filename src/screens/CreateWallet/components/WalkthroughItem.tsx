@@ -23,7 +23,9 @@ export const WalkthroughItem: React.FC<WalkthroughItemProps> = ({
       </View>
 
       <View style={styles.textContainer}>
-        <Title center>{title}</Title>
+        <Title center color="primary">
+          {title}
+        </Title>
         <Label center style={styles.label}>
           {desc}
         </Label>

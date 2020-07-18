@@ -18,7 +18,7 @@ export const ScreenContainer = styled.View<ViewProps>`
   align-items: ${props => (props.align ? props.align : 'center')};
   background-color: ${props =>
     props.light
-      ? colors.black
+      ? colors.white
       : props.color
       ? colors[props.color]
       : colors.whiteDark};

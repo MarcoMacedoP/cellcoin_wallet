@@ -135,14 +135,14 @@ export const rootRouterOptions: RootRouterOptions = {
 
 export const commonScreenOptions: StackNavigationOptions = {
   headerTitleAlign: 'center',
-  headerTintColor: colors.white,
+  headerTintColor: colors.black,
   headerTitleStyle: {
     fontSize: 16,
     fontWeight: 'bold',
   },
   headerStyle: {
     elevation: 0,
-    backgroundColor: colors.black,
+    backgroundColor: colors.white,
     shadowRadius: 0,
     borderBottomWidth: 0,
     shadowColor: 'transparent',

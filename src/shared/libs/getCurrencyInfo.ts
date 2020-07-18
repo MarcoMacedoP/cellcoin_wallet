@@ -5,6 +5,6 @@ export function getCurrencyInfo(currency: TokenType) {
     currency === 'TOKEN'
       ? require('assets/icons/token_icon.png')
       : require('assets/icons/ethereum_icon.png');
-  const tokenName = currency === 'TOKEN' ? 'XOY' : currency;
+  const tokenName = currency === 'TOKEN' ? 'CEL' : currency;
   return {logo, tokenName};
 }

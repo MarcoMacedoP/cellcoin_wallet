@@ -55,7 +55,7 @@ export const Button: React.FC<ButtonProps> = ({
           ? accent
             ? colors.accent
             : outline
-            ? colors.lightGray
+            ? colors.accent
             : secondary
             ? colors.primaryLigth
             : colors.primary
@@ -106,7 +106,7 @@ export const Button: React.FC<ButtonProps> = ({
           <Text
             uppercase
             isBold
-            color={outline ? 'primary' : 'white'}
+            color="white"
             style={[styles.label, labelStyle]}>
             {children}
           </Text>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 30,
     maxHeight: 50,
     marginTop: 5,
     marginVertical: 0,

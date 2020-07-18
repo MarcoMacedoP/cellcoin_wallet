@@ -6,7 +6,7 @@ const background = require('assets/images/background_splash.png');
 
 export const Splash = () => {
   return (
-    <FadeInView style={{width: '100%', flex: 1}}>
+    <FadeInView duration={100} style={{width: '100%', flex: 1}}>
       <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
         source={background}

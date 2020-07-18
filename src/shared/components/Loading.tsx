@@ -20,7 +20,7 @@ export const Loading: React.FC<LoadingProps> = ({image, text}) => (
       </ImageContainer>
     )}
     <LoaderContainer>
-      <UIActivityIndicator size={50} color={colors.accentLight} />
+      <UIActivityIndicator size={50} color={colors.primary} />
     </LoaderContainer>
 
     {text && (

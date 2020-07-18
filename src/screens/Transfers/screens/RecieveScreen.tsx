@@ -21,7 +21,7 @@ export const RecieveTransferScreen: React.FC<RecieveTransferScreenProps> = ({
   const {logo, tokenName} = getCurrencyInfo(currency.type);
   return (
     <LinearGradient
-      colors={['#3A81F8', '#16CDFC', '#16CDFC', '#16CDFC']}
+      colors={['#DF7814', '#DF7814', '#FEB037', '#FEB037']}
       style={styles.gradient}>
       <StatusBar barStyle="light-content" />
       <View style={styles.addressContainer}>
@@ -82,5 +82,6 @@ const styles = StyleSheet.create({
   brandLogo: {
     width: 150,
     resizeMode: 'contain',
+    marginTop: 16,
   },
 });
