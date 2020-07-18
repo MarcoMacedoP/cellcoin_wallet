@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.wallet_404",
+    package = "com.wallet_cellcoin",
 )
 
 android_resource(
     name = "res",
-    package = "com.wallet_404",
+    package = "com.wallet_cellcoin",
     res = "src/main/res",
 )
 

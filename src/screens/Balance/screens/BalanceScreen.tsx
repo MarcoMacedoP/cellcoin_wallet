@@ -19,7 +19,7 @@ import {useGlobalState} from 'globalState';
 
 const CURRENCYS: Array<CurrencyType> = [
   {
-    name: '404',
+    name: 'CellCoin',
     type: 'TOKEN',
     value: {original: '---', usd: '---'},
     image: 'assets/icons/token_icon.png',

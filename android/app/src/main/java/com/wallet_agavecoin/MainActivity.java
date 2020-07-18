@@ -1,4 +1,4 @@
-package com.wallet_404;
+package com.wallet_cellcoin;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -13,7 +13,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "wallet_404";
+    return "wallet_cellcoin";
   }
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {

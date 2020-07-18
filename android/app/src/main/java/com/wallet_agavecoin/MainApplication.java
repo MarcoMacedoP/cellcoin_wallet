@@ -1,4 +1,4 @@
-package com.wallet_404;
+package com.wallet_cellcoin;
 
 import android.app.Application;
 import android.content.Context;

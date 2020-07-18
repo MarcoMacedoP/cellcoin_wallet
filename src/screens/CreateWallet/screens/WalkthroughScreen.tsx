@@ -20,20 +20,20 @@ type WalkthroughItemData = {
 const WALKTHROUGH_DATA: WalkthroughItemData[] = [
   {
     image: require('assets/tutorial/tutorial_one.png'),
-    title: 'Supporting by 404 ',
-    desc: 'Generate profits with 404 Coin',
+    title: 'Supporting by CellCoin ',
+    desc: 'Generate profits with CellCoin Coin',
   },
   {
     image: require('assets/tutorial/tutorial_two.png'),
-    title: '404 Coin Services',
+    title: 'CellCoin Coin Services',
     desc:
-      'With 404 Coin,you can do multiple transactions. Buy or send cryptocurrency instantly.',
+      'With CellCoin Coin,you can do multiple transactions. Buy or send cryptocurrency instantly.',
   },
   {
     image: require('assets/tutorial/tutorial_three.png'),
-    title: '404 Coin Secure ',
+    title: 'CellCoin Coin Secure ',
     desc:
-      'Full control over assets by managing private keys independently. Produced by 404 Coin security team',
+      'Full control over assets by managing private keys independently. Produced by CellCoin Coin security team',
   },
 ];
 
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
 });
 
 const DotButton = styled.TouchableOpacity<{isSelected: boolean}>`
-  background-color: ${(props) =>
+  background-color: ${props =>
     props.isSelected ? colors.accent : colors.gray};
   border-radius: 50px;
   margin: 4px;

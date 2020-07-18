@@ -139,7 +139,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.wallet_404"
+        applicationId "com.wallet_cellcoin"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
