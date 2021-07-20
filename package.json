@@ -40,7 +40,7 @@
     "react": "16.9.0",
     "react-content-loader": "^5.0.4",
     "react-hooks-global-state": "^1.0.0",
-    "react-native": "0.61.5",
+    "react-native": "0.62.3",
     "react-native-bootsplash": "^1.2.1",
     "react-native-camera": "^3.18.0",
     "react-native-crypto": "^2.2.0",
